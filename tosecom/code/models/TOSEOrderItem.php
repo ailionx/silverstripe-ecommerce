@@ -6,19 +6,24 @@
  * and open the template in the editor.
  */
 
-class TOSESpec extends DataObject {
+
+class TOSEOrderItem extends DataObject {
     
     private static $db = array(
+        'Quantity' => 'Int',
+        'Name' => 'Varchar(100)',
+        'Category' => 'Varchar(100)',
+        'SKU' => 'Varchar(100)',
         'Weight' => 'Decimal',
-        'SKU' => 'Varchar(50)',
-        'Inventory' => 'Int'
+        'Price' => 'Currency',
+        'Currency' => 'Varchar(10)'
     );
-
+    
     private static $has_one = array(
         'Product' => 'TOSEProduct',
-        'Currency' => 'TOSECurrency'
+        'Spec' => 'TOSESpec',
+        'Order' => 'TOSEOrder'
     );
     
     private static $has_many = array();
-    
 }

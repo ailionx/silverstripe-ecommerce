@@ -6,16 +6,15 @@
  * and open the template in the editor.
  */
 
-class TOSEOrder extends DataObject {
+class TOSEHistoryOrder extends DataObject {
     
-    const PENDING = "Pending";
     const CANCELLED = "Cancelled";
     const PAID = "Paid";
     
     private static $db=array(
         'Reference'=>'Varchar(20)',
         'NeedInvoice' => "Boolean",
-        'Status'=>"Enum('Pending', 'Cancelled', 'Paid')",
+        'Status'=>"Enum('Cancelled', 'Paid')",
         'ShippingFee'=>'Decimal',
         'CustomerName'=>'Varchar',
         'CustomerEmail'=>'Varchar',
@@ -31,5 +30,4 @@ class TOSEOrder extends DataObject {
     private static $has_many = array(
         'Items' => "TOSEOrderItem"
     );
-
 }

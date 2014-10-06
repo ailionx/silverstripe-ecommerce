@@ -11,7 +11,7 @@ class TOSEProduct extends DataObject {
     private static $db = array(
         'Name' => 'Varchar(100)',
         'Description' => 'Text',
-        'Link' => 'Varchar(200)',
+        'Link' => 'Varchar(100)',
         'NewFrom' => 'Date',
         'NewTo' => 'Date',
         'Enabled' => 'Boolean'

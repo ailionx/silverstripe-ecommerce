@@ -12,4 +12,8 @@ class TOSECurrency extends DataObject {
         'Price' => 'Currency',
         'Currency' => 'Varchar(10)'
     );
+    
+    private static $has_one = array(
+        'Spec' => 'TOSESpec'
+    );
 }

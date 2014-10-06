@@ -10,7 +10,7 @@ class TOSECategory extends DataObject {
     
     private static $db = array(
         'Name' => 'Varchar(100)',
-        'Link' => 'Varchar(200)'
+        'Link' => 'Varchar(100)'
     );
     
     private static $has_one = array(
