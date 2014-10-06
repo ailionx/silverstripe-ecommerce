@@ -14,8 +14,7 @@ class TOSEProductPage extends Page {
 
     public function requireDefaultRecords() {
         parent::requireDefaultRecords();
-        
-        
+ 
         if(!$page = DataObject::get_one($this)) {
             $page = new TOSEProductPage();
             $page->Title = "Product";
