@@ -15,7 +15,7 @@ class TOSEOrder extends DataObject {
     private static $db=array(
         'Reference'=>'Varchar(20)',
         'NeedInvoice' => "Boolean",
-        'Status'=>"Enum('Pending', 'Cancelled', 'Paid')",
+        'Status'=>"Enum('Pending, Cancelled, Paid', 'Pending')",
         'ShippingFee'=>'Decimal',
         'CustomerName'=>'Varchar',
         'CustomerEmail'=>'Varchar',

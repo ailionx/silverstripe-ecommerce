@@ -14,7 +14,7 @@ class TOSEHistoryOrder extends DataObject {
     private static $db=array(
         'Reference'=>'Varchar(20)',
         'NeedInvoice' => "Boolean",
-        'Status'=>"Enum('Cancelled', 'Paid')",
+        'Status'=>"Enum('Cancelled, Paid', 'Cancelled')",
         'ShippingFee'=>'Decimal',
         'CustomerName'=>'Varchar',
         'CustomerEmail'=>'Varchar',
