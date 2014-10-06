@@ -15,10 +15,10 @@ class TOSEProductPage extends Page {
     public function requireDefaultRecords() {
         parent::requireDefaultRecords();
  
-        if(!$page = DataObject::get_one($this)) {
+        if(!$page = DataObject::get_one('TOSEProductPage')) {
             $page = new TOSEProductPage();
-            $page->Title = "Product";
-            $page->URLSegment = 'product';
+            $page->Title = Config::inst()->get('TOSEProductPage', 'page_title');
+            $page->URLSegment = Config::inst()->get('TOSEProductPage', 'page_URL_segment');
             $page->Status = 'Published';
             $page->ShowInMenus = 0;
             $page->ShowInSearch = 0;
@@ -29,8 +29,18 @@ class TOSEProductPage extends Page {
             DB::alteration_message('TOSEProductPage created', 'created'); 
         }
     }
+    
+    public function test() {
+        return var_dump(Config::inst()->get('TOSEProductPage', 'page_URL_segment'));
+    }
+    
 }
 
 class TOSEProductPage_Controller extends Page_Controller {
     
+    private static $url_handlers = array();
+    
+    private static $allowed_actions = array();
+    
+
 }

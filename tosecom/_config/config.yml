@@ -1,13 +1,7 @@
-LeftAndMain:
-  extra_requirements_css:
-    - tosecommerce/css/tose-admin.css
-    
 Member:
     extensions:
         - TOSEMember
-    
+
 TOSEProductPage:
-    Title:
-        "Flower"
-    URLSegment:
-        "flower"
+    page_title: 'Product'
+    page_URL_segment: 'product'
