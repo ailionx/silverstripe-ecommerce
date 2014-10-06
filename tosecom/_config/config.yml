@@ -1,0 +1,9 @@
+LeftAndMain:
+  extra_requirements_css:
+    - tosecommerce/css/tose-admin.css
+    
+TOSEProductPage:
+    Title:
+        "Flower"
+    URLSegment:
+        "flower"
