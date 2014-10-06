@@ -8,17 +8,15 @@
 
 class TOSEProductPage extends Page {
     
-    private static $page_title;
-
-    private static $page_URL_segment;
 
     public function requireDefaultRecords() {
         parent::requireDefaultRecords();
- 
+        
         if(!$page = DataObject::get_one('TOSEProductPage')) {
+            $config = $this->config()->defaultConfig;
             $page = new TOSEProductPage();
-            $page->Title = Config::inst()->get('TOSEProductPage', 'page_title');
-            $page->URLSegment = Config::inst()->get('TOSEProductPage', 'page_URL_segment');
+            $page->Title = $config['pageTitle'];
+            $page->URLSegment = $config['pageURLSegment'];
             $page->Status = 'Published';
             $page->ShowInMenus = 0;
             $page->ShowInSearch = 0;
@@ -30,17 +28,25 @@ class TOSEProductPage extends Page {
         }
     }
     
-    public function test() {
-        return var_dump(Config::inst()->get('TOSEProductPage', 'page_URL_segment'));
-    }
+    
     
 }
 
 class TOSEProductPage_Controller extends Page_Controller {
     
-    private static $url_handlers = array();
+    private static $url_handlers = array(
+        '$ID' => 'index'
+    );
     
     private static $allowed_actions = array();
     
-
+    public function index(SS_HTTPRequest $request) {
+        $id = $request->param("ID");
+        if(!$id || !is_numeric($id) || !($product = DataObject::get_by_id("TOSEProduct", $id))){
+            die("TOS Product NOT FOUND");
+        }
+        
+        return $this->customise(array("Product" => $product));
+    }
+    
 }

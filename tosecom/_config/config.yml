@@ -3,5 +3,6 @@ Member:
         - TOSEMember
 
 TOSEProductPage:
-    page_title: 'Product'
-    page_URL_segment: 'product'
+    defaultConfig:
+        pageTitle: 'Product'
+        pageURLSegment: 'product'

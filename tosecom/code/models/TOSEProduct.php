@@ -50,4 +50,13 @@ class TOSEProduct extends DataObject {
     public function isEnabled() {
         return $this->Enabled;
     }
+    
+    public function getCMSFields() {
+        $fields = parent::getCMSFields();
+//        $newFromField = $fields->fieldByName('NewFrom');
+//        $newToField = $fields->fieldByName('To');
+//        $newFromField->setConfig('showcalendar', true);
+//        $newToField->setConfig('showcalendar', true);
+        return $fields;
+    }
 }
