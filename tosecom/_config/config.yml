@@ -2,6 +2,11 @@ Member:
     extensions:
         - TOSEMember
 
+TOSEPage:
+    defaultConfig:
+        pageTitle: 'Ecommerce'
+        pageURLSegment: 'ecommerce'
+
 TOSEProductPage:
     defaultConfig:
         pageTitle: 'Product'

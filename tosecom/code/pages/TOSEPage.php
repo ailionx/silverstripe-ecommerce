@@ -8,6 +8,16 @@
 
 class TOSEPage extends Page {
     
+    public function requireDefaultRecords() {
+        parent::requireDefaultRecords();
+        
+        //To create default data
+        if(!DataGenerator::hasInitiated()){
+            DataGenerator::startGen();
+        }
+        
+    }
+    
 }
 
 class TOSEPage_Controller extends Page_Controller {

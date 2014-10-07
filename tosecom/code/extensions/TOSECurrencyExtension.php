@@ -10,18 +10,17 @@ class TOSECurrencyExtension extends DataExtension {
     
     
     
-    public function extraStatics() {
-//        parent::extraStatics($class, $extension);
-        $db = array();
-        
-        $config = $this->owner->config()->defaultConfig;
-        $currencies = $config['currencies'];
-        $currencyNames = array_keys($currencies);
-        $currencyNamesString = implode(',', $currencyNames);
-        
-        
-        return array('db'=>$db);
-    }
+//    public function extraStatics() {
+//        $db = array();
+//        
+//        $config = Config::inst()->get('TOSECurrency', 'defaultConfig');
+//        $currencies = $config['currencies'];
+//        $currencyNames = array_keys($currencies);
+//        $currencyNamesString = implode(',', $currencyNames);
+//        
+//        
+//        return array('db'=>$db);
+//    }
     
     
 }
