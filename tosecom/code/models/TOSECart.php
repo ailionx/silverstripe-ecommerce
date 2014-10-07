@@ -22,25 +22,45 @@ class TOSECart extends DataObject {
     
     
     public static function get_current_cart() {
-        $needLogin = Config::inst()->get('TOSECart', 'needLogin');
         
         if(Member::currentUserID()) {
             if ($cart = DataObject::get_one('TOSECart', "MemberID='".Member::currentUserID()."'")) {
                 return $cart;
             }
             $cart = new TOSECart();
-            $cart->Member() = Member::currentUser();
+            $cart->MemberID = Member::currentUserID();
             $cart->write();
             return $cart;
         } else {
-            
+            return $cart = new TOSECart();
         }
         
     }
     
-    public function existItem($data) {
+    public function isEmpty() {
         
-        $items = $this->CartItems();
+        
+    }
+    
+    public function itemsCount() {
+        $cart = self::get_current_cart();
+        $cartItems = $cart->CartItems();
+        return $cartItems->count();
+    }
+    
+    public function productsCount() {
+        $cart = self::get_current_cart();
+        $cartItems = $cart->CartItems();
+        $productCount = 0;
+        foreach ($cartItems as $item) {
+            $productCount += $item->Quantity;
+        }
+        return $productCount;
+    }
+
+    public function existItem($data) {
+        $cart = self::get_current_cart();
+        $items = $cart->CartItems();
         foreach ($items as $item) {
             $itemProductID = $item->Product()->ID;
             $itemSpecID = $item->Spec()->ID;
@@ -54,16 +74,23 @@ class TOSECart extends DataObject {
     }
     
     public function addProduct($data) {
-        $this->existItem($data) ? TOSECartItem::updateItem($data) : TOSECartItem::addItem($data);
+        $this->existItem($data) ? self::updateItem($data) : self::addItem($data);
     }
 
-    public function addItem($data) {
+    public static function add_item($data) {
+        $cart = self::get_current_cart();
         $item = new TOSECartItem();
-        $item->update($data);
-        $item->write();
+        if (Member::currentUserID()) {
+            $item->update($data);
+            $item->CartID = $cart->ID;
+            $item->write();
+        } else {
+
+        }
+
     }
     
-    public function updateItem($data) {
+    public static function update_item($data) {
         
     }
     
