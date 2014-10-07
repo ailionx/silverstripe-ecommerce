@@ -8,7 +8,7 @@
 
 class TOSEPage extends Page {
     
-    private static $allowed_children = array('TOSEProductPage', 'TOSECategoryPage');
+    private static $allowed_children = array('TOSEProductPage', 'TOSECategoryPage', 'TOSECartPage', 'TOSECheckoutPage');
     
     public function requireDefaultRecords() {
         parent::requireDefaultRecords();

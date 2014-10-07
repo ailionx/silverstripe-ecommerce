@@ -17,6 +17,16 @@ TOSECategoryPage:
         pageTitle: 'Category'
         pageURLSegment: 'category'
 
+TOSECartPage:
+    defaultConfig:
+        pageTitle: 'Cart'
+        pageURLSegment: 'cart'
+        
+TOSECheckoutPage:
+    defaultConfig:
+        pageTitle: 'Checkout'
+        pageURLSegment: 'checkout'
+        
 TOSECurrency:
     defaultConfig:
         currencies:
@@ -26,3 +36,4 @@ TOSECurrency:
             USD: '$'
     extensions:
         - TOSECurrencyExtension
+        

@@ -19,4 +19,14 @@ class TOSECart extends DataObject {
     private static $has_many = array(
         'CartItems' => 'TOSECartItem'
     );
+    
+    
+    public static function get_current_cart() {
+        
+    }
+    
+    public function addToCart() {
+        
+    }
+    
 }

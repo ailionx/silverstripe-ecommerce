@@ -38,7 +38,7 @@ class DataGenerator {
             DB::alteration_message('TOSEPage created', 'created'); 
         }
         
-        $TOSEPageID = DataObject::get_one('TOSEPage')->ID;
+        $TOSEPageID = DataObject::get_one('SiteTree', "ClassName='TOSEPage'")->ID;
         
         // create TOSECategoryPage
         if(!$page = DataObject::get_one('TOSECategoryPage')) {
@@ -70,6 +70,38 @@ class DataGenerator {
             $page->publish('Stage', 'Live');
             $page->flushCache();
             DB::alteration_message('TOSEProductPage created', 'created'); 
+        }
+        
+        // create TOSECartPage
+        if(!$page = DataObject::get_one('TOSECartPage')) {
+            $config = Config::inst()->get('TOSECartPage', 'defaultConfig');
+            $page = new TOSECartPage();
+            $page->Title = $config['pageTitle'];
+            $page->URLSegment = $config['pageURLSegment'];
+            $page->Status = 'Published';
+            $page->ShowInMenus = 0;
+            $page->ShowInSearch = 0;
+            $page->ParentID = $TOSEPageID;
+            $page->write();
+            $page->publish('Stage', 'Live');
+            $page->flushCache();
+            DB::alteration_message('TOSECartPage created', 'created'); 
+        }
+        
+        // create TOSECheckoutPage
+        if(!$page = DataObject::get_one('TOSECheckoutPage')) {
+            $config = Config::inst()->get('TOSECheckoutPage', 'defaultConfig');
+            $page = new TOSECheckoutPage();
+            $page->Title = $config['pageTitle'];
+            $page->URLSegment = $config['pageURLSegment'];
+            $page->Status = 'Published';
+            $page->ShowInMenus = 0;
+            $page->ShowInSearch = 0;
+            $page->ParentID = $TOSEPageID;
+            $page->write();
+            $page->publish('Stage', 'Live');
+            $page->flushCache();
+            DB::alteration_message('TOSECheckoutPage created', 'created'); 
         }
     }
 }

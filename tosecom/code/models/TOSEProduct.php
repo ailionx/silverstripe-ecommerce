@@ -31,30 +31,50 @@ class TOSEProduct extends DataObject {
         'Description' => 'Description'
     );
 
+    /**
+     * Function is to get Category name of product, for cms
+     * @return type
+     */
     public function getCategoryName() {
         return $this->Category()->Name;
     }
 
+    /**
+     * Function is to get the default spec of product, for cms
+     * @return type
+     */
     public function getDefaultSpec() {
         $Spec = DataObject::get('TOSESpec', "ProductID = '".$this->ID."'")->first();
         return $Spec;
     }
     
-    public function setDefualtSpec($id) {
-        $this->default_spec = $id;
-    }
-    
-    public function getDefaultImage() {
-        return $this->default_image;
-    }
-    
-    public function setDefualtImage($id) {
-        $this->default_image = $id;
-    }
-    
+    /**
+     * Function is to check if the Product is enabled, if not, this product should not be shown in front end
+     * @return type
+     */
     public function isEnabled() {
         return $this->Enabled;
     }
+    
+    public function getCartLink() {
+        $cartPage = DataObject::get_one('TOSECartPage');
+        $link = $cartPage->URLSegment;
+        return $link;
+    }
+
+//    public function setDefualtSpec($id) {
+//        $this->default_spec = $id;
+//    }
+//    
+//    public function getDefaultImage() {
+//        return $this->default_image;
+//    }
+//    
+//    public function setDefualtImage($id) {
+//        $this->default_image = $id;
+//    }
+    
+
     
     public function getCMSFields() {
 
