@@ -6,17 +6,23 @@
  * and open the template in the editor.
  */
 
-class TOSECartPage extends TOSEPage {
-    
-    
+class TOSECartPage extends TOSEPage {   
     
 }
 
 
 class TOSECartPage_Controller extends TOSEPage_Controller {
     
-    public function addToCart() {
-        
+    private static $allowed_actions = array(
+      'addToCart'  
+    );
+
+
+    public function addToCart(SS_HTTPRequest $request) {
+        $data = $request->postVars();
+        $cart = TOSECart::get_current_cart();
+        $cart->addProduct($data);
+        $this->redirectBack();
     }
     
 }

@@ -17,4 +17,12 @@ class TOSECartItem extends DataObject {
         'Spec' => 'TOSESpec',
         'Cart' => 'TOSECart'
     );
+    
+    public static function add_item() {
+        
+    }
+    
+    public static function update_item() {
+        
+    }
 }

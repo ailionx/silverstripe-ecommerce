@@ -56,9 +56,13 @@ class TOSEProduct extends DataObject {
         return $this->Enabled;
     }
     
+    public function isNew() {
+        
+    }
+
     public function getCartLink() {
         $cartPage = DataObject::get_one('TOSECartPage');
-        $link = $cartPage->URLSegment;
+        $link = $cartPage->Link();
         return $link;
     }
 

@@ -37,3 +37,6 @@ TOSECurrency:
     extensions:
         - TOSECurrencyExtension
         
+TOSECart:
+    needLogin: 'Both'
+        
