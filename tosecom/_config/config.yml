@@ -6,3 +6,18 @@ TOSEProductPage:
     defaultConfig:
         pageTitle: 'Product'
         pageURLSegment: 'product'
+        
+TOSECategoryPage:
+    defaultConfig:
+        pageTitle: 'Category'
+        pageURLSegment: 'category'
+
+TOSECurrency:
+    defaultConfig:
+        currencies:
+            GBP: '£'
+            CNY: '¥'
+            AUD: '$'
+            USD: '$'
+    extensions:
+        - TOSECurrencyExtension

@@ -1,0 +1,66 @@
+en:
+    TOSE_ADMIN:
+        VALIDATION:
+            CATEGORY:
+                NAME:
+                    REQUIRED: Please enter the category name!
+                    REMOTE: The category has existed! Please re-enter again
+            PRODUCT:
+                NAME:
+                    REQUIRED: Please enter the product name!
+                    REMOTE: The product has existed! Please re-enter again
+                PRICE:
+                    REQUIRED: Please enter the price!
+                    MONEY : Please enter corret money format!
+        MESSAGE:
+            IS_ROOT_CATEGORY: Root Category
+            NEW_CATEGORY_SUB_CATEGORY: You can create sub-category after creating new CATEGORY
+            NEW_CATEGORY_PRODUCT: You can add product after creating new CATEGORY
+            NEW_PRODUCT_PRICE: You can add price after creating new PRODUCT
+            NEW_PRODUCT_IMAGE: You can add images after creating new PRODUCT
+     
+    TOSE:
+        FORM:
+            ORDER:
+                CUSTOMER_INFO:
+                    TITLE: Customer Info
+                    FIELD_TITLE:
+                        NAME: Name
+                        PHONE: Phone
+                        EMAIL: Email
+                DELIVERY_ADDRESS:
+                    TITLE: Delivery Info
+                    FIELD_TITLE:
+                        NAME: Name
+                        PHONE: Phone
+                        EMAIL: Email
+                        STREETNO: No.
+                        STREET: Address
+                        SUBURB: Suburb
+                        CITY: City
+                        REGION: Region
+                        POST: Postal Code
+                        COUNTRY: Country
+                BILLING_ADDRESS:
+                    TITLE: Recipt Info
+                    FIELD_TITLE:
+                        NAME: Name
+                        PHONE: Phone
+                        EMAIL: Email
+                        STREETNO: No.
+                        STREET: Address
+                        SUBURB: Suburb
+                        CITY: City
+                        REGION: Region
+                        POST: Postal Code
+                        COUNTRY: Country
+            VALIDATION:
+                CHECKOUT:
+                    REQUIRED:
+                        NAME: Name is required
+                        PHONE: Phone is required
+                        EMAIL: Email is required
+                        ADDRESS: Address is required
+                    EMAIL: Email address is invalid
+                    ADDRESS: Sorry! We just delivery flowers in New Zealand.
+                    

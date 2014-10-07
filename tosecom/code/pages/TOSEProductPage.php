@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class TOSEProductPage extends Page {
+class TOSEProductPage extends TOSEPage {
     
 
     public function requireDefaultRecords() {
@@ -32,7 +32,7 @@ class TOSEProductPage extends Page {
     
 }
 
-class TOSEProductPage_Controller extends Page_Controller {
+class TOSEProductPage_Controller extends TOSEPage_Controller {
     
     private static $url_handlers = array(
         '$ID' => 'index'

@@ -9,11 +9,33 @@
 class TOSECurrency extends DataObject {
     
     private static $db = array(
-        'Price' => 'Currency',
-        'Currency' => 'Varchar(10)'
+        'Currency' => "Enum('NZD, USD, GBP', 'NZD')",
+        'Price' => 'Currency'
     );
     
     private static $has_one = array(
         'Spec' => 'TOSESpec'
     );
+    
+    
+    private static $summary_fields = array(
+        'Currency' => 'Currency',
+        'Price' => 'Price'
+    );
+
+    
+    
+    public static function get_all_currencies() {
+        $config = Config::inst()->get('TOSECurrency', 'defaultConfig');
+        $currencies = array_keys($config['currencies']);
+        return $currencies;
+    }
+    
+    public function getCMSFields() {
+        $fields = parent::getCMSFields();
+        $currencies = self::getAllCurrencies();
+        
+        return $fields;
+    }
+    
 }
