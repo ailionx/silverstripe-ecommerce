@@ -33,7 +33,7 @@ class TOSECurrency extends DataObject {
     
     public function getCMSFields() {
         $fields = parent::getCMSFields();
-        $currencies = self::getAllCurrencies();
+//        $currencies = self::getAllCurrencies();
         
         return $fields;
     }

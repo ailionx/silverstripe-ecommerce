@@ -1,6 +1,5 @@
-111
 <% with Product %>
-
+    $Name
     <% with getDefaultSpec %>
         $getDefaultPrice
     <% end_with %>

@@ -47,9 +47,21 @@ class TOSESpec extends DataObject {
 //        var_dump($weightField); die();
         $weightField->setTitle('Weight (Unit: kg.)');
         
-        $gridFieldConfig = GridFieldConfig_RelationEditor::create();
-        $gridField = new GridField('Currencies', 'Currencies', $this->Currencies(), $gridFieldConfig);
-        $fields->addFieldToTab('Root.Main', $gridField);
+        if ($this->ID) {
+            $gridFieldConfig = GridFieldConfig_RelationEditor::create();
+            $gridField = new GridField('Currencies', 'Currencies', $this->Currencies(), $gridFieldConfig);
+            $fields->addFieldToTab('Root.Main', $gridField);
+        } else {
+            
+            $fields->addFieldToTab(
+                    "Root.Main", 
+                    new LiteralField(
+                            "NewProductPriceMsg", 
+                            "<div class='message warning'>" . _t("TOSE_ADMIN.MESSAGE.NEW_PRODUCT_PRICE") . "</div>"
+                    )
+            );
+        }
+
         
         return $fields;
     }

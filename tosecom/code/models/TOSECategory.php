@@ -22,4 +22,19 @@ class TOSECategory extends DataObject {
         'Products' => 'TOSEProduct'
     );
     
+    private static $summary_fields = array(
+        'Name' => 'Name',
+        'getParentCategoryName' => 'Parent Category'
+    );
+    
+    public function getParentCategoryName() {
+        
+        if ($name = $this->ParentCategory()->Name) {
+            return $name;
+        } else {
+            return 'Root';
+        }
+//        return $parent=$this->ParentCategory() ? $parent->Name : 'Root';
+    }   
+    
 }

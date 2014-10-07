@@ -25,10 +25,15 @@ class TOSEProduct extends DataObject {
         'Specs' => 'TOSESpec'
     );
     
-    private static $default_spec;
-    
-    private static $default_image;
+    private static $summary_fields = array(
+        'Name' => 'Name',
+        'getCategoryName' => 'Category',
+        'Description' => 'Description'
+    );
 
+    public function getCategoryName() {
+        return $this->Category()->Name;
+    }
 
     public function getDefaultSpec() {
         $Spec = DataObject::get('TOSESpec', "ProductID = '".$this->ID."'")->first();

@@ -59,7 +59,7 @@ class DataGenerator {
         // create TOSEProductPage
         if(!$page = DataObject::get_one('TOSEProductPage')) {
             $config = Config::inst()->get('TOSEProductPage', 'defaultConfig');
-            $page = new TOSECategoryPage();
+            $page = new TOSEProductPage();
             $page->Title = $config['pageTitle'];
             $page->URLSegment = $config['pageURLSegment'];
             $page->Status = 'Published';
