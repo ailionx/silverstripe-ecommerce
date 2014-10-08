@@ -14,7 +14,8 @@ class TOSECartPage extends TOSEPage {
 class TOSECartPage_Controller extends TOSEPage_Controller {
     
     private static $allowed_actions = array(
-      'addToCart'  
+        'addToCart',
+        'showCartItems'
     );
 
 
@@ -26,6 +27,6 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
     }
     
     public function showCartItems() {
-        $cartItems = TOSECart::get_cart_items();
+        return TOSECart::get_cart_items();
     }
 }

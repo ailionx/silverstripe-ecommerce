@@ -25,4 +25,11 @@ class TOSEAddress extends DataObject {
     private static $has_one = array();
     
     private static $has_many = array();
+    
+    public static function save($data) {
+        
+        $address = new TOSEAddress();
+        $address->update($data);
+        $address->write();
+    }
 }

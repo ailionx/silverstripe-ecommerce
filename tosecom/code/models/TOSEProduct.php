@@ -70,9 +70,11 @@ class TOSEProduct extends DataObject {
 //        $this->default_spec = $id;
 //    }
 //    
-//    public function getDefaultImage() {
-//        return $this->default_image;
-//    }
+    public function getDefaultImage() {
+        if($this->Images()->Count() > 0){
+            return $this->Images()->First();
+        }
+    }
 //    
 //    public function setDefualtImage($id) {
 //        $this->default_image = $id;

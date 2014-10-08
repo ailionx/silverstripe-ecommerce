@@ -67,12 +67,12 @@ class TOSECart extends DataObject {
     public static function get_cart_items() {
         if(self::is_customer_login()) {
             $cart = self::get_current_cart();
-            $cartItems = $cart->CartItems()->toArray();
+            $cartItems = $cart->CartItems();
         } else {
             $sessionCartItems = Session::get('TOSECart');
-            $cartItems = array();
+            $cartItems = new ArrayList();
             foreach ($sessionCartItems as $item) {
-                $cartItems[] = unserialize($item);
+                $cartItems->add(unserialize($item));
             }
         }
         return $cartItems;
@@ -136,10 +136,21 @@ class TOSECart extends DataObject {
     
     public function updateItem($data) {
         
-        
+    }
+    
+    public function itemPlus($data) {
         
     }
     
+    public function itemMinus($data) {
+        
+    }
+    
+    public function itemRemove($data) {
+        
+    }
+
+
 //    public function getSessionCart() {
 //        
 //        if ($sessionCartItems = Session::get('TOSECart')) {

@@ -8,7 +8,7 @@
         <ul>
             <% loop Specs %>
                 <li style="float: left; margin-right: 30px;">
-                    <input type="radio" name="specID" value="$ID" />&nbsp;&nbsp;Specification:
+                    <input type="radio" name="SpecID" value="$ID" />&nbsp;&nbsp;Specification:
                     <div>$ExtraInfo</div>
                     <div>Weight: $Weight</div>
                     <div>SKU: $SKU</div>
@@ -22,7 +22,7 @@
         <div style="clear:both">
             Quantity: <input type="text" name="Quantity" />
         </div>
-        <input type="hidden" value="$ID" name="productID" />
+        <input type="hidden" value="$ID" name="ProductID" />
         <input type="submit" value="add to cart" />
     </form>
 

@@ -37,6 +37,10 @@ TOSECurrency:
     extensions:
         - TOSECurrencyExtension
         
-TOSECart:
+TOSEPage:
     needLogin: 'Both'
+    
+TOSELoginPage:
+    pageTitle: 'Login'
+    pageURLSegment: 'login'
         

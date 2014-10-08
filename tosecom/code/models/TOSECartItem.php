@@ -18,11 +18,10 @@ class TOSECartItem extends DataObject {
         'Cart' => 'TOSECart'
     );
     
-    public static function add_item() {
+    public static function save($data) {
         
-    }
-    
-    public static function update_item() {
-        
+        $cartItem = new TOSECartItem();
+        $cartItem->update($data);
+        $cartItem->write();
     }
 }
