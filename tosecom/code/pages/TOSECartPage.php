@@ -25,4 +25,7 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         $this->redirectBack();
     }
     
+    public function showCartItems() {
+        $cartItems = TOSECart::get_cart_items();
+    }
 }
