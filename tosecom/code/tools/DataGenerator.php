@@ -24,10 +24,9 @@ class DataGenerator {
         
         // create TOSEPage
         if(!$page = DataObject::get_one('TOSEPage')) {
-            $config = Config::inst()->get('TOSEPage', 'defaultConfig');
             $page = new TOSEPage();
-            $page->Title = $config['pageTitle'];
-            $page->URLSegment = $config['pageURLSegment'];
+            $page->Title = Config::inst()->get('TOSEPage', 'pageTitle');
+            $page->URLSegment = Config::inst()->get('TOSEPage', 'pageURLSegment');
             $page->Status = 'Published';
             $page->ShowInMenus = 0;
             $page->ShowInSearch = 0;
@@ -42,10 +41,9 @@ class DataGenerator {
         
         // create TOSECategoryPage
         if(!$page = DataObject::get_one('TOSECategoryPage')) {
-            $config = Config::inst()->get('TOSECategoryPage', 'defaultConfig');
             $page = new TOSECategoryPage();
-            $page->Title = $config['pageTitle'];
-            $page->URLSegment = $config['pageURLSegment'];
+            $page->Title = Config::inst()->get('TOSECategoryPage', 'pageTitle');
+            $page->URLSegment = Config::inst()->get('TOSECategoryPage', 'pageURLSegment');
             $page->Status = 'Published';
             $page->ShowInMenus = 0;
             $page->ShowInSearch = 0;
@@ -58,10 +56,9 @@ class DataGenerator {
         
         // create TOSEProductPage
         if(!$page = DataObject::get_one('TOSEProductPage')) {
-            $config = Config::inst()->get('TOSEProductPage', 'defaultConfig');
             $page = new TOSEProductPage();
-            $page->Title = $config['pageTitle'];
-            $page->URLSegment = $config['pageURLSegment'];
+            $page->Title = Config::inst()->get('TOSEProductPage', 'pageTitle');
+            $page->URLSegment = Config::inst()->get('TOSEProductPage', 'pageURLSegment');
             $page->Status = 'Published';
             $page->ShowInMenus = 0;
             $page->ShowInSearch = 0;
@@ -74,10 +71,9 @@ class DataGenerator {
         
         // create TOSECartPage
         if(!$page = DataObject::get_one('TOSECartPage')) {
-            $config = Config::inst()->get('TOSECartPage', 'defaultConfig');
             $page = new TOSECartPage();
-            $page->Title = $config['pageTitle'];
-            $page->URLSegment = $config['pageURLSegment'];
+            $page->Title = Config::inst()->get('TOSECartPage', 'pageTitle');
+            $page->URLSegment = Config::inst()->get('TOSECartPage', 'pageURLSegment');
             $page->Status = 'Published';
             $page->ShowInMenus = 0;
             $page->ShowInSearch = 0;
@@ -90,10 +86,9 @@ class DataGenerator {
         
         // create TOSECheckoutPage
         if(!$page = DataObject::get_one('TOSECheckoutPage')) {
-            $config = Config::inst()->get('TOSECheckoutPage', 'defaultConfig');
             $page = new TOSECheckoutPage();
-            $page->Title = $config['pageTitle'];
-            $page->URLSegment = $config['pageURLSegment'];
+            $page->Title = Config::inst()->get('TOSECheckoutPage', 'pageTitle');
+            $page->URLSegment = Config::inst()->get('TOSECheckoutPage', 'pageURLSegment');
             $page->Status = 'Published';
             $page->ShowInMenus = 0;
             $page->ShowInSearch = 0;

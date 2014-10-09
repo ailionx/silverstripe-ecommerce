@@ -3,42 +3,34 @@ Member:
         - TOSEMember
 
 TOSEPage:
-    defaultConfig:
-        pageTitle: 'Ecommerce'
-        pageURLSegment: 'ecommerce'
+    pageTitle: 'Ecommerce'
+    pageURLSegment: 'ecommerce'
+    needLogin: 'Both'
 
 TOSEProductPage:
-    defaultConfig:
-        pageTitle: 'Product'
-        pageURLSegment: 'product'
+    pageTitle: 'Product'
+    pageURLSegment: 'product'
         
 TOSECategoryPage:
-    defaultConfig:
-        pageTitle: 'Category'
-        pageURLSegment: 'category'
+    pageTitle: 'Category'
+    pageURLSegment: 'category'
 
 TOSECartPage:
-    defaultConfig:
-        pageTitle: 'Cart'
-        pageURLSegment: 'cart'
+    pageTitle: 'Cart'
+    pageURLSegment: 'cart'
         
 TOSECheckoutPage:
-    defaultConfig:
-        pageTitle: 'Checkout'
-        pageURLSegment: 'checkout'
+    pageTitle: 'Checkout'
+    pageURLSegment: 'checkout'
         
 TOSECurrency:
-    defaultConfig:
-        currencies:
-            GBP: '£'
-            CNY: '¥'
-            AUD: '$'
-            USD: '$'
+    currencies:
+        GBP: '£'
+        CNY: '¥'
+        AUD: '$'
+        USD: '$'
     extensions:
         - TOSECurrencyExtension
-        
-TOSEPage:
-    needLogin: 'Both'
     
 TOSELoginPage:
     pageTitle: 'Login'

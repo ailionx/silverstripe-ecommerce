@@ -26,5 +26,5 @@ class TOSEMember extends DataExtension {
         
         $data['MemberID'] = $member->ID;
         TOSEAddress::save($data);
-    }
+    } 
 }

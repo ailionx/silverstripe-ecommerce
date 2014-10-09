@@ -24,4 +24,26 @@ class TOSEPage extends Page {
 
 class TOSEPage_Controller extends Page_Controller {
     
+    private static $allowed_actions = array(
+        'logout'
+    );
+
+
+    public function logout() {
+        $member = Member::currentUser();
+        $member->logOut();
+        $this->redirect('ecommerce/login');
+    }
+    
+    public function showLogout () {
+        
+        if (Member::currentUserID()) {
+            $htmlText = new LiteralField('logoutButton', '<a href="ecommerce/logout"><button>logout</button></a>');
+            
+        } else {
+            $htmlText = new LiteralField('loginButton', '<a href="ecommerce/login"><button>login</button></a>');
+        }
+        
+        return $htmlText;
+    }
 }
