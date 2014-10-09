@@ -13,7 +13,12 @@
                 <% end_loop %>
             </div>
         <% end_with %>
-        <div>Quantity: $Quantity</div>
+        <form method="post" action="{$Top.Link}refreshItem">
+        <div>Quantity: <input type="text" value="$Quantity" name="Quantity" /></div>
+        <input type="hidden" value="$Product.ID" name="ProductID" />
+        <input type="hidden" value="$Spec.ID" name="SpecID" />
+        <button style="float: none;" type="submit">update</button></a>
+        </form>
     </div>
 <% end_loop %>
 <a href="ecommerce/checkout"><button>Checkout</button></a>

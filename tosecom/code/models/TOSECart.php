@@ -32,32 +32,45 @@ class TOSECart extends DataObject {
         }
         return $member->inGroup('customer');
     }
-
+    
+    /**
+     * Function is to get current cart
+     * @return \TOSECart
+     */
     public static function get_current_cart() {
         
         if(self::is_customer_login()) {
-            if ($cart = DataObject::get_one('TOSECart', "MemberID='".Member::currentUserID()."'")) {
+            $cart = DataObject::get_one('TOSECart', "MemberID='".Member::currentUserID()."'");
+            if ($cart) {
+                return $cart;
+            } else {
+                $cart = new TOSECart();
+                $cart->MemberID = Member::currentUserID();
+                $cart->write();
                 return $cart;
             }
-            $cart = new TOSECart();
-            $cart->MemberID = Member::currentUserID();
-            $cart->write();
-            return $cart;
         } else {
             return new TOSECart();
         }
         
     }
     
+    /**
+     * Function is to check if cart is empty
+     * @return type
+     */
     public function isEmpty() {
         $items = $this->getCartItems();
         return empty($items);
     }
     
+    /**
+     * Function is to get the count of items
+     * @return type
+     */
     public function itemsCount() {
-        $cart = self::get_current_cart();
         if(self::is_customer_login()) {
-            $cartItems = $cart->CartItems();
+            $cartItems = $this->CartItems();
         } else {
             $cartItems = Session::get(self::CartSession);
         }
@@ -65,10 +78,13 @@ class TOSECart extends DataObject {
         return $cartItems->count();
     }
     
+    /**
+     * Function is to get the items of cart
+     * @return \ArrayList
+     */
     public function getCartItems() {
         if(self::is_customer_login()) {
-            $cart = self::get_current_cart();
-            return $cart->CartItems();
+            return $this->CartItems();
         } else {
             $sessionCartItems = Session::get(self::CartSession);
             if (!$sessionCartItems) {
@@ -79,9 +95,8 @@ class TOSECart extends DataObject {
     }
 
     public function productsCount() {
-        $cart = self::get_current_cart();
         if(self::is_customer_login()) {
-            $cartItems = $cart->CartItems();
+            $cartItems = $this->CartItems();
         } else {
             $cartItems = Session::get(self::CartSession);
         }
@@ -100,8 +115,7 @@ class TOSECart extends DataObject {
         }
         
         if(self::is_customer_login()) {
-            $cart = self::get_current_cart();
-            $cartItems = $cart->CartItems();
+            $cartItems = $this->CartItems();
         } else {
             $cartItems = $this->getCartItems();
         }
@@ -109,10 +123,10 @@ class TOSECart extends DataObject {
             $itemProductID = $item->ProductID;
             $itemSpecID = $item->SpecID;
             if ($data['ProductID']===$itemProductID && $data['SpecID'] === $itemSpecID) {
-                return $item;
+                return $item; 
             }
-            return FALSE;
         }
+        return FALSE;
     }
     
     public function addProduct($data) {
@@ -120,11 +134,10 @@ class TOSECart extends DataObject {
     }
 
     public function addItem($data) {
-        $cart = self::get_current_cart();
         $item = new TOSECartItem();
         $item->update($data);
         if (self::is_customer_login()) {
-            $item->CartID = $cart->ID;
+            $item->CartID = $this->ID;
             $item->write();
         } else {
             $cartItems = $this->getCartItems();
@@ -135,7 +148,6 @@ class TOSECart extends DataObject {
     }
     
     public function updateItem($data) {
-        $cart = self::get_current_cart();
         if (self::is_customer_login()) {
             $item = $this->existItem($data);
             $oldQuantity = $item->Quantity;
@@ -145,18 +157,11 @@ class TOSECart extends DataObject {
         } else {
             
         }
-    }
-    
-    public function itemPlus($data) {
-        
-    }
-    
-    public function itemMinus($data) {
-        
-    }
-    
+    }    
+
     public function itemRemove($data) {
-        
+        $item = $this->CartItems()->filter("ProductID='".$data['ProductID']."'");
+        $item->delete();
     }
 
     public function clearCart() {
@@ -169,13 +174,6 @@ class TOSECart extends DataObject {
             Session::clear(self::CartSession);
         }
         
-    }
-
-
-    
-    public function saveSessionCart($cart) {
-        
-        Session::set(self::CartSession, serialize($cart));
     }
     
 }

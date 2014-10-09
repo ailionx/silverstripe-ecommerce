@@ -16,7 +16,8 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
     private static $allowed_actions = array(
         'addToCart',
         'showCartItems',
-        'clearCart'
+        'clearCart',
+        'refreshItem'
     );
 
 
@@ -42,6 +43,16 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
     public function clearCart() {
         $cart = TOSECart::get_current_cart();
         $cart->clearCart();
+        return $this->redirectBack();
+    }
+    
+        
+    public function refreshItem(SS_HTTPRequest $request) {
+        $data = $request->postVars();
+        $cart = TOSECart::get_current_cart();
+        $item = DataObject::get_one('TOSECartItem',"CartID='$cart->ID' AND ProductID='".$data['ProductID']."' AND SpecID='".$data['SpecID']."'");
+        $item->update($data);
+        $item->write();
         return $this->redirectBack();
     }
     
