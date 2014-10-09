@@ -1,11 +1,12 @@
 Member:
+    needLogin: 'Both'
+    customerGroup: 'customer'
     extensions:
         - TOSEMember
 
 TOSEPage:
     pageTitle: 'Ecommerce'
     pageURLSegment: 'ecommerce'
-    needLogin: 'Both'
 
 TOSEProductPage:
     pageTitle: 'Product'
@@ -24,6 +25,9 @@ TOSECheckoutPage:
     pageURLSegment: 'checkout'
         
 TOSECurrency:
+    defaultCurrency: 'NZD'
+    defaultCurrencySymbol: '$'
+    multiCurrency: 'FALSE'
     currencies:
         GBP: '£'
         CNY: '¥'

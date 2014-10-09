@@ -18,7 +18,7 @@ class TOSECartItem extends DataObject {
         'Cart' => 'TOSECart'
     );
     
-    public static function save($data) {
+    public function save($data) {
         
         $cartItem = new TOSECartItem();
         $cartItem->update($data);
@@ -26,4 +26,14 @@ class TOSECartItem extends DataObject {
         
         return $cartItem;
     }
+    
+    public function subTotal() {
+        
+        $spec = $this->Spec();
+        $currency = $spec->getCurrentCurrency();
+        $price = $currency->Price;
+        $subTotal = $this->Quantity * $price;
+        return $subTotal;
+    }
+    
 }

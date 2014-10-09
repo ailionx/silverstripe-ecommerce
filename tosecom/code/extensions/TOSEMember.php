@@ -27,4 +27,21 @@ class TOSEMember extends DataExtension {
         $data['MemberID'] = $member->ID;
         TOSEAddress::save($data);
     } 
+    
+    /**
+     * Function is to check if customer account logged in
+     * @return boolean
+     */
+    public static function is_customer_login() {
+        $customerGroup = Config::inst()->get('Member', 'customerGroup');
+        if(!$member = Member::currentUser()) {
+            return FALSE;
+        }
+        return $member->inGroup($customerGroup);
+    }
+    
+    public static function logout() {
+        $member = Member::currentUser();
+        $member->logOut();
+    }
 }

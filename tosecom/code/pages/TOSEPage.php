@@ -8,6 +8,10 @@
 
 class TOSEPage extends Page {
     
+    const SessionCart = 'TOSECart';
+    
+    const SessionCurrencyName = 'TOSECurrencyName';
+
     private static $allowed_children = array('TOSEProductPage', 'TOSECategoryPage', 'TOSECartPage', 'TOSECheckoutPage', 'TOSELoginPage');
     
     public function requireDefaultRecords() {
@@ -20,21 +24,13 @@ class TOSEPage extends Page {
         
     }
     
-}
-
-class TOSEPage_Controller extends Page_Controller {
-    
-    private static $allowed_actions = array(
-        'logout'
-    );
-
-
     public function logout() {
-        $member = Member::currentUser();
-        $member->logOut();
+        TOSEMember::logout();
         return $this->redirect('ecommerce/login');
     }
-    
+            
+
+
     public function showLogout () {
         
         if (Member::currentUserID()) {
@@ -54,4 +50,14 @@ class TOSEPage_Controller extends Page_Controller {
         
         return FALSE;
     }
+     
+    
+}
+
+class TOSEPage_Controller extends Page_Controller {
+    
+    private static $allowed_actions = array(
+        'logout'
+    );
+    
 }

@@ -66,4 +66,11 @@ class TOSESpec extends DataObject {
         return $fields;
     }
     
+    public function getCurrency() {
+        $currentCurrentyName = TOSECurrency::get_current_currency_name();
+        $currentCurrency = DataObject::get_one('TOSECurrency', "SpecID='$this->ID' AND Currency='$currentCurrentyName'");
+        return $currentCurrency;
+    }
+    
+    
 }

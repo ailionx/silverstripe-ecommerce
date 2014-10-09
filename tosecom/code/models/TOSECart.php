@@ -8,8 +8,6 @@
 
 class TOSECart extends DataObject {
     
-    const CartSession = 'TOSECart';
-
     private static $db = array(
         
     );
@@ -22,16 +20,6 @@ class TOSECart extends DataObject {
         'CartItems' => 'TOSECartItem'
     );
     
-    /**
-     * Function is to check if customer account logged in
-     * @return boolean
-     */
-    public static function is_customer_login() {
-        if(!$member = Member::currentUser()) {
-            return FALSE;
-        }
-        return $member->inGroup('customer');
-    }
     
     /**
      * Function is to get current cart
@@ -39,7 +27,7 @@ class TOSECart extends DataObject {
      */
     public static function get_current_cart() {
         
-        if(self::is_customer_login()) {
+        if(TOSEMember::is_customer_login()) {
             $cart = DataObject::get_one('TOSECart', "MemberID='".Member::currentUserID()."'");
             if ($cart) {
                 return $cart;
@@ -69,10 +57,10 @@ class TOSECart extends DataObject {
      * @return type
      */
     public function itemsCount() {
-        if(self::is_customer_login()) {
+        if(TOSEMember::is_customer_login()) {
             $cartItems = $this->CartItems();
         } else {
-            $cartItems = Session::get(self::CartSession);
+            $cartItems = Session::get(TOSEPage::SessionCart);
         }
 
         return $cartItems->count();
@@ -83,10 +71,10 @@ class TOSECart extends DataObject {
      * @return \ArrayList
      */
     public function getCartItems() {
-        if(self::is_customer_login()) {
+        if(TOSEMember::is_customer_login()) {
             return $this->CartItems();
         } else {
-            $sessionCartItems = Session::get(self::CartSession);
+            $sessionCartItems = Session::get(TOSEPage::SessionCart);
             if (!$sessionCartItems) {
                 return new ArrayList();
             } 
@@ -95,10 +83,10 @@ class TOSECart extends DataObject {
     }
 
     public function productsCount() {
-        if(self::is_customer_login()) {
+        if(TOSEMember::is_customer_login()) {
             $cartItems = $this->CartItems();
         } else {
-            $cartItems = Session::get(self::CartSession);
+            $cartItems = Session::get(TOSEPage::SessionCart);
         }
         
         $productCount = 0;
@@ -114,7 +102,7 @@ class TOSECart extends DataObject {
             return FALSE;
         }
         
-        if(self::is_customer_login()) {
+        if(TOSEMember::is_customer_login()) {
             $cartItems = $this->CartItems();
         } else {
             $cartItems = $this->getCartItems();
@@ -136,19 +124,19 @@ class TOSECart extends DataObject {
     public function addItem($data) {
         $item = new TOSECartItem();
         $item->update($data);
-        if (self::is_customer_login()) {
+        if (TOSEMember::is_customer_login()) {
             $item->CartID = $this->ID;
             $item->write();
         } else {
             $cartItems = $this->getCartItems();
             $cartItems->add($item);
-            Session::set(self::CartSession, serialize($cartItems));
+            Session::set(TOSEPage::SessionCart, serialize($cartItems));
         }
 
     }
     
     public function updateItem($data) {
-        if (self::is_customer_login()) {
+        if (TOSEMember::is_customer_login()) {
             $item = $this->existItem($data);
             $oldQuantity = $item->Quantity;
             $newQuantity = $oldQuantity + $data['Quantity'];
@@ -165,13 +153,13 @@ class TOSECart extends DataObject {
     }
 
     public function clearCart() {
-        if (self::is_customer_login()) {
+        if (TOSEMember::is_customer_login()) {
             $cartItems = $this->CartItems();
             foreach ($cartItems as $item) {
                 $item->delete();
             }
         } else {
-            Session::clear(self::CartSession);
+            Session::clear(TOSEPage::SessionCart);
         }
         
     }
