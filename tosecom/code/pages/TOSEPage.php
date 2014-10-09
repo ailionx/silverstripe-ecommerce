@@ -32,7 +32,7 @@ class TOSEPage_Controller extends Page_Controller {
     public function logout() {
         $member = Member::currentUser();
         $member->logOut();
-        $this->redirect('ecommerce/login');
+        return $this->redirect('ecommerce/login');
     }
     
     public function showLogout () {
@@ -45,5 +45,13 @@ class TOSEPage_Controller extends Page_Controller {
         }
         
         return $htmlText;
+    }
+    
+    public function getMemberName() {
+        if (Member::currentUserID()) {
+           return "User:".Member::currentUser()->FirstName; 
+        }
+        
+        return FALSE;
     }
 }

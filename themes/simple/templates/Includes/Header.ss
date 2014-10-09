@@ -1,6 +1,6 @@
 <header class="header" role="banner">
 	<div class="inner">
-                <div style="float:right">$showLogout</div>
+                <div style="float:right; color: #fff">$getMemberName<br>$showLogout</div>
 		<div class="unit size4of4 lastUnit">
 			<a href="$BaseHref" class="brand" rel="home">
 				<h1>$SiteConfig.Title</h1>

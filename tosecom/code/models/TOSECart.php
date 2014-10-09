@@ -8,6 +8,8 @@
 
 class TOSECart extends DataObject {
     
+    const CartSession = 'TOSECart';
+
     private static $db = array(
         
     );
@@ -28,8 +30,7 @@ class TOSECart extends DataObject {
         if(!$member = Member::currentUser()) {
             return FALSE;
         }
-        
-        return $member->inGroup('Customer');
+        return $member->inGroup('customer');
     }
 
     public static function get_current_cart() {
@@ -49,7 +50,7 @@ class TOSECart extends DataObject {
     }
     
     public function isEmpty() {
-        $items = self::get_cart_items();
+        $items = $this->getCartItems();
         return empty($items);
     }
     
@@ -58,24 +59,23 @@ class TOSECart extends DataObject {
         if(self::is_customer_login()) {
             $cartItems = $cart->CartItems();
         } else {
-            $cartItems = Session::get('TOSECart');
+            $cartItems = Session::get(self::CartSession);
         }
 
         return $cartItems->count();
     }
     
-    public static function get_cart_items() {
+    public function getCartItems() {
         if(self::is_customer_login()) {
             $cart = self::get_current_cart();
-            $cartItems = $cart->CartItems();
+            return $cart->CartItems();
         } else {
-            $sessionCartItems = Session::get('TOSECart');
-            $cartItems = new ArrayList();
-            foreach ($sessionCartItems as $item) {
-                $cartItems->add(unserialize($item));
-            }
+            $sessionCartItems = Session::get(self::CartSession);
+            if (!$sessionCartItems) {
+                return new ArrayList();
+            } 
+            return unserialize($sessionCartItems);
         }
-        return $cartItems;
     }
 
     public function productsCount() {
@@ -83,7 +83,7 @@ class TOSECart extends DataObject {
         if(self::is_customer_login()) {
             $cartItems = $cart->CartItems();
         } else {
-            $cartItems = Session::get('TOSECart');
+            $cartItems = Session::get(self::CartSession);
         }
         
         $productCount = 0;
@@ -101,14 +101,14 @@ class TOSECart extends DataObject {
         
         if(self::is_customer_login()) {
             $cart = self::get_current_cart();
-            $items = $cart->CartItems();
+            $cartItems = $cart->CartItems();
         } else {
-            $items = self::get_cart_items();
+            $cartItems = $this->getCartItems();
         }
-        foreach ($items as $item) {
-            $itemProductID = $item->Product()->ID;
-            $itemSpecID = $item->Spec()->ID;
-            if ($data['ProductID']===$itemProductID && $data['specID'] === $itemSpecID) {
+        foreach ($cartItems as $item) {
+            $itemProductID = $item->ProductID;
+            $itemSpecID = $item->SpecID;
+            if ($data['ProductID']===$itemProductID && $data['SpecID'] === $itemSpecID) {
                 return $item;
             }
             return FALSE;
@@ -127,15 +127,24 @@ class TOSECart extends DataObject {
             $item->CartID = $cart->ID;
             $item->write();
         } else {
-            $cartItems = self::get_cart_items();
-            $cartItems[] = serialize($item);
-            Session::set('TOSECart', $cartItems);
+            $cartItems = $this->getCartItems();
+            $cartItems->add($item);
+            Session::set(self::CartSession, serialize($cartItems));
         }
 
     }
     
     public function updateItem($data) {
-        
+        $cart = self::get_current_cart();
+        if (self::is_customer_login()) {
+            $item = $this->existItem($data);
+            $oldQuantity = $item->Quantity;
+            $newQuantity = $oldQuantity + $data['Quantity'];
+            $item->Quantity = $newQuantity;
+            $item->write();
+        } else {
+            
+        }
     }
     
     public function itemPlus($data) {
@@ -150,20 +159,23 @@ class TOSECart extends DataObject {
         
     }
 
+    public function clearCart() {
+        if (self::is_customer_login()) {
+            $cartItems = $this->CartItems();
+            foreach ($cartItems as $item) {
+                $item->delete();
+            }
+        } else {
+            Session::clear(self::CartSession);
+        }
+        
+    }
 
-//    public function getSessionCart() {
-//        
-//        if ($sessionCartItems = Session::get('TOSECart')) {
-//            return $this->;
-//            
-//        }
-//         ? Session::get('TOSECart') : new TOSECart();
-//        return $cart;
-//    }
+
     
     public function saveSessionCart($cart) {
         
-        Session::set('TOSECart', serialize($cart));
+        Session::set(self::CartSession, serialize($cart));
     }
     
 }

@@ -23,5 +23,7 @@ class TOSECartItem extends DataObject {
         $cartItem = new TOSECartItem();
         $cartItem->update($data);
         $cartItem->write();
+        
+        return $cartItem;
     }
 }
