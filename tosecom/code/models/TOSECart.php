@@ -47,9 +47,9 @@ class TOSECart extends DataObject {
      * Function is to check if cart is empty
      * @return type
      */
-    public function isEmpty() {
-        $items = $this->getCartItems();
-        return empty($items);
+    public function cartEmpty() {
+        $itemsCount = $this->getCartItems()->count();
+        return $itemsCount ? FALSE : TRUE;
     }
     
     /**
@@ -98,7 +98,7 @@ class TOSECart extends DataObject {
     }
 
     public function existItem($data) {
-        if ($this->isEmpty()) {
+        if ($this->cartEmpty()) {
             return FALSE;
         }
         
@@ -117,7 +117,26 @@ class TOSECart extends DataObject {
         return FALSE;
     }
     
+
     public function addProduct($data) {
+        
+        // Validate the input data
+        $numberFields = array(
+            'Quantity',
+            'ProductID',
+            'SpecID'
+        );
+        TOSEValidator::data_is_number($data, $numberFields, TRUE);
+        
+        $productInventory = DataObject::get_one('TOSESpec', "ProductID='".$data['ProductID']."' AND ID='".$data['SpecID']."'")->Inventory;
+        if ($exitItem = $this->existItem($data)) {
+            $Quantity = $exitItem->Quantity;
+            $Quantity += $data['Quantity'];
+        }
+
+        if($Quantity > $productInventory) {
+            die('Out of inventory');
+        }
         $this->existItem($data) ? $this->updateItem($data) : $this->addItem($data);
     }
 

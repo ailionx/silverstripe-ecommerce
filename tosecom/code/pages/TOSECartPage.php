@@ -18,9 +18,22 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         'clearCart',
         'updateItem',
         'getCart',
-        'deleteItem'
+        'deleteItem',
+        'cartEmpty'
     );
-
+    
+    private static $url_handlers = array(
+        'empty' => 'cartEmpty'
+    );
+    
+//    public function index() {
+//        $cart = TOSECart::get_current_cart();
+//        if ($cart->cartEmpty()) {
+//            return $this->redirect($this->Link()."empty");
+//        } else {
+//            return $this;
+//        }
+//    }
 
     public function addToCart(SS_HTTPRequest $request) {
         $data = $request->postVars();
@@ -58,15 +71,19 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         $item = DataObject::get_one('TOSECartItem',"CartID='$cart->ID' AND ProductID='".$data['ProductID']."' AND SpecID='".$data['SpecID']."'");
         
         // Validate if inputs type is number 
-        $mustBeNumber = array('Quantity', 'ProductID', 'SpecID');
-        TOSEValidator::data_is_number($data, $mustBeNumber);
+        $numberFields = array(
+            'Quantity',
+            'ProductID',
+            'SpecID'
+        );
+        TOSEValidator::data_is_number($data, $numberFields, TRUE);
         
-        if ($data['Quantity'] == 0) {
-            $item->delete();
-        } else {
-            $item->update($data);
-            $item->write();
+        $inventory = $item->spec()->Inventory;
+        if ($data['Quantity']>$inventory) {
+            die('Out of inventory');
         }
+        $item->update($data);
+        $item->write();
         return $this->redirectBack();
     }
     
@@ -76,5 +93,9 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         $cart->removeItem($data);
         return $this->redirectBack();
     }
+    
+//    public function cartEmpty() {
+//        die('test');
+//    }
     
 }
