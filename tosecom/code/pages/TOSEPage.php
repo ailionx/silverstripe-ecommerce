@@ -50,6 +50,10 @@ class TOSEPage extends Page {
         
         return FALSE;
     }
+    
+    public function getCurrentCurrencySymbol() {
+        return TOSECurrency::get_current_currency_symbol();
+    }
      
     
 }

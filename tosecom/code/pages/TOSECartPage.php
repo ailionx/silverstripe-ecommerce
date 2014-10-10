@@ -15,9 +15,10 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
     
     private static $allowed_actions = array(
         'addToCart',
-        'showCartItems',
         'clearCart',
-        'refreshItem'
+        'updateItem',
+        'getCart',
+        'deleteItem'
     );
 
 
@@ -28,18 +29,22 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         return $this->redirectBack();
     }
     
-    public function getCartItems() {
-        $cart = TOSECart::get_current_cart();
-        $cartItems = $cart->getCartItems();
-        if ($cartItems->count() > 0) {
-            foreach ($cartItems as $item) {
-                $tester = $item->Product(); 
-            }
-        }
-//        var_dump($tester); die();
-        return $cartItems;
-    }
+//    public function getCartItems() {
+//        $cart = TOSECart::get_current_cart();
+//        $cartItems = $cart->getCartItems();
+//        if ($cartItems->count() > 0) {
+//            foreach ($cartItems as $item) {
+//                $tester = $item->Product(); 
+//            }
+//        }
+////        var_dump($tester); die();
+//        return $cartItems;
+//    }
     
+    public function getCart() {
+        return TOSECart::get_current_cart();
+    }
+
     public function clearCart() {
         $cart = TOSECart::get_current_cart();
         $cart->clearCart();
@@ -47,12 +52,19 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
     }
     
         
-    public function refreshItem(SS_HTTPRequest $request) {
+    public function updateItem(SS_HTTPRequest $request) {
         $data = $request->postVars();
         $cart = TOSECart::get_current_cart();
         $item = DataObject::get_one('TOSECartItem',"CartID='$cart->ID' AND ProductID='".$data['ProductID']."' AND SpecID='".$data['SpecID']."'");
         $item->update($data);
         $item->write();
+        return $this->redirectBack();
+    }
+    
+    public function deleteItem(SS_HTTPRequest $request) {
+        $data = $request->getVars();
+        $cart = TOSECart::get_current_cart();
+        $cart->removeItem($data);
         return $this->redirectBack();
     }
     

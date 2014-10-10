@@ -147,8 +147,8 @@ class TOSECart extends DataObject {
         }
     }    
 
-    public function itemRemove($data) {
-        $item = $this->CartItems()->filter("ProductID='".$data['ProductID']."'");
+    public function removeItem($data) {
+        $item = DataObject::get_one('TOSECartItem', "CartID='$this->ID' AND ProductID='".$data['ProductID']."' AND SpecID='".$data['SpecID']."'");
         $item->delete();
     }
 
@@ -162,6 +162,19 @@ class TOSECart extends DataObject {
             Session::clear(TOSEPage::SessionCart);
         }
         
+    }
+    
+    public function totalPrice() {
+        $cartItems = $this->CartItems();
+        $totalPrice = 0;
+        foreach ($cartItems as $item) {
+            $totalPrice += $item->subTotalPrice();
+        }
+        return $totalPrice;
+    }
+    
+    public function totalPriceFormatted() {
+        return number_format($this->totalPrice(), 2);
     }
     
 }

@@ -27,13 +27,17 @@ class TOSECartItem extends DataObject {
         return $cartItem;
     }
     
-    public function subTotal() {
+    public function subTotalPrice() {
         
         $spec = $this->Spec();
-        $currency = $spec->getCurrentCurrency();
+        $currency = $spec->getCurrency();
         $price = $currency->Price;
-        $subTotal = $this->Quantity * $price;
-        return $subTotal;
+        $subTotalPrice = $this->Quantity * $price;
+        return $subTotalPrice;
+    }
+    
+    public function subTotalPriceFormatted() {
+        return number_format($this->subTotalPrice(), 2);
     }
     
 }

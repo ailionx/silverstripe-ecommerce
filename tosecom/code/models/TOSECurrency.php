@@ -45,10 +45,10 @@ class TOSECurrency extends DataObject {
     }
     
     public static function get_current_currency_name() {
-        $multiCurrency = Config::inst()->get('TOSEPage', 'multiCurrency');
-        $defaultCurrencyName = Config::inst()->get('TOSEPage', 'defaultCurrency');
-        if ($multiCurrency) {
-            $currentCurrencyName = Session::get(self::SessionCurrencyName);
+        $multiCurrency = Config::inst()->get('TOSECurrency', 'multiCurrency');
+        $defaultCurrencyName = Config::inst()->get('TOSECurrency', 'defaultCurrency');
+        if ($multiCurrency === "TRUE") {
+            $currentCurrencyName = Session::get(TOSEPage::SessionCurrencyName);
             return $currentCurrencyName ? $currentCurrencyName : $defaultCurrencyName;
         } else {
             return $defaultCurrencyName;
@@ -56,15 +56,20 @@ class TOSECurrency extends DataObject {
     }           
     
     public static function get_current_currency_symbol() {
-        $multiCurrency = Config::inst()->get('TOSEPage', 'multiCurrency');
-        $defaultCurrencySymbol = Config::inst()->get('TOSEPage', 'defaultSymbol');
-        $currencies = Config::inst()->get('TOSEPage', 'currencies');
-        if ($multiCurrency) {
-            $currentCurrencyName = Session::get(self::SessionCurrencyName);
+        $multiCurrency = Config::inst()->get('TOSECurrency', 'multiCurrency');
+        $defaultCurrencySymbol = Config::inst()->get('TOSECurrency', 'defaultCurrencySymbol');
+        $currencies = Config::inst()->get('TOSECurrency', 'currencies');
+        if ($multiCurrency === "TRUE") {
+            die($multiCurrency);
+            $currentCurrencyName = Session::get(TOSEPage::SessionCurrencyName);
             return $currencies[$currentCurrencyName];
         } else {
             return $defaultCurrencySymbol;
         }
+    }
+    
+    public function priceFormatted() {
+        return number_format($this->Price, 2);
     }
     
 }
