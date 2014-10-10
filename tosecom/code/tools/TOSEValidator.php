@@ -8,14 +8,20 @@
 
 class TOSEValidator {
         
+    /**
+     * Function is to validate if data is number. Option: data is not zero
+     * @param type $data
+     * @param type $fields
+     * @param type $nonZero
+     */
     public static function data_is_number($data, $fields, $nonZero=FALSE) {
         if(is_array($fields)) {
             foreach ($fields as $field) {
                 if(!is_numeric($data[$field])) {
                     die($field." must be number");
                 }
-                if($nonZero && ($data[$field]==0)){
-                    die($field." cannot be zero");
+                if($nonZero && ($data[$field]<=0)){
+                    die($field." must bigger than zero");
                 }
             }
         } elseif (is_string($fields)) {

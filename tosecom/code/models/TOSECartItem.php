@@ -18,6 +18,11 @@ class TOSECartItem extends DataObject {
         'Cart' => 'TOSECart'
     );
     
+    /**
+     * Function is to save a new cart item
+     * @param type $data
+     * @return \TOSECartItem
+     */
     public function save($data) {
         
         $cartItem = new TOSECartItem();
@@ -27,6 +32,10 @@ class TOSECartItem extends DataObject {
         return $cartItem;
     }
     
+    /**
+     * Function is to get sub total price of current item
+     * @return type
+     */
     public function subTotalPrice() {
         
         $spec = $this->Spec();
@@ -36,6 +45,10 @@ class TOSECartItem extends DataObject {
         return $subTotalPrice;
     }
     
+    /**
+     * Function is to format sub total price to be more readable
+     * @return type
+     */
     public function subTotalPriceFormatted() {
         return number_format($this->subTotalPrice(), 2);
     }

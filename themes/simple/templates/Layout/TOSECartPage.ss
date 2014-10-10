@@ -25,6 +25,6 @@
         <% end_loop %>
         <div>Total Price: $Top.CurrentCurrencySymbol$totalPriceFormatted</div>
         <a href='$Top.Link/clearCart'><button>Clear Cart</button></a>
-        <a href="$Top.Link/checkout"><button>Checkout</button></a>
+        <a href="$Top.getEcommerceRootPageLink/checkout"><button>Checkout</button></a>
     <% end_if %>
 <% end_with %>

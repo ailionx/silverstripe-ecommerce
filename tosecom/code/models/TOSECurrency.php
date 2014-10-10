@@ -31,6 +31,10 @@ class TOSECurrency extends DataObject {
 //        return $currencies;
 //    }
     
+    /**
+     * Function is to set CMS fields
+     * @return type
+     */
     public function getCMSFields() {
         $fields = parent::getCMSFields();
 //        $currencies = self::getAllCurrencies();
@@ -38,12 +42,10 @@ class TOSECurrency extends DataObject {
         return $fields;
     }
     
-    public static function getCurrencySymbol($currencyName) {
-        $currencies = Config::inst()->get('TOSECurrency', 'currencies');
-        var_dump($currencyName); die();
-        return $currencies[$currencyName];
-    }
-    
+    /**
+     * Function is to get current currency name
+     * @return type
+     */
     public static function get_current_currency_name() {
         $multiCurrency = Config::inst()->get('TOSECurrency', 'multiCurrency');
         $defaultCurrencyName = Config::inst()->get('TOSECurrency', 'defaultCurrency');
@@ -55,6 +57,10 @@ class TOSECurrency extends DataObject {
         }
     }           
     
+    /**
+     * Function is to get the symbol of current currency
+     * @return type
+     */
     public static function get_current_currency_symbol() {
         $multiCurrency = Config::inst()->get('TOSECurrency', 'multiCurrency');
         $defaultCurrencySymbol = Config::inst()->get('TOSECurrency', 'defaultCurrencySymbol');
@@ -68,6 +74,10 @@ class TOSECurrency extends DataObject {
         }
     }
     
+    /**
+     * Function is to format price to be more readable
+     * @return type
+     */
     public function priceFormatted() {
         return number_format($this->Price, 2);
     }

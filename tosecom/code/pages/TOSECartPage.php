@@ -35,6 +35,11 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
 //        }
 //    }
 
+    /**
+     * Function is to handle add action for a product in page
+     * @param SS_HTTPRequest $request
+     * @return type
+     */
     public function addToCart(SS_HTTPRequest $request) {
         $data = $request->postVars();
         $cart = TOSECart::get_current_cart();
@@ -54,17 +59,29 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
 //        return $cartItems;
 //    }
     
+    /**
+     * Function is to get current cart object
+     * @return type
+     */
     public function getCart() {
         return TOSECart::get_current_cart();
     }
-
+    
+    /**
+     * Function is to clear current cart
+     * @return type
+     */
     public function clearCart() {
         $cart = TOSECart::get_current_cart();
         $cart->clearCart();
         return $this->redirectBack();
     }
     
-        
+    /**
+     * Function is to update cart item in cart page
+     * @param SS_HTTPRequest $request
+     * @return type
+     */
     public function updateItem(SS_HTTPRequest $request) {
         $data = $request->postVars();
         $cart = TOSECart::get_current_cart();
@@ -87,6 +104,11 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         return $this->redirectBack();
     }
     
+    /**
+     * Function is to delete item in cart page
+     * @param SS_HTTPRequest $request
+     * @return type
+     */
     public function deleteItem(SS_HTTPRequest $request) {
         $data = $request->getVars();
         $cart = TOSECart::get_current_cart();

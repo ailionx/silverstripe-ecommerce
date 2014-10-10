@@ -82,6 +82,10 @@ class TOSECart extends DataObject {
         }
     }
 
+    /**
+     * Function is to check total products number in cart
+     * @return type
+     */
     public function productsCount() {
         if(TOSEMember::is_customer_login()) {
             $cartItems = $this->CartItems();
@@ -97,6 +101,11 @@ class TOSECart extends DataObject {
         return $productCount;
     }
 
+    /**
+     * Function is to check if there is already same item exist in cart
+     * @param type $data
+     * @return boolean
+     */
     public function existItem($data) {
         if ($this->cartEmpty()) {
             return FALSE;
@@ -117,7 +126,10 @@ class TOSECart extends DataObject {
         return FALSE;
     }
     
-
+    /**
+     * Function is to add new products in to cart
+     * @param type $data
+     */
     public function addProduct($data) {
         
         // Validate the input data
@@ -140,6 +152,10 @@ class TOSECart extends DataObject {
         $this->existItem($data) ? $this->updateItem($data) : $this->addItem($data);
     }
 
+    /**
+     * Function is to add new item in to cart
+     * @param type $data
+     */
     public function addItem($data) {
         $item = new TOSECartItem();
         $item->update($data);
@@ -154,6 +170,10 @@ class TOSECart extends DataObject {
 
     }
     
+    /**
+     * Function is to update item which already exist in cart
+     * @param type $data
+     */
     public function updateItem($data) {
         if (TOSEMember::is_customer_login()) {
             $item = $this->existItem($data);
@@ -166,11 +186,18 @@ class TOSECart extends DataObject {
         }
     }    
 
+    /**
+     * Function is to remove item in cart
+     * @param type $data
+     */
     public function removeItem($data) {
         $item = DataObject::get_one('TOSECartItem', "CartID='$this->ID' AND ProductID='".$data['ProductID']."' AND SpecID='".$data['SpecID']."'");
         $item->delete();
     }
 
+    /**
+     * Function is to clear all items in cart
+     */
     public function clearCart() {
         if (TOSEMember::is_customer_login()) {
             $cartItems = $this->CartItems();
@@ -183,6 +210,10 @@ class TOSECart extends DataObject {
         
     }
     
+    /** 
+     * Function is to get total price of items in cart
+     * @return type
+     */
     public function totalPrice() {
         $cartItems = $this->CartItems();
         $totalPrice = 0;
@@ -192,6 +223,10 @@ class TOSECart extends DataObject {
         return $totalPrice;
     }
     
+    /**
+     * Function is to format total price to be more readable
+     * @return type
+     */
     public function totalPriceFormatted() {
         return number_format($this->totalPrice(), 2);
     }

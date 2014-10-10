@@ -19,7 +19,9 @@ class TOSEPage extends Page {
             'TOSECheckoutPage',
             'TOSELoginPage'
         );
-    
+    /**
+     * Function is to generate tosecom pagess
+     */
     public function requireDefaultRecords() {
         parent::requireDefaultRecords();
         
@@ -37,7 +39,11 @@ class TOSEPage extends Page {
     public function isCustomerLogin() {
         return TOSEMember::is_customer_login();
     }
-
+    
+    /**
+     * Function is to get login or logout string based on member login status
+     * @return type
+     */
     public function getLogInOut() {
         return Member::currentUserID() ? "logout" : "login";
     }
@@ -54,10 +60,18 @@ class TOSEPage extends Page {
         return FALSE;
     }
     
+    /**
+     * Function is to get symbol current currency  
+     * @return type
+     */
     public function getCurrentCurrencySymbol() {
         return TOSECurrency::get_current_currency_symbol();
     }
     
+    /**
+     * Function is to get the link of ecommerce page
+     * @return type
+     */
     public function getEcommerceRootPageLink() {
         $page = DataObject::get_one('SiteTree', "ClassName='TOSEPage'");
         return $page->URLSegment;
@@ -65,12 +79,17 @@ class TOSEPage extends Page {
     
 }
 
+
 class TOSEPage_Controller extends Page_Controller {
     
     private static $allowed_actions = array(
         'logout'
     );
     
+    /**
+     * Function is to perform logout action
+     * @return type
+     */
     public function logout() {
         TOSEMember::logout();
         return $this->redirect('ecommerce/login');
