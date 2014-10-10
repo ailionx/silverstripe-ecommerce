@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class DataGenerator {
+class TOSEDataGenerator {
     
     private static $has_initiated = FALSE;
 

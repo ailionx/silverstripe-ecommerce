@@ -56,8 +56,17 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         $data = $request->postVars();
         $cart = TOSECart::get_current_cart();
         $item = DataObject::get_one('TOSECartItem',"CartID='$cart->ID' AND ProductID='".$data['ProductID']."' AND SpecID='".$data['SpecID']."'");
-        $item->update($data);
-        $item->write();
+        
+        // Validate if inputs type is number 
+        $mustBeNumber = array('Quantity', 'ProductID', 'SpecID');
+        TOSEValidator::data_is_number($data, $mustBeNumber);
+        
+        if ($data['Quantity'] == 0) {
+            $item->delete();
+        } else {
+            $item->update($data);
+            $item->write();
+        }
         return $this->redirectBack();
     }
     
