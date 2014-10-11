@@ -59,13 +59,6 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
 //        return $cartItems;
 //    }
     
-    /**
-     * Function is to get current cart object
-     * @return type
-     */
-    public function getCart() {
-        return TOSECart::get_current_cart();
-    }
     
     /**
      * Function is to clear current cart

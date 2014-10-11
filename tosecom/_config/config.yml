@@ -23,6 +23,8 @@ TOSECartPage:
 TOSECheckoutPage:
     pageTitle: 'Checkout'
     pageURLSegment: 'checkout'
+    extensions:
+        - TOSECheckoutPageExtension
         
 TOSECurrency:
     defaultCurrency: 'NZD'

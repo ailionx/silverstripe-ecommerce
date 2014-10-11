@@ -19,6 +19,10 @@ class TOSEPage extends Page {
             'TOSECheckoutPage',
             'TOSELoginPage'
         );
+    
+    public function test() {
+ 
+    }
     /**
      * Function is to generate tosecom pagess
      */
@@ -77,6 +81,13 @@ class TOSEPage extends Page {
         return $page->URLSegment;
     }
     
+    /**
+     * Function is to get current cart object
+     * @return type
+     */
+    public function getCart() {
+        return TOSECart::get_current_cart();
+    }
 }
 
 
@@ -94,5 +105,6 @@ class TOSEPage_Controller extends Page_Controller {
         TOSEMember::logout();
         return $this->redirect('ecommerce/login');
     }
+    
     
 }
