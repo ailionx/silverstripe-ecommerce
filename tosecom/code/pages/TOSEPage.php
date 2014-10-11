@@ -20,9 +20,6 @@ class TOSEPage extends Page {
             'TOSELoginPage'
         );
     
-    public function test() {
- 
-    }
     /**
      * Function is to generate tosecom pagess
      */
@@ -88,6 +85,16 @@ class TOSEPage extends Page {
     public function getCart() {
         return TOSECart::get_current_cart();
     }
+    
+    /**
+     * Function is to get current cart link
+     * @return type
+     */
+    public function getCartLink() {
+        $cartPage = DataObject::get_one('SiteTree', "ClassName='TOSECartPage'");
+        return $cartPage->Link();
+    }
+    
 }
 
 

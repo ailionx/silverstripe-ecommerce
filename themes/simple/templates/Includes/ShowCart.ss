@@ -8,9 +8,9 @@
                 <div>$Currency: $get_current_currency_symbol$priceFormatted</div>
             <% end_with %>
         <% end_with %>
-        <form method="post" action="{$Top.Link}updateItem">
+        <form method="post" action="{$CartLink}updateItem">
         <div>Quantity: <input type="number" value="$Quantity" name="Quantity" style="width: 40px" /></div>
-        <div>SubTotal: $Top.CurrentCurrencySymbol$subTotalPriceFormatted</div>
+        <div>SubTotal: $CurrencySymbol$subTotalPriceFormatted</div>
         <input type="hidden" value="$Product.ID" name="ProductID" />
         <input type="hidden" value="$Spec.ID" name="SpecID" />
         <button type="submit">update</button>
@@ -19,5 +19,3 @@
     </div>
 <% end_loop %>
 <div>Total Price: $Top.CurrentCurrencySymbol$totalPriceFormatted</div>
-<a href='$Top.Link/clearCart'><button>Clear Cart</button></a>
-<a href="$Top.getEcommerceRootPageLink/checkout"><button>Checkout</button></a>
