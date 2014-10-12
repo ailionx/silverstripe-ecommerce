@@ -15,7 +15,7 @@
         <input type="hidden" value="$Spec.ID" name="SpecID" />
         <button type="submit">update</button>
         </form>
-        <a href="$Top.Link()deleteItem?ProductID=$ProductID&SpecID=$SpecID"><button style="float: none;">delete</button></a>
+        <a href="{$CartLink}deleteItem?ProductID=$ProductID&SpecID=$SpecID"><button style="float: none;">delete</button></a>
     </div>
 <% end_loop %>
-<div>Total Price: $Top.CurrentCurrencySymbol$totalPriceFormatted</div>
+<div>Total Price: $CurrencySymbol$totalPriceFormatted</div>

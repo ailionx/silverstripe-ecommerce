@@ -4,4 +4,3 @@
 <div>
     $orderForm
 </div>
-<a href="$Top.getEcommerceRootPageLink/checkout/confirm"><button>Next</button></a>

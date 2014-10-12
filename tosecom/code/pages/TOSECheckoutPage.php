@@ -15,11 +15,13 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
     
     private static $allowed_actions = array(
         'cartEmpty',
-        'orderForm'
+        'orderForm',
+        'handleConfirmation'
     );
     
     private static $url_handlers = array(
-        'empty' => 'cartEmpty'
+        'empty' => 'cartEmpty',
+        'handleConfirmation' => 'confirm'
     );
 
 
@@ -32,6 +34,10 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         return $this;
     }
     
+//    public function doNext() {
+//        
+//    }
+
     public function handleConfirmation(SS_HTTPRequest $request) {
         $cart = TOSECart::get_current_cart();
         if ($cart->cartEmpty()) {
@@ -41,8 +47,6 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $data = $request->postVars();
     }
     
-    public function orderForm(SS_HTTPRequest $request) {
-//        var_dump($request); die();
-    }
+
     
 }
