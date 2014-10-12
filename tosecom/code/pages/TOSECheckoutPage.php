@@ -45,6 +45,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         }
         
         $data = $request->postVars();
+        var_dump($data); die();
     }
     
 

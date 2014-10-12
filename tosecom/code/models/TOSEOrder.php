@@ -31,5 +31,13 @@ class TOSEOrder extends DataObject {
     private static $has_many = array(
         'Items' => "TOSEOrderItem"
     );
+    
+    public function save($data) {
+        
+        $order = new TOSEOrder();
+        $order->update($data);
+        $order->write();
+        return $order;
+    }
 
 }

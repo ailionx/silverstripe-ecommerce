@@ -38,7 +38,15 @@ TOSECurrency:
     extensions:
         - TOSECurrencyExtension
     
+TOSERegisterPage:
+    pageTitle: 'Register'
+    pageURLSegment: 'register'
+    
 TOSELoginPage:
     pageTitle: 'Login'
     pageURLSegment: 'login'
+    
+TOSEAccountPage:
+    pageTitle: 'Account'
+    pageURLSegment: 'account'    
         

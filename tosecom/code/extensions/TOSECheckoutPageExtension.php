@@ -27,6 +27,8 @@ class TOSECheckoutPageExtension extends DataExtension {
         'PostCode' => 'Int'*/
     
     public function orderForm() {
+        $memberAddress = TOSEAddress::getCurrentMemberAddress();
+        var_dump($memberAddress); die();
         $fields = new FieldList();
         $customerInfoFields = new CompositeField();
         $customerInfoFields->push(new LiteralField('CustomerInfo', '<h3>Customer Information</h3>'));

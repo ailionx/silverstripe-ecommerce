@@ -8,7 +8,9 @@
 
 class TOSEMember extends DataExtension {
     
-    private static $db = array();
+    private static $db = array(
+        'Phone' => 'Varchar(50)'
+    );
 
     private static $has_one = array(
         'Address' => 'TOSEAddress'
@@ -23,9 +25,7 @@ class TOSEMember extends DataExtension {
         $member = new TOSEMember();
         $member->update($data);
         $member->write();
-        
-        $data['MemberID'] = $member->ID;
-        TOSEAddress::save($data);
+        return $member;
     } 
     
     /**
@@ -44,4 +44,6 @@ class TOSEMember extends DataExtension {
         $member = Member::currentUser();
         $member->logOut();
     }
+    
+    
 }

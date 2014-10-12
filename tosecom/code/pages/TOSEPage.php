@@ -17,7 +17,9 @@ class TOSEPage extends Page {
             'TOSECategoryPage',
             'TOSECartPage',
             'TOSECheckoutPage',
-            'TOSELoginPage'
+            'TOSELoginPage',
+            'TOSERegisterPage',
+            'TOSEAccountPage'
         );
     
     /**
@@ -70,15 +72,6 @@ class TOSEPage extends Page {
     }
     
     /**
-     * Function is to get the link of ecommerce page
-     * @return type
-     */
-    public function getEcommerceRootPageLink() {
-        $page = DataObject::get_one('SiteTree', "ClassName='TOSEPage'");
-        return $page->URLSegment;
-    }
-    
-    /**
      * Function is to get current cart object
      * @return type
      */
@@ -86,14 +79,6 @@ class TOSEPage extends Page {
         return TOSECart::get_current_cart();
     }
     
-    /**
-     * Function is to get current cart link
-     * @return type
-     */
-    public function getCartLink() {
-        $cartPage = DataObject::get_one('SiteTree', "ClassName='TOSECartPage'");
-        return $cartPage->Link();
-    }
     
 }
 
@@ -113,5 +98,22 @@ class TOSEPage_Controller extends Page_Controller {
         return $this->redirect('ecommerce/login');
     }
     
+        
+    /**
+     * Function is to get the link of ecommerce page
+     * @return type
+     */
+    public function getEcommerceRootPageLink() {
+        $page = DataObject::get_one('SiteTree', "ClassName='TOSEPage'");
+        return $page->URLSegment;
+    }
     
+    /**
+     * Function is to get current cart link
+     * @return type
+     */
+    public function getCartLink() {
+        $cartPage = DataObject::get_one('SiteTree', "ClassName='TOSECartPage'");
+        return $cartPage->Link();
+    }
 }

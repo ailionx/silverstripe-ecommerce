@@ -99,20 +99,55 @@ class TOSEDataGenerator {
             DB::alteration_message('TOSECheckoutPage created', 'created'); 
         }
         
-        // create TOSELoginPage
-        $config = Config::inst()->get('TOSEPage', 'needLogin');
-        if(!$page = DataObject::get_one('TOSELoginPage') && ($config != "No")) {
-            $page = new TOSELoginPage();
-            $page->Title = Config::inst()->get('TOSELoginPage', 'pageTitle');
-            $page->URLSegment = Config::inst()->get('TOSELoginPage', 'pageURLSegment');
-            $page->Status = 'Published';
-            $page->ShowInMenus = 0;
-            $page->ShowInSearch = 0;
-            $page->ParentID = $TOSEPageID;
-            $page->write();
-            $page->publish('Stage', 'Live');
-            $page->flushCache();
-            DB::alteration_message('TOSELoginPage created', 'created'); 
+        // determin if the purchase system need login
+        
+        $config = Config::inst()->get('Member', 'needLogin');
+        if ($config != "No") {
+            // generate register page
+            if(!$page = DataObject::get_one('TOSERegisterPage')) {
+                $page = new TOSERegisterPage();
+                $page->Title = Config::inst()->get('TOSERegisterPage', 'pageTitle');
+                $page->URLSegment = Config::inst()->get('TOSERegisterPage', 'pageURLSegment');
+                $page->Status = 'Published';
+                $page->ShowInMenus = 0;
+                $page->ShowInSearch = 0;
+                $page->ParentID = $TOSEPageID;
+                $page->write();
+                $page->publish('Stage', 'Live');
+                $page->flushCache();
+                DB::alteration_message('TOSERegisterPage created', 'created'); 
+            }
+            
+            // generate login page
+            if(!$page = DataObject::get_one('TOSELoginPage')) {
+                $page = new TOSELoginPage();
+                $page->Title = Config::inst()->get('TOSELoginPage', 'pageTitle');
+                $page->URLSegment = Config::inst()->get('TOSELoginPage', 'pageURLSegment');
+                $page->Status = 'Published';
+                $page->ShowInMenus = 0;
+                $page->ShowInSearch = 0;
+                $page->ParentID = $TOSEPageID;
+                $page->write();
+                $page->publish('Stage', 'Live');
+                $page->flushCache();
+                DB::alteration_message('TOSELoginPage created', 'created'); 
+            }
+            
+            // generate account page
+            if(!$page = DataObject::get_one('TOSEAccountPage')) {
+                $page = new TOSEAccountPage();
+                $page->Title = Config::inst()->get('TOSEAccountPage', 'pageTitle');
+                $page->URLSegment = Config::inst()->get('TOSEAccountPage', 'pageURLSegment');
+                $page->Status = 'Published';
+                $page->ShowInMenus = 0;
+                $page->ShowInSearch = 0;
+                $page->ParentID = $TOSEPageID;
+                $page->write();
+                $page->publish('Stage', 'Live');
+                $page->flushCache();
+                DB::alteration_message('TOSEAccountPage created', 'created'); 
+            }
         }
+
     }
 }

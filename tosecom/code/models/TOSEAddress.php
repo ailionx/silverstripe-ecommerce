@@ -9,10 +9,6 @@
 class TOSEAddress extends DataObject {
     
     private static $db = array(
-        'FirstName' => 'Varchar(100)',
-        'SurName' => 'Varchar(100)',
-        'Phone' => 'Varchar(100)',
-        'Email' => 'Varchar(100)',
         'StreetNumber' => 'Int',
         'StreetName' => 'Varchar(100)',
         'Suburb' => 'Varchar(100)',
@@ -31,5 +27,16 @@ class TOSEAddress extends DataObject {
         $address = new TOSEAddress();
         $address->update($data);
         $address->write();
+        return $address;
+    }
+    
+    public static function getCurrentMemberAddress() {
+        if(TOSEMember::is_customer_login()) {
+            $member = Member::currentUser();
+            $memberAddress = $member->Address();
+            return $memberAddress->ID ? $memberAddress : FALSE;
+        }
+        
+        return FALSE;
     }
 }
