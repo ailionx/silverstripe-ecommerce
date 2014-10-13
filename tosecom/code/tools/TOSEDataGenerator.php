@@ -73,17 +73,10 @@ class TOSEDataGenerator {
             
     }
     
-    public static function gen_TOSEModules() {
-        
-        if(!$permission = DataObject::get_one('Permission', "Code='TOSEMember::PermissionCode'")) {
-            $permission = self::gen_customer_permission();
-        }
-        
+    public static function gen_TOSEModules() {        
         $groupCode = TOSEMember::get_customer_group_code();
         if(!$group = DataObject::get_one('Group', "Code='$groupCode'")) {
             $group = self::gen_customer_group($groupCode);
-            $group->Permissions()->add($permission);
-            $group->write();
         }
     }
 
@@ -214,15 +207,11 @@ class TOSEDataGenerator {
         $group->Title = ucfirst($code);
         $group->ParentID = 0;
         $group->write();
-        DB::alteration_message("Group ".$group->Title." created", 'created'); 
-        return $group;
-    }
-    
-    public static function gen_customer_permission() {
+        $groupID = $group->ID;
         $permission = new Permission();
         $permission->Code = TOSEMember::PermissionCode;
+        $permission->GroupID = $groupID;
         $permission->write();
-        DB::alteration_message("Permission ".$permission->Code." created", 'created'); 
-        return $permission;
+        DB::alteration_message("Group ".$group->Title." created", 'created'); 
     }
 }

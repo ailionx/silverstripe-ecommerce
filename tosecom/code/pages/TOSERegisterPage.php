@@ -118,7 +118,7 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
         $member->AddressID = $address->ID;
         $member->addToGroupByCode($groupCode);
         $member->write();
-//        Session::clear(TOSEPage::SessionRegisterInfo);
+        Session::clear(TOSEPage::SessionRegisterInfo);
         
         return $this->redirect($this->Link()."success");
     }
