@@ -4,6 +4,18 @@ Member:
     extensions:
         - TOSEMember
 
+TOSERegisterPage:
+    pageTitle: 'Register'
+    pageURLSegment: 'register'
+    
+TOSELoginPage:
+    pageTitle: 'Login'
+    pageURLSegment: 'login'
+    
+TOSEAccountPage:
+    pageTitle: 'Account'
+    pageURLSegment: 'account'
+
 TOSEPage:
     pageTitle: 'Ecommerce'
     pageURLSegment: 'ecommerce'
@@ -37,16 +49,4 @@ TOSECurrency:
         USD: '$'
     extensions:
         - TOSECurrencyExtension
-    
-TOSERegisterPage:
-    pageTitle: 'Register'
-    pageURLSegment: 'register'
-    
-TOSELoginPage:
-    pageTitle: 'Login'
-    pageURLSegment: 'login'
-    
-TOSEAccountPage:
-    pageTitle: 'Account'
-    pageURLSegment: 'account'    
         

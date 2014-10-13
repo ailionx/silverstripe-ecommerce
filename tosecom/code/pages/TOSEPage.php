@@ -11,10 +11,23 @@ class TOSEPage extends Page {
     const SessionCart = 'TOSECart';
     
     const SessionCurrencyName = 'TOSECurrencyName';
+    
+    const SessionRegisterInfo = 'TOSERegisterInfo';
+    
+    private static $default_page_title = array(
+            'TOSEPage' => 'Ecommerce',
+            'TOSECategoryPage' => 'Category',
+            'TOSEProductPage' => 'Product',
+            'TOSECartPage' => 'Cart',
+            'TOSECheckoutPage' => 'Checkout',
+            'TOSELoginPage' => 'Login',
+            'TOSERegisterPage' => 'Register',
+            'TOSEAccountPage' => 'Account'
+        );
 
     private static $allowed_children = array(
-            'TOSEProductPage',
             'TOSECategoryPage',
+            'TOSEProductPage',
             'TOSECartPage',
             'TOSECheckoutPage',
             'TOSELoginPage',
@@ -29,12 +42,33 @@ class TOSEPage extends Page {
         parent::requireDefaultRecords();
         
         //To create default data
-        if(!TOSEDataGenerator::hasInitiated()){
-            TOSEDataGenerator::startGen();
+        if(!TOSEDataGenerator::has_initiated()){
+            TOSEDataGenerator::start_gen();
         }
         
     }
     
+    
+    public static function get_page_title($pageName) {
+        $config = Config::inst()->get($pageName, 'pageTitle');
+        if(!$config) {
+            $defaultTitle = self::$default_page_title[$pageName];
+            return $defaultTitle;
+        }
+        return $config;
+    }
+    
+    public static function get_page_URLSegment($pageName) {
+        $config = Config::inst()->get($pageName, 'pageURLSegment');
+        if(!$config) {
+            $defaultTitle = self::$default_page_title[$pageName];
+            $defaultURLSegment = strtolower($defaultTitle);
+            return $defaultURLSegment;
+        }
+        
+        return $config;
+    }
+
     /**
      * Function is to check if customer member logged in
      * @return type

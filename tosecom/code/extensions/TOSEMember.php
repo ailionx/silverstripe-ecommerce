@@ -13,16 +13,24 @@ class TOSEMember extends DataExtension {
     );
 
     private static $has_one = array(
-        'Address' => 'TOSEAddress'
+        'Address' => 'TOSEMemberAddress'
     );
     
     private static $has_many = array(
         'Orders' => 'TOSEOrder'
     );
     
+    const NeedLoginYes = "Yes";
+    
+    const NeedLoginNo = "No";
+    
+    const NeedLoginBoth = "Both";
+    
+    const PermissionCode = "SITETREE_VIEW_ALL";
+
     public static function save($data) {
         
-        $member = new TOSEMember();
+        $member = new Member();
         $member->update($data);
         $member->write();
         return $member;
@@ -43,6 +51,28 @@ class TOSEMember extends DataExtension {
     public static function logout() {
         $member = Member::currentUser();
         $member->logOut();
+    }
+    
+    public static function need_login() {
+        $options = array(
+            self::NeedLoginYes,
+            self::NeedLoginNo,
+            self::NeedLoginBoth
+        );
+        $config = Config::inst()->get('Member', 'needLogin');
+        foreach ($options as $option) {
+            if($config === $option) {
+                return $option;
+            }
+        }
+        
+        die("needLogin is not defined correctly, it only can be".self::NeedLoginYes.", ".self::NeedLoginNo." or ".self::NeedLoginBoth."please see config.yaml");
+    }
+    
+    public static function get_customer_group_code() {
+        $code = Config::inst()->get('Member', 'customerGroup');
+        $lcCode = strtolower($code);
+        return strtolower($lcCode);
     }
     
     

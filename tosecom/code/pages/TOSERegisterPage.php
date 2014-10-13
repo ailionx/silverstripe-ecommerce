@@ -28,7 +28,7 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
     
     private static $allowed_actions = array(
         'registerForm',
-        'doRegister'
+        'success'
     );
 
 
@@ -38,30 +38,48 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
         $userInfo->push(new LiteralField('userInfo', '<h3>User Information</h3>'));
         $userInfo->push(new TextField('FirstName', 'FirstName'));
         $userInfo->push(new TextField('Surname', 'Surname'));
-        $userInfo->push(new TextField('Email', 'Email'));
+        $userInfo->push(new EmailField('Email', 'Email'));
+        $userInfo->push(new PasswordField('Password', 'Password'));
+        $userInfo->push(new PasswordField('ConfirmPassword', 'Confirm Password'));
         $userInfo->push(new TextField('Phone', 'Phone'));
         $fields->push($userInfo);
         
         $userAddress = new CompositeField();
         $userAddress->push(new LiteralField('userInfo', '<h3>Address Information</h3>'));
-        $userAddress->push(new TextField('StreetNumber', 'StreetNumber'));
+        $userAddress->push(new NumericField('StreetNumber', 'StreetNumber'));
         $userAddress->push(new TextField('StreetName', 'StreetName'));
         $userAddress->push(new TextField('Suburb', 'Suburb'));
         $userAddress->push(new TextField('City', 'City'));
         $userAddress->push(new TextField('Region', 'Region'));
         $userAddress->push(new TextField('Country', 'Country'));
-        $userAddress->push(new TextField('PostCode', 'PostCode'));
+        $userAddress->push(new NumericField('PostCode', 'PostCode'));
         $fields->push($userAddress);
         
         $actions = new FieldList(
                 new FormAction('doRegister', 'Register')
                 );
         
-        $form = new Form($this, 'registerForm', $fields, $actions);
+        $required = new RequiredFields(
+                'FirstName',
+                'Surname',
+                'Email',
+                'Phone',
+                'StreetNumber',
+                'StreetName',
+                'City',
+                'Country'
+                );
+        
+        $form = new Form($this, 'registerForm', $fields, $actions, $required);
         
         if(TOSEMember::is_customer_login()) {
             return $this->redirect($this->getEcommerceRootPageLink()."/".Config::inst()->get('TOSEAccountPage', 'pageURLSegment'));
         }
+        
+        if($data = Session::get(TOSEPage::SessionRegisterInfo)) {
+            $form->loadDataFrom($data);
+        }
+        
         return $form;
     }
 
@@ -72,10 +90,10 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
         return $result = $existMemberInfo ? TRUE : FALSE;
     }
     
+    
     public function doRegister($data, $form) {
         
-        var_dump($data); die();
-        
+        Session::set(TOSEPage::SessionRegisterInfo, $data);
         if ($this->checkMailExist($data['Email'])) {
             $fieldName = 'Email';
             $message = 'This Email Address has been registerd, please use another one or go to login';
@@ -84,11 +102,25 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
             return $this->redirectBack();
         }
         
-        $member = TOSEMember::save($data);
-        $data['MemberID'] = $member->ID;
-        TOSEAddress::save($data);
+        if ($data['Password'] != $data['ConfirmPassword']) {
+            $fieldName = 'ConfirmPassword';
+            $message = 'The two passwords you typed do not match';
+            $messageType = 'validation-error';
+            $form->addErrorMessage($fieldName, $message, $messageType);
+            return $this->redirectBack();
+        }
         
-        return $this->redirect($this->getEcommerceRootPageLink()."/".Config::inst()->get('TOSELoginPage', 'pageURLSegment'));
+        $member = TOSEMember::save($data);
+        $groupCode = Config::inst()->get('Member', 'customerGroup');
+
+        $data['MemberID'] = $member->ID;
+        $address = TOSEMemberAddress::save($data);
+        $member->AddressID = $address->ID;
+        $member->addToGroupByCode($groupCode);
+        $member->write();
+//        Session::clear(TOSEPage::SessionRegisterInfo);
+        
+        return $this->redirect($this->Link()."success");
     }
     
 }

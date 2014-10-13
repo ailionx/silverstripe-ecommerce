@@ -9,145 +9,220 @@
 class TOSEDataGenerator {
     
     private static $has_initiated = FALSE;
-
-    public static function hasInitiated() {
+    
+    /**
+     * Function is to check if the generator has been initiated
+     * @return type
+     */
+    public static function has_initiated() {
         return self::$has_initiated;
     }
-
-    public static function startGen() {
+    
+    /**
+     * Function is to start gen TOSEData
+     */
+    public static function start_gen() {
         
-        self::genTOSEPages();
+        self::gen_TOSEPages();
+        self::gen_TOSEModules();
         self::$has_initiated = TRUE;
     }
 
-    public static function genTOSEPages() {
+    /**
+     * Function is to generate TOSEPages
+     */
+    public static function gen_TOSEPages() {
         
-        // create TOSEPage
-        if(!$page = DataObject::get_one('TOSEPage')) {
-            $page = new TOSEPage();
-            $page->Title = Config::inst()->get('TOSEPage', 'pageTitle');
-            $page->URLSegment = Config::inst()->get('TOSEPage', 'pageURLSegment');
-            $page->Status = 'Published';
-            $page->ShowInMenus = 0;
-            $page->ShowInSearch = 0;
-            $page->ParentID = 0;
-            $page->write();
-            $page->publish('Stage', 'Live');
-            $page->flushCache();
-            DB::alteration_message('TOSEPage created', 'created'); 
+        if(!$page = DataObject::get_one('SiteTree', "ClassName='TOSEPage'")) {
+            self::gen_TOSEPage();
         }
         
-        $TOSEPageID = DataObject::get_one('SiteTree', "ClassName='TOSEPage'")->ID;
+        $TOSEPageID = DataObject::get_one('SiteTree', "ClassName='TOSEPage'")->ID; 
         
-        // create TOSECategoryPage
-        if(!$page = DataObject::get_one('TOSECategoryPage')) {
-            $page = new TOSECategoryPage();
-            $page->Title = Config::inst()->get('TOSECategoryPage', 'pageTitle');
-            $page->URLSegment = Config::inst()->get('TOSECategoryPage', 'pageURLSegment');
-            $page->Status = 'Published';
-            $page->ShowInMenus = 0;
-            $page->ShowInSearch = 0;
-            $page->ParentID = $TOSEPageID;
-            $page->write();
-            $page->publish('Stage', 'Live');
-            $page->flushCache();
-            DB::alteration_message('TOSECategoryPage created', 'created'); 
+        if(!$page = DataObject::get_one('SiteTree', "ClassName='TOSECategoryPage'")) {
+            self::gen_TOSECategoryPage($TOSEPageID);
         }
         
-        // create TOSEProductPage
-        if(!$page = DataObject::get_one('TOSEProductPage')) {
-            $page = new TOSEProductPage();
-            $page->Title = Config::inst()->get('TOSEProductPage', 'pageTitle');
-            $page->URLSegment = Config::inst()->get('TOSEProductPage', 'pageURLSegment');
-            $page->Status = 'Published';
-            $page->ShowInMenus = 0;
-            $page->ShowInSearch = 0;
-            $page->ParentID = $TOSEPageID;
-            $page->write();
-            $page->publish('Stage', 'Live');
-            $page->flushCache();
-            DB::alteration_message('TOSEProductPage created', 'created'); 
+        if(!$page = DataObject::get_one('SiteTree', "ClassName='TOSEProductPage'")) {
+            self::gen_TOSEProductPage($TOSEPageID);
         }
         
-        // create TOSECartPage
-        if(!$page = DataObject::get_one('TOSECartPage')) {
-            $page = new TOSECartPage();
-            $page->Title = Config::inst()->get('TOSECartPage', 'pageTitle');
-            $page->URLSegment = Config::inst()->get('TOSECartPage', 'pageURLSegment');
-            $page->Status = 'Published';
-            $page->ShowInMenus = 0;
-            $page->ShowInSearch = 0;
-            $page->ParentID = $TOSEPageID;
-            $page->write();
-            $page->publish('Stage', 'Live');
-            $page->flushCache();
-            DB::alteration_message('TOSECartPage created', 'created'); 
+        if(!$page = DataObject::get_one('SiteTree', "ClassName='TOSECartPage'")) {
+            self::gen_TOSECartPage($TOSEPageID);
         }
         
-        // create TOSECheckoutPage
-        if(!$page = DataObject::get_one('TOSECheckoutPage')) {
-            $page = new TOSECheckoutPage();
-            $page->Title = Config::inst()->get('TOSECheckoutPage', 'pageTitle');
-            $page->URLSegment = Config::inst()->get('TOSECheckoutPage', 'pageURLSegment');
-            $page->Status = 'Published';
-            $page->ShowInMenus = 0;
-            $page->ShowInSearch = 0;
-            $page->ParentID = $TOSEPageID;
-            $page->write();
-            $page->publish('Stage', 'Live');
-            $page->flushCache();
-            DB::alteration_message('TOSECheckoutPage created', 'created'); 
+        if(!$page = DataObject::get_one('SiteTree', "ClassName='TOSECheckoutPage'")) {
+            self::gen_TOSECheckoutPage($TOSEPageID);
         }
         
         // determin if the purchase system need login
-        
-        $config = Config::inst()->get('Member', 'needLogin');
-        if ($config != "No") {
-            // generate register page
-            if(!$page = DataObject::get_one('TOSERegisterPage')) {
-                $page = new TOSERegisterPage();
-                $page->Title = Config::inst()->get('TOSERegisterPage', 'pageTitle');
-                $page->URLSegment = Config::inst()->get('TOSERegisterPage', 'pageURLSegment');
-                $page->Status = 'Published';
-                $page->ShowInMenus = 0;
-                $page->ShowInSearch = 0;
-                $page->ParentID = $TOSEPageID;
-                $page->write();
-                $page->publish('Stage', 'Live');
-                $page->flushCache();
-                DB::alteration_message('TOSERegisterPage created', 'created'); 
+        $config = TOSEMember::need_login();
+        if ($config != TOSEMember::NeedLoginNo) {
+            if(!$page = DataObject::get_one('SiteTree', "ClassName='TOSERegisterPage'")) {
+                self::gen_TOSERegisterPage($TOSEPageID);
             }
-            
-            // generate login page
-            if(!$page = DataObject::get_one('TOSELoginPage')) {
-                $page = new TOSELoginPage();
-                $page->Title = Config::inst()->get('TOSELoginPage', 'pageTitle');
-                $page->URLSegment = Config::inst()->get('TOSELoginPage', 'pageURLSegment');
-                $page->Status = 'Published';
-                $page->ShowInMenus = 0;
-                $page->ShowInSearch = 0;
-                $page->ParentID = $TOSEPageID;
-                $page->write();
-                $page->publish('Stage', 'Live');
-                $page->flushCache();
-                DB::alteration_message('TOSELoginPage created', 'created'); 
+
+            if(!$page = DataObject::get_one('SiteTree', "ClassName='TOSELoginPage'")) {
+                self::gen_TOSELoginPage($TOSEPageID);
             }
-            
-            // generate account page
-            if(!$page = DataObject::get_one('TOSEAccountPage')) {
-                $page = new TOSEAccountPage();
-                $page->Title = Config::inst()->get('TOSEAccountPage', 'pageTitle');
-                $page->URLSegment = Config::inst()->get('TOSEAccountPage', 'pageURLSegment');
-                $page->Status = 'Published';
-                $page->ShowInMenus = 0;
-                $page->ShowInSearch = 0;
-                $page->ParentID = $TOSEPageID;
-                $page->write();
-                $page->publish('Stage', 'Live');
-                $page->flushCache();
-                DB::alteration_message('TOSEAccountPage created', 'created'); 
+
+            if(!$page = DataObject::get_one('SiteTree', "ClassName='TOSEAccountPage'")) {
+                self::gen_TOSEAccountPage($TOSEPageID);
             }
         }
+            
+    }
+    
+    public static function gen_TOSEModules() {
+        
+        if(!$permission = DataObject::get_one('Permission', "Code='TOSEMember::PermissionCode'")) {
+            $permission = self::gen_customer_permission();
+        }
+        
+        $groupCode = TOSEMember::get_customer_group_code();
+        if(!$group = DataObject::get_one('Group', "Code='$groupCode'")) {
+            $group = self::gen_customer_group($groupCode);
+            $group->Permissions()->add($permission);
+            $group->write();
+        }
+    }
 
+    // create TOSEPage
+    public static function gen_TOSEPage() {
+        $page = new TOSEPage();
+        $page->Title = TOSEPage::get_page_title('TOSEPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSEPage');
+        $page->Status = 'Published';
+        $page->ShowInMenus = 0;
+        $page->ShowInSearch = 0;
+        $page->ParentID = 0;
+        $page->write();
+        $page->publish('Stage', 'Live');
+        $page->flushCache();
+        DB::alteration_message('TOSEPage created', 'created'); 
+    }
+    
+    
+    // create TOSECategoryPage
+    public static function gen_TOSECategoryPage($parentID) {
+        $page = new TOSECategoryPage();
+        $page->Title = TOSEPage::get_page_title('TOSECategoryPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSECategoryPage');
+        $page->Status = 'Published';
+        $page->ShowInMenus = 0;
+        $page->ShowInSearch = 0;
+        $page->ParentID = $parentID;
+        $page->write();
+        $page->publish('Stage', 'Live');
+        $page->flushCache();
+        DB::alteration_message('TOSECategoryPage created', 'created'); 
+    }
+        
+    // create TOSEProductPage
+    public static function gen_TOSEProductPage($parentID) {
+        $page = new TOSEProductPage();
+        $page->Title = TOSEPage::get_page_title('TOSEProductPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSEProductPage');
+        $page->Status = 'Published';
+        $page->ShowInMenus = 0;
+        $page->ShowInSearch = 0;
+        $page->ParentID = $parentID;
+        $page->write();
+        $page->publish('Stage', 'Live');
+        $page->flushCache();
+        DB::alteration_message('TOSEProductPage created', 'created'); 
+    }
+        
+    // create TOSECartPage
+    public static function gen_TOSECartPage($parentID) {
+        $page = new TOSECartPage();
+        $page->Title = TOSEPage::get_page_title('TOSECartPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSECartPage');
+        $page->Status = 'Published';
+        $page->ShowInMenus = 0;
+        $page->ShowInSearch = 0;
+        $page->ParentID = $parentID;
+        $page->write();
+        $page->publish('Stage', 'Live');
+        $page->flushCache();
+        DB::alteration_message('TOSECartPage created', 'created'); 
+    }
+        
+    // create TOSECheckoutPage
+    public static function gen_TOSECheckoutPage($parentID) {
+        $page = new TOSECheckoutPage();
+        $page->Title = TOSEPage::get_page_title('TOSECheckoutPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSECheckoutPage');
+        $page->Status = 'Published';
+        $page->ShowInMenus = 0;
+        $page->ShowInSearch = 0;
+        $page->ParentID = $parentID;
+        $page->write();
+        $page->publish('Stage', 'Live');
+        $page->flushCache();
+        DB::alteration_message('TOSECheckoutPage created', 'created'); 
+    }
+        
+    // generate register page
+    public static function gen_TOSERegisterPage($parentID) {
+        $page = new TOSERegisterPage();
+        $page->Title = TOSEPage::get_page_title('TOSERegisterPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSERegisterPage');
+        $page->Status = 'Published';
+        $page->ShowInMenus = 0;
+        $page->ShowInSearch = 0;
+        $page->ParentID = $parentID;
+        $page->write();
+        $page->publish('Stage', 'Live');
+        $page->flushCache();
+        DB::alteration_message('TOSERegisterPage created', 'created'); 
+    }
+            
+    // generate login page
+    public static function gen_TOSELoginPage($parentID) {
+        $page = new TOSELoginPage();
+        $page->Title = TOSEPage::get_page_title('TOSELoginPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSELoginPage');
+        $page->Status = 'Published';
+        $page->ShowInMenus = 0;
+        $page->ShowInSearch = 0;
+        $page->ParentID = $parentID;
+        $page->write();
+        $page->publish('Stage', 'Live');
+        $page->flushCache();
+        DB::alteration_message('TOSELoginPage created', 'created'); 
+    }
+            
+    // generate account page
+    public static function gen_TOSEAccountPage($parentID) {
+        $page = new TOSEAccountPage();
+        $page->Title = TOSEPage::get_page_title('TOSEAccountPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSEAccountPage');
+        $page->Status = 'Published';
+        $page->ShowInMenus = 0;
+        $page->ShowInSearch = 0;
+        $page->ParentID = $parentID;
+        $page->write();
+        $page->publish('Stage', 'Live');
+        $page->flushCache();
+        DB::alteration_message('TOSEAccountPage created', 'created'); 
+    }
+    
+    public static function gen_customer_group($code) {
+        $group = new Group();
+        $group->Code = $code;
+        $group->Title = ucfirst($code);
+        $group->ParentID = 0;
+        $group->write();
+        DB::alteration_message("Group ".$group->Title." created", 'created'); 
+        return $group;
+    }
+    
+    public static function gen_customer_permission() {
+        $permission = new Permission();
+        $permission->Code = TOSEMember::PermissionCode;
+        $permission->write();
+        DB::alteration_message("Permission ".$permission->Code." created", 'created'); 
+        return $permission;
     }
 }
