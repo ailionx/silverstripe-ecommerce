@@ -15,7 +15,8 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
     
     private static $allowed_actions = array(
         'cartEmpty',
-        'orderForm'
+        'orderForm',
+        'confirm'
     );
     
     private static $url_handlers = array(
@@ -44,6 +45,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $member = Member::currentUser();
         $fields = new FieldList();
         $customerInfoFields = new CompositeField();
+        $customerInfoFields->addExtraClass('customer-info');
         $customerInfoFields->push(new LiteralField('CustomerInfo', '<h3>Customer Information</h3>'));
         $customerInfoFields->push(new TextField('CustomerName', 'Name', $member->FirstName." ".$member->Surname));
         $customerInfoFields->push(new EmailField('CustomerEmail', 'Email', $member->Email));
@@ -51,6 +53,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $fields->push($customerInfoFields);
         
         $shippingFields = new CompositeField();
+        $shippingFields->addExtraClass('shipping-info');
         $shippingFields->push(new LiteralField('ShippingInfo', '<h3>Shipping Address</h3>'));
         $shippingFields->push(new TextField('ShippingFirstName', 'First Name', $member->FirstName));
         $shippingFields->push(new TextField('ShippingSurName', 'SurName', $member->Surname));
@@ -64,11 +67,13 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $shippingFields->push(new NumericField('ShippingPostCode', 'PostCode', $memberAddress->PostCode));
         $fields->push($shippingFields);
         
-        $invioceFields = new CompositeField();
-        $invioceFields->push(new CheckboxField('needInvioce', 'Need Invioce?'));
-        $fields->push($invioceFields);
+        $invoiceFields = new CompositeField();
+        $invoiceFields->addExtraClass('need-invoice');
+        $invoiceFields->push(new CheckboxField('needInvioce', 'Need Invioce?'));
+        $fields->push($invoiceFields);
         
         $billingFields = new CompositeField();
+        $billingFields->addExtraClass('billing-info');
         $billingFields->push(new LiteralField('BillingInfo', '<h3>Billing Address</h3>'));
         $billingFields->push(new TextField('BillingFirstName', 'First Name', $member->FirstName));
         $billingFields->push(new TextField('BillingSurName', 'SurName', $member->Surname));
@@ -83,7 +88,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $fields->push($billingFields);
                 
         $actions = new FieldList(
-                new FormAction('confirm', 'Next')
+                new FormAction('doNext', 'Next')
                 );
         
         $required = new RequiredFields(
@@ -94,16 +99,29 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         
         $form = new Form($this, 'orderForm', $fields, $actions, $required);
         
+        if($data = unserialize(Session::get(TOSEPage::SessionOrderInfo))) {
+
+            $form->loadDataFrom($data);
+        }
+        
         return $form;
     }
     
-    public function confirm($data, $form) {
+    public function doNext($data) {
+        $sessionData = serialize($data);
+        Session::set(TOSEPage::SessionOrderInfo, $sessionData);
+
+        return $this->redirect($this->Link('confirm'));
+    }
+
+    public function confirm() {
         $cart = TOSECart::get_current_cart();
         if ($cart->cartEmpty()) {
             return $this->redirect($this->Link()."cartEmpty");
         }
-        var_dump($data); die();
+        $data = unserialize(Session::get(TOSEPage::SessionOrderInfo));
+        return $this->customise($data)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
     }
     
-    
+
 }

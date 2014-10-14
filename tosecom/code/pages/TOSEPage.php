@@ -8,12 +8,27 @@
 
 class TOSEPage extends Page {
     
+    /**
+     * Save the cart information. For non-login user
+     */
     const SessionCart = 'TOSECart';
-    
+    /**
+     * Save the current currency name
+     */
     const SessionCurrencyName = 'TOSECurrencyName';
-    
+    /**
+     * Save the register information
+     */
     const SessionRegisterInfo = 'TOSERegisterInfo';
+    /**
+     * Save the order information
+     */
+    const SessionOrderInfo = 'TOSEOderInfo';
     
+    /**
+     * Set the default value if they are not set correctly in config.yml
+     * @var type 
+     */
     private static $default_page_title = array(
             'TOSEPage' => 'Ecommerce',
             'TOSECategoryPage' => 'Category',
@@ -48,7 +63,11 @@ class TOSEPage extends Page {
         
     }
     
-    
+    /**
+     * Function is to get the page title for ecommerce pages
+     * @param type $pageName
+     * @return type
+     */
     public static function get_page_title($pageName) {
         $config = Config::inst()->get($pageName, 'pageTitle');
         if(!$config) {
@@ -58,6 +77,11 @@ class TOSEPage extends Page {
         return $config;
     }
     
+    /**
+     * Function is to get the page URL segment for ecommerce pages
+     * @param type $pageName
+     * @return type
+     */
     public static function get_page_URLSegment($pageName) {
         $config = Config::inst()->get($pageName, 'pageURLSegment');
         if(!$config) {
