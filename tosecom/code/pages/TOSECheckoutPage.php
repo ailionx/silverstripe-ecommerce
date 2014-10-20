@@ -69,7 +69,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         
         $invoiceFields = new CompositeField();
         $invoiceFields->addExtraClass('need-invoice');
-        $invoiceFields->push(new CheckboxField('needInvioce', 'Need Invioce?'));
+        $invoiceFields->push(new CheckboxField('needInvoice', 'Need Invoice?'));
         $fields->push($invoiceFields);
         
         $billingFields = new CompositeField();
@@ -120,7 +120,48 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
             return $this->redirect($this->Link()."cartEmpty");
         }
         $data = unserialize(Session::get(TOSEPage::SessionOrderInfo));
-        return $this->customise($data)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
+        
+        $customInfo = array();
+        $customInfo['CustomerName'] = $data['CustomerName'];
+        $customInfo['CustomerEmail'] = $data['CustomerEmail'];
+        $customInfo['CustomerPhone'] = $data['CustomerPhone'];
+        
+        $shippingInfo = array();
+        $shippingInfo['ShippingFirstName'] = $data['ShippingFirstName'];
+        $shippingInfo['ShippingSurName'] = $data['ShippingSurName'];
+        $shippingInfo['ShippingPhone'] = $data['ShippingPhone'];
+        $shippingInfo['ShippingStreetNumber'] = $data['ShippingStreetNumber'];
+        $shippingInfo['ShippingStreetName'] = $data['ShippingStreetName'];
+        $shippingInfo['ShippingSuburb'] = $data['ShippingSuburb'];
+        $shippingInfo['ShippingCity'] = $data['ShippingCity'];
+        $shippingInfo['ShippingRegion'] = $data['ShippingRegion'];
+        $shippingInfo['ShippingCountry'] = $data['ShippingCountry'];
+        $shippingInfo['ShippingPostCode'] = $data['ShippingPostCode'];
+        
+        $needInvoice = key_exists('needInvoice', $data) ? TRUE : FALSE;
+        
+        if ($needInvoice) {
+            $billingInfo = array();
+            $billingInfo['BillingFirstName'] = $data['BillingFirstName'];
+            $billingInfo['BillingSurName'] = $data['BillingSurName'];
+            $billingInfo['BillingPhone'] = $data['BillingPhone'];
+            $billingInfo['BillingStreetNumber'] = $data['BillingStreetNumber'];
+            $billingInfo['BillingStreetName'] = $data['BillingStreetName'];
+            $billingInfo['BillingSuburb'] = $data['BillingSuburb'];
+            $billingInfo['BillingCity'] = $data['BillingCity'];
+            $billingInfo['BillingRegion'] = $data['BillingRegion'];
+            $billingInfo['BillingCountry'] = $data['BillingCountry'];
+            $billingInfo['BillingPostCode'] = $data['BillingPostCode'];
+        }
+        
+        $sortData = array(
+            'customInfo' => $customInfo,
+            'needInvoice' => $needInvoice,
+            'shippingInfo' => $shippingInfo,
+            'billingInfo' => $billingInfo            
+        );
+        
+        return $this->customise($sortData)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
     }
     
 
