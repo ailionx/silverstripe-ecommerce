@@ -16,7 +16,9 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
     private static $allowed_actions = array(
         'cartEmpty',
         'orderForm',
-        'confirm'
+        'confirm',
+        'doPay',
+        'result'
     );
     
     private static $url_handlers = array(
@@ -86,7 +88,10 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $billingFields->push(new TextField('BillingCountry', 'Country', $memberAddress->Country));
         $billingFields->push(new NumericField('BillingPostCode', 'PostCode', $memberAddress->PostCode));
         $fields->push($billingFields);
-                
+        
+        $commentField = new TextareaField('Comments', 'Comments');
+        $fields->push($commentField);
+        
         $actions = new FieldList(
                 new FormAction('doNext', 'Next')
                 );
@@ -94,7 +99,15 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $required = new RequiredFields(
                 'Name',
                 'Email',
-                'Phone'
+                'Phone',
+                'ShippingFirstName',
+                'ShippingSurName',
+                'ShippingPhone',
+                'ShippingStreetNumber',
+                'ShippingStreetName',
+                'ShippingCity',
+                'ShippingCountry',
+                'ShippingPostCode'
             );
         
         $form = new Form($this, 'orderForm', $fields, $actions, $required);
@@ -164,5 +177,102 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         return $this->customise($sortData)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
     }
     
+    public function getShippingFee() {
+        return 10;
+    }
 
+    public function totalAmount() {
+        
+        $productAmount = TOSECart::get_current_cart()->totalPrice();
+        $shippingFee = $this->getShippingFee();
+        $totalAmount = $productAmount + $shippingFee;
+        return $totalAmount;
+    }
+    
+    public function doPay(SS_HTTPRequest $request) {
+        
+        $order = $this->saveOrder();
+        
+        $reference = $order->Reference;
+        
+        $processor = PaymentFactory::factory("PaymentExpressPxPay");
+        
+        $processor->setRedirectURL($this->Link('result'));
+        
+//        
+//        Amount = 'Amount'
+//        Currency = 'Currency'
+//        Reference = 'Reference' (optional)
+
+        //To create data for payment gateway
+        $data = array(
+            'Amount' => $this->totalAmount(),
+            'Currency' => 'NZD',
+            'Status' => "Pending",
+            'Reference' => $reference
+        );
+        
+	// Process the payment 
+	$processor->capture($data);        
+    }
+    
+    
+    public function saveShippingAddress($orderID, $data) {
+        
+    }
+
+    public function saveBillingAddress($orderID, $data) {
+        
+    }
+
+    public function saveOrder() {
+        $orderInfo = unserialize(Session::get('TOSEPage::SessionOrderInfo'));
+        $data['Reference'] = TOSEOrder::create_reference();
+        $data['NeedInvoice'] = array_key_exists('NeedInvoice', $orderInfo);
+        $data['Status'] = "Pending";
+        $data['ShippingFee'] = $this->getShippingFee();
+        $data['CustomerName'] = $orderInfo['CustomerName'];
+        $data['CustomerEmail'] = $orderInfo['CustomerEmail'];
+        $data['CustomerPhone'] = $orderInfo['CustomerPhone'];
+        $data['Comments'] = $orderInfo['Comments'];
+        
+    }
+    
+    public function updateOrder() {
+        
+    }
+
+
+    public function result(){
+         $payment = DataObject::get_one("Payment", "ID = " . (int)Session::get('PaymentID'));
+
+         //To create default data
+         $data = array(
+             'IsSuccess' => false,
+             'Status' => Payment::FAILURE,
+             'Reference' => null
+         );
+         
+         //use const variable SUCCESS not directly use string
+         if($payment && $payment->Status === Payment::SUCCESS){
+             
+             //To call save order function to create order
+             $order = $this->updateOrder();
+             
+             $data['IsSuccess'] = true;
+             $data['Status'] = Payment::SUCCESS;
+             $data['Reference'] = $order->Reference;
+             
+             //Clear Payment ID from Session
+             Session::clear("PaymentID");
+             //Clear form info
+             Session::clear(TOSEPage::SessionOrderInfo);
+             //Clear cart
+             TOSECart::get_current_cart()->clearCart();
+         }
+
+
+        return $this->customise($data);
+     }
+     
 }

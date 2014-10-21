@@ -9,3 +9,26 @@ After:
 # Caution: Indentation through two spaces, not tabs
 SSViewer:
   theme: 'simple'
+  
+PaymentGateway:
+  environment:
+    'dev'
+
+PaymentProcessor:
+  supported_methods:
+    dev:
+      - 'PaymentExpressPxPay'
+    live:
+      - 'PaymentExpressPxPay'
+    
+
+PaymentExpressGateway_PxPay:
+  live:
+    authentication:
+      user_id: 'TechOnsite_Dev'
+      key: 'f61452a5c42aefea0d40cce5f640a23b701a997704f79bbe4ca4032f0ea5c920'
+      
+  dev:
+    authentication:
+      user_id: 'TechOnsite_Dev'
+      key: 'f61452a5c42aefea0d40cce5f640a23b701a997704f79bbe4ca4032f0ea5c920'

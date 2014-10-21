@@ -49,3 +49,12 @@
         </div>
     <% end_with %>
 <% end_if %>
+
+<div class="action">
+    <a href="$Link">
+        <button>Go Back</button>
+    </a>
+    <a href="{$Link}doPay">
+        <button>Place Order</button>
+    </a>
+</div>

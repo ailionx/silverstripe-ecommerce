@@ -39,5 +39,14 @@ class TOSEOrder extends DataObject {
         $order->write();
         return $order;
     }
-
+    
+    public static function create_reference(){
+        $date = date("Y-m-d");  
+        $time = (int)date("Ymd")*10000;
+        
+        $amount = DataObject::get("TOSEOrder", "Created Like'{$date}%'")->count();
+        $ref = $time + $amount+1;
+        
+        return $ref;
+    }
 }
