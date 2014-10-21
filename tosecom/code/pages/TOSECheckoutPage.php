@@ -25,7 +25,11 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         'empty' => 'cartEmpty'
     );
 
-
+    /**
+     * Function is to do initial redirect
+     * @param SS_HTTPRequest $request
+     * @return \TOSECheckoutPage_Controller
+     */
     public function index(SS_HTTPRequest $request) {
         $cart = TOSECart::get_current_cart();
         if ($cart->cartEmpty()) {
@@ -120,13 +124,22 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         return $form;
     }
     
+    /**
+     * Function is the action of order form
+     * @param type $data
+     * @return type
+     */
     public function doNext($data) {
         $sessionData = serialize($data);
         Session::set(TOSEPage::SessionOrderInfo, $sessionData);
 
         return $this->redirect($this->Link('confirm'));
     }
-
+    
+    /**
+     * Function is to show confirm page
+     * @return type
+     */
     public function confirm() {
         $cart = TOSECart::get_current_cart();
         if ($cart->cartEmpty()) {
@@ -177,10 +190,18 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         return $this->customise($sortData)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
     }
     
+    /**
+     * Function is to get the shipping fee
+     * @return int
+     */
     public function getShippingFee() {
         return 10;
     }
-
+    
+    /**
+     * Function si to calculate the total amount of the order
+     * @return type
+     */
     public function totalAmount() {
         
         $productAmount = TOSECart::get_current_cart()->totalPrice();
@@ -189,6 +210,10 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         return $totalAmount;
     }
     
+    /**
+     * Function is to process payment
+     * @param SS_HTTPRequest $request
+     */
     public function doPay(SS_HTTPRequest $request) {
         
         $order = $this->saveOrder();
@@ -216,33 +241,103 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
 	$processor->capture($data);        
     }
     
-    
+    /**
+     * Function is to save shipping address with order id
+     * @param type $orderID
+     * @param type $data
+     * @return type
+     */
     public function saveShippingAddress($orderID, $data) {
+        $shippingInfo = array();
         
+        $shippingInfo['ShippingFirstName'] = $data['ShippingFirstName'];
+        $shippingInfo['ShippingSurName'] = $data['ShippingSurName'];
+        $shippingInfo['ShippingPhone'] = $data['ShippingPhone'];
+        $shippingInfo['ShippingStreetNumber'] = $data['ShippingStreetNumber'];
+        $shippingInfo['ShippingStreetName'] = $data['ShippingStreetName'];
+        $shippingInfo['ShippingSuburb'] = $data['ShippingSuburb'];
+        $shippingInfo['ShippingCity'] = $data['ShippingCity'];
+        $shippingInfo['ShippingRegion'] = $data['ShippingRegion'];
+        $shippingInfo['ShippingCountry'] = $data['ShippingCountry'];
+        $shippingInfo['ShippingPostCode'] = $data['ShippingPostCode'];
+        $shippingInfo['OrderID'] = $orderID;
+        
+        return TOSEShippingAddress::save($shippingInfo);
     }
 
+    /**
+     * Function is to save billing address with order id
+     * @param type $orderID
+     * @param type $data
+     * @return type
+     */
     public function saveBillingAddress($orderID, $data) {
+        $billingInfo = array();
         
+        $billingInfo['BillingFirstName'] = $data['BillingFirstName'];
+        $billingInfo['BillingSurName'] = $data['BillingSurName'];
+        $billingInfo['BillingPhone'] = $data['BillingPhone'];
+        $billingInfo['BillingStreetNumber'] = $data['BillingStreetNumber'];
+        $billingInfo['BillingStreetName'] = $data['BillingStreetName'];
+        $billingInfo['BillingSuburb'] = $data['BillingSuburb'];
+        $billingInfo['BillingCity'] = $data['BillingCity'];
+        $billingInfo['BillingRegion'] = $data['BillingRegion'];
+        $billingInfo['BillingCountry'] = $data['BillingCountry'];
+        $billingInfo['BillingPostCode'] = $data['BillingPostCode'];
+        $billingInfo['OrderID'] = $orderID;
+        
+        return TOSEBillingAddress::save($billingInfo);
     }
-
+    
+    /**
+     * Function is to save the order
+     * @return type
+     */
     public function saveOrder() {
-        $orderInfo = unserialize(Session::get('TOSEPage::SessionOrderInfo'));
-        $data['Reference'] = TOSEOrder::create_reference();
-        $data['NeedInvoice'] = array_key_exists('NeedInvoice', $orderInfo);
-        $data['Status'] = "Pending";
-        $data['ShippingFee'] = $this->getShippingFee();
-        $data['CustomerName'] = $orderInfo['CustomerName'];
-        $data['CustomerEmail'] = $orderInfo['CustomerEmail'];
-        $data['CustomerPhone'] = $orderInfo['CustomerPhone'];
-        $data['Comments'] = $orderInfo['Comments'];
+        $orderInfo = unserialize(Session::get(TOSEPage::SessionOrderInfo));
+        $orderData['Reference'] = TOSEOrder::create_reference();
+        $orderData['NeedInvoice'] = array_key_exists('NeedInvoice', $orderInfo);
+        $orderData['Status'] = TOSEOrder::PENDING;
+        $orderData['ShippingFee'] = $this->getShippingFee();
+        $orderData['CustomerName'] = $orderInfo['CustomerName'];
+        $orderData['CustomerEmail'] = $orderInfo['CustomerEmail'];
+        $orderData['CustomerPhone'] = $orderInfo['CustomerPhone'];
+        $orderData['Comments'] = $orderInfo['Comments'];
+        
+        $order = TOSEOrder::save($orderData);
+        
+        $shippingAddress = $this->saveShippingAddress($order->ID, $orderInfo);
+        $order->ShippingAddressID = $shippingAddress->ID;
+        
+        if(key_exists('needInvoice', $orderInfo)) {
+            $billingAddress = $this->saveBillingAddress($order->ID, $orderInfo);
+            $order->BillingAddressID = $billingAddress->ID;
+        }
+        
+        $order->write();
+        
+        //Clear form info
+        Session::clear(TOSEPage::SessionOrderInfo);
+        
+        return $order;
         
     }
     
-    public function updateOrder() {
-        
+    /**
+     * Function is to update order status
+     * @param type $reference
+     * @param type $status
+     */
+    public function updateOrderStatus($reference, $status) {
+        $order = DataObject::get_one('TOSEOrder', "Reference='$reference'");
+        $order->Status = $status;
+        $order->write();
     }
 
-
+    /**
+     * Function is the action after payment
+     * @return type
+     */
     public function result(){
          $payment = DataObject::get_one("Payment", "ID = " . (int)Session::get('PaymentID'));
 
@@ -257,7 +352,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
          if($payment && $payment->Status === Payment::SUCCESS){
              
              //To call save order function to create order
-             $order = $this->updateOrder();
+             $order = $this->updateOrderStatus($payment->Reference, TOSEOrder::PAID);
              
              $data['IsSuccess'] = true;
              $data['Status'] = Payment::SUCCESS;
@@ -265,10 +360,6 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
              
              //Clear Payment ID from Session
              Session::clear("PaymentID");
-             //Clear form info
-             Session::clear(TOSEPage::SessionOrderInfo);
-             //Clear cart
-             TOSECart::get_current_cart()->clearCart();
          }
 
 

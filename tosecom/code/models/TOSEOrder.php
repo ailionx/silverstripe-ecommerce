@@ -32,12 +32,44 @@ class TOSEOrder extends DataObject {
         'Items' => "TOSEOrderItem"
     );
     
-    public function save($data) {
+////        private static $db = array(
+//        'Quantity' => 'Int',
+//        'Name' => 'Varchar(100)',
+//        'Category' => 'Varchar(100)',
+//        'SKU' => 'Varchar(100)',
+//        'Weight' => 'Decimal',
+//        'Price' => 'Currency',
+//        'Currency' => 'Varchar(10)'
+//    );
+//    
+//    private static $has_one = array(
+//        'Product' => 'TOSEProduct',
+//        'Spec' => 'TOSESpec',
+//        'Order' => 'TOSEOrder'
+    public static function save($data) {
         
         $order = new TOSEOrder();
         $order->update($data);
         $order->write();
-        return $order;
+        $cartItems = TOSECart::get_current_cart()->getCartItems();
+        foreach ($cartItems as $cartItem) {
+            $orderItem = array();
+            
+            $orderItem['OrderID'] = $order->ID;
+            $orderItem['Quantity'] = $cartItem->Quantity;
+            $orderItem['Name'] = $cartItem->Product()->Name;
+            $orderItem['Category'] = $cartItem->Product()->Category()->ID;
+            $orderItem['SKU'] = $cartItem->Spec()->SKU;
+            $orderItem['Weight'] = $cartItem->Spec()->Weight;
+            $orderItem['Price'] = $cartItem->Spec()->getCurrentPrice();
+            $orderItem['Currency'] = TOSECurrency::get_current_currency_name();
+            $orderItem['ProductID'] = $cartItem->ProductID;
+            $orderItem['SpecID'] = $cartItem->SpecID;
+
+            TOSEOrderItem::save($orderItem);
+        }
+        
+        TOSECart::get_current_cart()->clearCart();
     }
     
     public static function create_reference(){

@@ -122,11 +122,19 @@ class TOSEPage extends Page {
     }
     
     /**
-     * Function is to get symbol current currency  
+     * Function is to get symbol current currency symbol
      * @return type
      */
     public function getCurrentCurrencySymbol() {
         return TOSECurrency::get_current_currency_symbol();
+    }
+    
+    /**
+     * Function is to get symbol current currency name
+     * @return type
+     */
+    public function getCurrentCurrencyName() {
+        return TOSECurrency::get_current_currency_name();
     }
     
     /**

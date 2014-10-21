@@ -32,14 +32,18 @@ class TOSESpec extends DataObject {
         'ExtraInfo' => 'ExtraInfo'
     );
     
-    public function  getDefaultPrice() {
-        if($nzPrice = DataObject::get_one('TOSECurrency', "Currency='NZD' And SpecID='".$this->ID."'")) {
-            return $nzPrice->Price;
-        } else {
-            return '0';
-        }
-    }
+//    public function  getDefaultPrice() {
+//        if($nzPrice = DataObject::get_one('TOSECurrency', "Currency='NZD' And SpecID='".$this->ID."'")) {
+//            return $nzPrice->Price;
+//        } else {
+//            return '0';
+//        }
+//    }
 
+    /**
+     * Setup CMS fields
+     * @return type
+     */
     public function getCMSFields() {
         $fields = parent::getCMSFields();
         $fields->removeByName('Currencies');
@@ -66,11 +70,18 @@ class TOSESpec extends DataObject {
         return $fields;
     }
     
-    public function getCurrency() {
+    /**
+     * Function is to get current currency
+     * @return type
+     */
+    public function getCurrentCurrency() {
         $currentCurrentyName = TOSECurrency::get_current_currency_name();
         $currentCurrency = DataObject::get_one('TOSECurrency', "SpecID='$this->ID' AND Currency='$currentCurrentyName'");
         return $currentCurrency;
     }
     
+    public function getCurrentPrice() {
+        return $this->getCurrentCurrency()->Price;
+    }
     
 }
