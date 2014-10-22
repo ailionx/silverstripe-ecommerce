@@ -9,7 +9,7 @@ PaymentProcessor:
         - 'PayPalExpress'
         - 'Cheque'
     live:
-        - 'Cheque'
+        - 'PayPalExpress'
     
 
 PaymentExpressGateway_PxPay:
@@ -22,17 +22,3 @@ PaymentExpressGateway_PxPay:
     authentication:
       user_id: 'TechOnsite_Dev'
       key: 'f61452a5c42aefea0d40cce5f640a23b701a997704f79bbe4ca4032f0ea5c920'
-        
-PaymentFactory:
-    PaymentExpressPxPay:
-        title: 'Payment Express PxPay'
-        gateway_classes:
-            live: 'PaymentExpressGateway_PxPay'
-            dev: 'PaymentExpressGateway_PxPay'
-            test: 'PaymentExpressGateway_PxPay_Mock'
-        processor: 'PaymentProcessor_GatewayHosted'
-        model: 'Payment'
-    PayPalExpress: 'placeholder'
-    Cheque: 'placeholder'
-        
-    
