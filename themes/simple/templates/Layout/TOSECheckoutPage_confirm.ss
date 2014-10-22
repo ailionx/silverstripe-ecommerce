@@ -51,6 +51,13 @@
     </div>
 </div>
 
+<div>
+    <div id="payment-method" style="margin-top: 30px;">
+        <h3>Payment Method</h3>
+        $PaymentMethod
+    </div>
+</div>
+
 <div class="action">
     <a href="$Link">
         <button>Go Back</button>

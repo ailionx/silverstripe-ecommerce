@@ -30,7 +30,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      * @param SS_HTTPRequest $request
      * @return \TOSECheckoutPage_Controller
      */
-    public function index(SS_HTTPRequest $request) {
+    public function index() {
         $cart = TOSECart::get_current_cart();
         if ($cart->cartEmpty()) {
             return $this->redirect($this->Link()."cartEmpty");
@@ -97,6 +97,19 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $fields->push(new LiteralField('CommentsTitle', '<h3>Message</h3>'));
         $fields->push($commentField);
         
+        $methods = Config::inst()->get('PaymentProcessor', 'supported_methods');
+        if($this->multiPaymentMethod()) {
+            $envMethods = array();
+            foreach ($methods[SS_ENVIRONMENT_TYPE] as $method) {
+                $envMethods[$method] = $method;
+            }
+            $paymentField = new DropdownField('PaymentMethod', 'Payment Method', $envMethods);
+        } else {
+            $envMethods = $methods[SS_ENVIRONMENT_TYPE][0];
+            $paymentField = new HiddenField('PaymentMethod', 'Payment Method', $envMethods);
+        }
+        $fields->push($paymentField);
+        
         $actions = new FieldList(
                 new FormAction('doNext', 'Next')
                 );
@@ -148,9 +161,20 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         }
         $data = unserialize(Session::get(TOSEPage::SessionOrderInfo));
         $data['NeedInvoice'] = key_exists('NeedInvoice', $data) ? TRUE : FALSE;
-        
+
         return $this->customise($data)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
     }
+    
+    public function multiPaymentMethod() {
+        $methods = Config::inst()->get('PaymentProcessor', 'supported_methods');
+        $envMethods = $methods[SS_ENVIRONMENT_TYPE];
+        if(count($envMethods)>1) {
+            return TRUE;
+        }
+        
+        return FALSE;
+    }
+
     
     /**
      * Function is to get the shipping fee
@@ -172,17 +196,16 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         return $totalAmount;
     }
     
-    
+
     /**
      * Function is to process payment.
      * @param SS_HTTPRequest $request
      */
-    public function doPay($method) {
-        
-        $defaultMethod = Config::inst()->get('TOSECheckoutPage', 'PaymentExpressPxPay');
-        $method = $method ? $method : $defaultMethod;
-        
-        $processor = PaymentFactory::factory("PaymentExpressPxPay");
+    public function doPay() {
+        $orderInfo = unserialize(Session::get(TOSEPage::SessionOrderInfo));
+        $method = $orderInfo['PaymentMethod'];
+
+        $processor = PaymentFactory::factory($method);
         $processor->setRedirectURL($this->Link('result'));
         
 //        Amount = 'Amount'
@@ -193,8 +216,8 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $data = array(
             'Amount' => $this->totalAmount(),
             'Currency' => TOSECurrency::get_current_currency_name(),
-            'Status' => $order->Status,
-            'Reference' => $order->Reference
+            'Status' => TOSEOrder::PENDING,
+            'Reference' => null
         );
         
 	// Process the payment 
