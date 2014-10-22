@@ -182,4 +182,10 @@ class TOSEPage_Controller extends Page_Controller {
         $cartPage = DataObject::get_one('SiteTree', "ClassName='TOSECartPage'");
         return $cartPage->Link();
     }
+    
+    public function getCheckoutLink() {
+        $checkoutPage = DataObject::get_one('TOSECheckoutPage');
+        return $checkoutPage->Link();
+    }
+    
 }

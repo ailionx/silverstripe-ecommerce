@@ -172,16 +172,17 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         return $totalAmount;
     }
     
+    
     /**
-     * Function is to process payment
+     * Function is to process payment.
      * @param SS_HTTPRequest $request
      */
-    public function doPay(SS_HTTPRequest $request) {
+    public function doPay($method) {
         
-        $order = $this->saveOrder();        
-        $reference = $order->Reference;
+        $defaultMethod = Config::inst()->get('TOSECheckoutPage', 'PaymentExpressPxPay');
+        $method = $method ? $method : $defaultMethod;
         
-        $processor = PaymentFactory::factory("PaymentExpressPxPay");        
+        $processor = PaymentFactory::factory("PaymentExpressPxPay");
         $processor->setRedirectURL($this->Link('result'));
         
 //        Amount = 'Amount'
@@ -191,9 +192,9 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         //To create data for payment gateway
         $data = array(
             'Amount' => $this->totalAmount(),
-            'Currency' => 'NZD',
-            'Status' => "Pending",
-            'Reference' => $reference
+            'Currency' => TOSECurrency::get_current_currency_name(),
+            'Status' => $order->Status,
+            'Reference' => $order->Reference
         );
         
 	// Process the payment 
@@ -288,29 +289,29 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      * @return type
      */
     public function result(){
-         $payment = DataObject::get_one("Payment", "ID = " . (int)Session::get('PaymentID'));
-         $order = DataObject::get_one('TOSEOrder', "Reference='$payment->Reference'");
+        $payment = DataObject::get_one("Payment", "ID = " . (int)Session::get('PaymentID'));
+        $order = DataObject::get_one('TOSEOrder', "Reference='$payment->Reference'");
 
-         //To create default data
-         $data = array(
-             'IsSuccess' => false,
-             'Status' => Payment::FAILURE,
-             'Reference' => $payment->Reference
-         );
-         
-         //use const variable SUCCESS not directly use string
-         if($payment && $payment->Status === Payment::SUCCESS){
-             
-             //To call save order function to create order
-             $order->updateOrderStatus($payment->Reference, TOSEOrder::PAID);
-             
-             $data['IsSuccess'] = true;
-             $data['Status'] = Payment::SUCCESS;
-             $data['Reference'] = $order->Reference;
-             
-             //Clear Payment ID from Session
-             Session::clear("PaymentID");
-         }
+        //To create default data
+        $data = array(
+            'IsSuccess' => false,
+            'Status' => Payment::FAILURE,
+            'Reference' => $payment->Reference
+        );
+
+        //use const variable SUCCESS not directly use string
+        if($payment && $payment->Status === Payment::SUCCESS){
+
+            //To call save order function to create order
+
+            $order = $this->saveOrder();
+            $data['IsSuccess'] = true;
+            $data['Status'] = Payment::SUCCESS;
+            $data['Reference'] = $order->Reference;
+
+            //Clear Payment ID from Session
+            Session::clear("PaymentID");
+        }
 
 
         return $this->customise($data);

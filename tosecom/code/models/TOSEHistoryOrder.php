@@ -8,13 +8,13 @@
 
 class TOSEHistoryOrder extends DataObject {
     
-    const CANCELLED = "Cancelled";
+    const PENDING = "Pending";
     const PAID = "Paid";
     
     private static $db=array(
         'Reference'=>'Varchar(20)',
         'NeedInvoice' => "Boolean",
-        'Status'=>"Enum('Cancelled, Paid', 'Cancelled')",
+//        'Status'=>"Enum('Cancelled, Paid', 'Cancelled')",
         'ShippingFee'=>'Decimal',
         'CustomerName'=>'Varchar',
         'CustomerEmail'=>'Varchar',

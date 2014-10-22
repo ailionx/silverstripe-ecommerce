@@ -35,10 +35,9 @@ TOSECartPage:
 TOSECheckoutPage:
     pageTitle: 'Checkout'
     pageURLSegment: 'checkout'
+    defaultPaymentMethod: 'PaymentExpressPxPay'
+    multiPaymentMethod: 'TRUE'    
 
-TOSECheckoutPage_Controller:
-    extensions:
-        - TOSECheckoutPageControllerExtension
         
 TOSECurrency:
     defaultCurrency: 'NZD'

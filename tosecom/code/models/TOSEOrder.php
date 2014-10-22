@@ -9,7 +9,6 @@
 class TOSEOrder extends DataObject {
     
     const PENDING = "Pending";
-    const CANCELLED = "Cancelled";
     const PAID = "Paid";
     
     private static $db=array(
@@ -25,30 +24,23 @@ class TOSEOrder extends DataObject {
         
     private static $has_one=array(
         'ShippingAddress'=>'TOSEShippingAddress',
-        'BillingAddress'=>'TOSEBillingAddress'
+        'BillingAddress'=>'TOSEBillingAddress',
+        'Member' => 'Member'
     );
     
     private static $has_many = array(
         'Items' => "TOSEOrderItem"
     );
     
-////        private static $db = array(
-//        'Quantity' => 'Int',
-//        'Name' => 'Varchar(100)',
-//        'Category' => 'Varchar(100)',
-//        'SKU' => 'Varchar(100)',
-//        'Weight' => 'Decimal',
-//        'Price' => 'Currency',
-//        'Currency' => 'Varchar(10)'
-//    );
-//    
-//    private static $has_one = array(
-//        'Product' => 'TOSEProduct',
-//        'Spec' => 'TOSESpec',
-//        'Order' => 'TOSEOrder'
+    /**
+     * Function is to save order object
+     * @param type $data
+     * @return \TOSEOrder
+     */
     public static function save($data) {
         
         $order = new TOSEOrder();
+        $data['MemberID'] = Member::currentUserID();
         $order->update($data);
         $order->write();
         $cartItems = TOSECart::get_current_cart()->getCartItems();
@@ -74,6 +66,10 @@ class TOSEOrder extends DataObject {
         return $order;
     }
     
+    /**
+     * Function is to create reference number
+     * @return type
+     */
     public static function create_reference(){
         $date = date("Y-m-d");  
         $time = (int)date("Ymd")*10000;
@@ -84,6 +80,7 @@ class TOSEOrder extends DataObject {
         return $ref;
     }
     
+    
     /**
      * Function is to update order status
      * @param type $reference
@@ -93,5 +90,17 @@ class TOSEOrder extends DataObject {
         $this->Status = $status;
         $this->write();
     }
+    
+    public function countItems() {
+        return $this->Items()->count();
+    }
+    
+//    public function canPay() {
+//        if($this->Status == TOSEOrder::PENDING) {
+//            return TRUE;
+//        }
+//        
+//        return FALSE;
+//    }
     
 }
