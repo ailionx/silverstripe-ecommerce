@@ -75,7 +75,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         
         $invoiceFields = new CompositeField();
         $invoiceFields->addExtraClass('need-invoice');
-        $invoiceFields->push(new CheckboxField('needInvoice', 'Need Invoice?'));
+        $invoiceFields->push(new CheckboxField('NeedInvoice', 'Need Invoice?'));
         $fields->push($invoiceFields);
         
         $billingFields = new CompositeField();
@@ -93,7 +93,8 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $billingFields->push(new NumericField('BillingPostCode', 'PostCode', $memberAddress->PostCode));
         $fields->push($billingFields);
         
-        $commentField = new TextareaField('Comments', 'Comments');
+        $commentField = new TextareaField('Comments', '');
+        $fields->push(new LiteralField('CommentsTitle', '<h3>Message</h3>'));
         $fields->push($commentField);
         
         $actions = new FieldList(
@@ -146,48 +147,9 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
             return $this->redirect($this->Link()."cartEmpty");
         }
         $data = unserialize(Session::get(TOSEPage::SessionOrderInfo));
+        $data['NeedInvoice'] = key_exists('NeedInvoice', $data) ? TRUE : FALSE;
         
-        $customInfo = array();
-        $customInfo['CustomerName'] = $data['CustomerName'];
-        $customInfo['CustomerEmail'] = $data['CustomerEmail'];
-        $customInfo['CustomerPhone'] = $data['CustomerPhone'];
-        
-        $shippingInfo = array();
-        $shippingInfo['ShippingFirstName'] = $data['ShippingFirstName'];
-        $shippingInfo['ShippingSurName'] = $data['ShippingSurName'];
-        $shippingInfo['ShippingPhone'] = $data['ShippingPhone'];
-        $shippingInfo['ShippingStreetNumber'] = $data['ShippingStreetNumber'];
-        $shippingInfo['ShippingStreetName'] = $data['ShippingStreetName'];
-        $shippingInfo['ShippingSuburb'] = $data['ShippingSuburb'];
-        $shippingInfo['ShippingCity'] = $data['ShippingCity'];
-        $shippingInfo['ShippingRegion'] = $data['ShippingRegion'];
-        $shippingInfo['ShippingCountry'] = $data['ShippingCountry'];
-        $shippingInfo['ShippingPostCode'] = $data['ShippingPostCode'];
-        
-        $needInvoice = key_exists('needInvoice', $data) ? TRUE : FALSE;
-        
-        if ($needInvoice) {
-            $billingInfo = array();
-            $billingInfo['BillingFirstName'] = $data['BillingFirstName'];
-            $billingInfo['BillingSurName'] = $data['BillingSurName'];
-            $billingInfo['BillingPhone'] = $data['BillingPhone'];
-            $billingInfo['BillingStreetNumber'] = $data['BillingStreetNumber'];
-            $billingInfo['BillingStreetName'] = $data['BillingStreetName'];
-            $billingInfo['BillingSuburb'] = $data['BillingSuburb'];
-            $billingInfo['BillingCity'] = $data['BillingCity'];
-            $billingInfo['BillingRegion'] = $data['BillingRegion'];
-            $billingInfo['BillingCountry'] = $data['BillingCountry'];
-            $billingInfo['BillingPostCode'] = $data['BillingPostCode'];
-        }
-        
-        $sortData = array(
-            'customInfo' => $customInfo,
-            'needInvoice' => $needInvoice,
-            'shippingInfo' => $shippingInfo,
-            'billingInfo' => $billingInfo            
-        );
-        
-        return $this->customise($sortData)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
+        return $this->customise($data)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
     }
     
     /**
@@ -216,15 +178,12 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      */
     public function doPay(SS_HTTPRequest $request) {
         
-        $order = $this->saveOrder();
-        
+        $order = $this->saveOrder();        
         $reference = $order->Reference;
         
-        $processor = PaymentFactory::factory("PaymentExpressPxPay");
-        
+        $processor = PaymentFactory::factory("PaymentExpressPxPay");        
         $processor->setRedirectURL($this->Link('result'));
         
-//        
 //        Amount = 'Amount'
 //        Currency = 'Currency'
 //        Reference = 'Reference' (optional)
@@ -249,19 +208,19 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      */
     public function saveShippingAddress($orderID, $data) {
         $shippingInfo = array();
-        
-        $shippingInfo['ShippingFirstName'] = $data['ShippingFirstName'];
-        $shippingInfo['ShippingSurName'] = $data['ShippingSurName'];
-        $shippingInfo['ShippingPhone'] = $data['ShippingPhone'];
-        $shippingInfo['ShippingStreetNumber'] = $data['ShippingStreetNumber'];
-        $shippingInfo['ShippingStreetName'] = $data['ShippingStreetName'];
-        $shippingInfo['ShippingSuburb'] = $data['ShippingSuburb'];
-        $shippingInfo['ShippingCity'] = $data['ShippingCity'];
-        $shippingInfo['ShippingRegion'] = $data['ShippingRegion'];
-        $shippingInfo['ShippingCountry'] = $data['ShippingCountry'];
-        $shippingInfo['ShippingPostCode'] = $data['ShippingPostCode'];
+
+        $shippingInfo['FirstName'] = $data['ShippingFirstName'];
+        $shippingInfo['SurName'] = $data['ShippingSurName'];
+        $shippingInfo['Phone'] = $data['ShippingPhone'];
+        $shippingInfo['StreetNumber'] = $data['ShippingStreetNumber'];
+        $shippingInfo['StreetName'] = $data['ShippingStreetName'];
+        $shippingInfo['Suburb'] = $data['ShippingSuburb'];
+        $shippingInfo['City'] = $data['ShippingCity'];
+        $shippingInfo['Region'] = $data['ShippingRegion'];
+        $shippingInfo['Country'] = $data['ShippingCountry'];
+        $shippingInfo['PostCode'] = $data['ShippingPostCode'];
         $shippingInfo['OrderID'] = $orderID;
-        
+
         return TOSEShippingAddress::save($shippingInfo);
     }
 
@@ -274,18 +233,18 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
     public function saveBillingAddress($orderID, $data) {
         $billingInfo = array();
         
-        $billingInfo['BillingFirstName'] = $data['BillingFirstName'];
-        $billingInfo['BillingSurName'] = $data['BillingSurName'];
-        $billingInfo['BillingPhone'] = $data['BillingPhone'];
-        $billingInfo['BillingStreetNumber'] = $data['BillingStreetNumber'];
-        $billingInfo['BillingStreetName'] = $data['BillingStreetName'];
-        $billingInfo['BillingSuburb'] = $data['BillingSuburb'];
-        $billingInfo['BillingCity'] = $data['BillingCity'];
-        $billingInfo['BillingRegion'] = $data['BillingRegion'];
-        $billingInfo['BillingCountry'] = $data['BillingCountry'];
-        $billingInfo['BillingPostCode'] = $data['BillingPostCode'];
+        $billingInfo['FirstName'] = $data['BillingFirstName'];
+        $billingInfo['SurName'] = $data['BillingSurName'];
+        $billingInfo['Phone'] = $data['BillingPhone'];
+        $billingInfo['StreetNumber'] = $data['BillingStreetNumber'];
+        $billingInfo['StreetName'] = $data['BillingStreetName'];
+        $billingInfo['Suburb'] = $data['BillingSuburb'];
+        $billingInfo['City'] = $data['BillingCity'];
+        $billingInfo['Region'] = $data['BillingRegion'];
+        $billingInfo['Country'] = $data['BillingCountry'];
+        $billingInfo['PostCode'] = $data['BillingPostCode'];
         $billingInfo['OrderID'] = $orderID;
-        
+
         return TOSEBillingAddress::save($billingInfo);
     }
     
@@ -303,36 +262,26 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $orderData['CustomerEmail'] = $orderInfo['CustomerEmail'];
         $orderData['CustomerPhone'] = $orderInfo['CustomerPhone'];
         $orderData['Comments'] = $orderInfo['Comments'];
-        
+
         $order = TOSEOrder::save($orderData);
-        
+
         $shippingAddress = $this->saveShippingAddress($order->ID, $orderInfo);
         $order->ShippingAddressID = $shippingAddress->ID;
         
-        if(key_exists('needInvoice', $orderInfo)) {
+        if(key_exists('NeedInvoice', $orderInfo)) {
             $billingAddress = $this->saveBillingAddress($order->ID, $orderInfo);
             $order->BillingAddressID = $billingAddress->ID;
         }
-        
+
         $order->write();
         
         //Clear form info
-        Session::clear(TOSEPage::SessionOrderInfo);
+//        Session::clear(TOSEPage::SessionOrderInfo);
         
         return $order;
         
     }
     
-    /**
-     * Function is to update order status
-     * @param type $reference
-     * @param type $status
-     */
-    public function updateOrderStatus($reference, $status) {
-        $order = DataObject::get_one('TOSEOrder', "Reference='$reference'");
-        $order->Status = $status;
-        $order->write();
-    }
 
     /**
      * Function is the action after payment
@@ -340,19 +289,20 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      */
     public function result(){
          $payment = DataObject::get_one("Payment", "ID = " . (int)Session::get('PaymentID'));
+         $order = DataObject::get_one('TOSEOrder', "Reference='$payment->Reference'");
 
          //To create default data
          $data = array(
              'IsSuccess' => false,
              'Status' => Payment::FAILURE,
-             'Reference' => null
+             'Reference' => $payment->Reference
          );
          
          //use const variable SUCCESS not directly use string
          if($payment && $payment->Status === Payment::SUCCESS){
              
              //To call save order function to create order
-             $order = $this->updateOrderStatus($payment->Reference, TOSEOrder::PAID);
+             $order->updateOrderStatus($payment->Reference, TOSEOrder::PAID);
              
              $data['IsSuccess'] = true;
              $data['Status'] = Payment::SUCCESS;

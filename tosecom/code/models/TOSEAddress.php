@@ -9,6 +9,9 @@
 class TOSEAddress extends DataObject {
     
     private static $db = array(
+        'FirstName' => 'Varchar(100)',
+        'SurName' => 'Varchar(100)',
+        'Phone' => 'Varchar(100)',
         'StreetNumber' => 'Int',
         'StreetName' => 'Varchar(100)',
         'Suburb' => 'Varchar(100)',

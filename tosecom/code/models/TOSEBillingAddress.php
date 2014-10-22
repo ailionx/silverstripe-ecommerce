@@ -8,11 +8,20 @@
 
 class TOSEBillingAddress extends TOSEAddress {
     
-    private static $db = array();
+    private static $db = array(
+    );
 
     private static $has_one = array(
         'Order' => 'TOSEOder'
     );
     
     private static $has_many = array();
+    
+    public static function save($data) {
+        $billingAddress = new TOSEBillingAddress();
+        $billingAddress->update($data);
+        $billingAddress->write();
+        
+        return $billingAddress;
+    }
 }

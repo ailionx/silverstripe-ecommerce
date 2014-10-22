@@ -24,8 +24,8 @@ class TOSEOrder extends DataObject {
     );
         
     private static $has_one=array(
-        'Shipping'=>'TOSEShippingAddress',
-        'Billing'=>'TOSEBillingAddress'
+        'ShippingAddress'=>'TOSEShippingAddress',
+        'BillingAddress'=>'TOSEBillingAddress'
     );
     
     private static $has_many = array(
@@ -69,7 +69,9 @@ class TOSEOrder extends DataObject {
             TOSEOrderItem::save($orderItem);
         }
         
-        TOSECart::get_current_cart()->clearCart();
+//        TOSECart::get_current_cart()->clearCart();
+        
+        return $order;
     }
     
     public static function create_reference(){
@@ -81,4 +83,15 @@ class TOSEOrder extends DataObject {
         
         return $ref;
     }
+    
+    /**
+     * Function is to update order status
+     * @param type $reference
+     * @param type $status
+     */
+    public function updateOrderStatus($status) {
+        $this->Status = $status;
+        $this->write();
+    }
+    
 }
