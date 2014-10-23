@@ -13,4 +13,19 @@ class TOSECategoryPage extends TOSEPage {
 
 class TOSECategoryPage_Controller extends TOSEPage_Controller {
     
+//    public function index() {
+//        
+//    }
+    
+    public function getRootCategories() {
+
+        $rootCategories = DataObject::get('TOSECategory', "ParentCategoryID='0'");
+
+        return $rootCategories;
+    }
+    
+    public function test() {
+        TOSECategory::get_ancestor_categories('round fru');
+    }
+    
 }
