@@ -2,7 +2,6 @@
     <h3>First Solution</h3>
     <% loop RootCategories %>
     <div>
-        [0]: {$Name}
         <% loop get_descendant_categories($Name) %>
             <div style="margin-left: {$Level}rem;">
                 [$Level]: {$Name}

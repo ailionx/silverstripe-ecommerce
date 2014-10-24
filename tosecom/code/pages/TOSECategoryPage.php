@@ -13,9 +13,26 @@ class TOSECategoryPage extends TOSEPage {
 
 class TOSECategoryPage_Controller extends TOSEPage_Controller {
     
-//    public function index() {
-//        
-//    }
+    private static $url_handlers = array(
+        '$ID' => "index"
+    );
+
+    public function index(SS_HTTPRequest $request) {
+        $params = $request->allParams();
+        $id = $params['ID'];
+        if(!is_numeric($id)) {
+            die('Invalid category');
+        }
+        if(!$category = DataObject::get_one('TOSECategory', "ID = '$id'")) {
+            die('No such category');
+        }
+
+        return $this->customise(
+            $data = array(
+                "Category" => $category
+            ));
+        
+    }
     
     public function getRootCategories() {
 
@@ -24,8 +41,5 @@ class TOSECategoryPage_Controller extends TOSEPage_Controller {
         return $rootCategories;
     }
     
-    public function test() {
-        TOSECategory::get_ancestor_categories('round fru');
-    }
     
 }

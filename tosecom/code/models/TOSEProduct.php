@@ -79,7 +79,27 @@ class TOSEProduct extends DataObject {
 //    public function setDefualtImage($id) {
 //        $this->default_image = $id;
 //    }
-    
+    public static function get_enabled_products($products) {
+        
+        if(is_object($products)) {
+            $className = get_class($products);
+            if($className=="ArrayList" || $className=="DataList") {
+                return $products->filter('Enabled','1');
+            }
+        }
+        
+        if (is_array($products)) {
+            return array_filter($products, function($obj){
+                if ((get_class($obj))!="TOSEProduct") {
+                    die('Only product object can be checked enable');
+                }
+                return $obj->isEnabled() ? TRUE : FALSE;
+            });
+        }
+        
+        die('Not supported type, must be ArrayList, DataList or Array');
+        
+    }
 
     
     public function getCMSFields() {
