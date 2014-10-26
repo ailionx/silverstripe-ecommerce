@@ -3,7 +3,7 @@
 </div>
 
 <div>
-    <% with $Category %>
-        $getAncerstorCategoriesID
-    <% end_with %>
+    <% loop $Category %>
+        $Name
+    <% end_loop %>
 </div>

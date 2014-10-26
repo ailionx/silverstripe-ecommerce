@@ -14,16 +14,19 @@ class TOSECategoryPage extends TOSEPage {
 class TOSECategoryPage_Controller extends TOSEPage_Controller {
     
     private static $url_handlers = array(
-        '$ID' => "index"
+        '$cateoryLink' => "index"
     );
 
     public function index(SS_HTTPRequest $request) {
         $params = $request->allParams();
-        $id = $params['ID'];
-        if(!is_numeric($id)) {
-            die('Invalid category');
+        $cateoryLink = $params['cateoryLink'];
+        if(!$cateoryLink) {
+            return $this->customise(
+            $data = array(
+                "Category" => DataObject::get('TOSECategory')
+            ));
         }
-        if(!$category = DataObject::get_one('TOSECategory', "ID = '$id'")) {
+        if(!$category = DataObject::get_one('TOSECategory', "Link = '$cateoryLink'")) {
             die('No such category');
         }
 
