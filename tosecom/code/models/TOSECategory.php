@@ -160,7 +160,9 @@ class TOSECategory extends DataObject {
        
     }
     
-    
+    /**
+     * Function is to write in link for category
+     */
     public function onBeforeWrite() {
         parent::onBeforeWrite();
                 //To setup link
@@ -177,6 +179,9 @@ class TOSECategory extends DataObject {
         $this->Link = $link;
     }
     
+    /**
+     * Function is to write in chain information for category
+     */
     public function onAfterWrite() {
         parent::onAfterWrite();
         if (!$this->Chain) {
@@ -184,6 +189,11 @@ class TOSECategory extends DataObject {
             $this->Chain = $chain;
             $this->write();
         }
+    }
+    
+    public function updateCategoryChain($id) {
+        $categories = DataObject::get('TOSECategory', "Chain like %-$id-%");
+        
     }
     
 }

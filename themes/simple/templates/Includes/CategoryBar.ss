@@ -4,7 +4,7 @@
     <div>
         <% loop get_descendant_categories($Name) %>
             <div style="margin-left: {$Level}rem;">
-                [$Level]: {$Name}
+                <a href="$Top.getEcommerceRootPageLink/$Link">[$Level]: {$Name}</a>
             </div>
         <% end_loop %>
     </div>
