@@ -8,6 +8,13 @@
 
 class TOSECurrency extends DataObject {
     
+        
+//    private static $db = array(
+//        'Price' => 'Currency',
+//        'Currency' => self::currency_options()
+//        
+//    );
+    
     private static $db = array(
         'Currency' => "Enum('NZD, USD, GBP', 'NZD')",
         'Price' => 'Currency'
@@ -17,14 +24,24 @@ class TOSECurrency extends DataObject {
         'Spec' => 'TOSESpec'
     );
     
-    
     private static $summary_fields = array(
         'Currency' => 'Currency',
         'Price' => 'Price'
     );
 
-    
-    
+     
+    public static function currency_options() {
+        $config = Config::inst()->get('TOSECurrency', 'currencies');
+        $currencies = array_keys($config);
+        if(!in_array('NZD', $currencies)){
+            $currencies[] = 'NZD';
+        }
+        $currencyOptions = implode(',', $currencies);
+        $enumString = "Enum(".$currencyOptions.",'NZD')";
+        
+        return $enumString;
+    }
+
 //    public static function get_all_currencies() {
 //        $config = Config::inst()->get('TOSECurrency', 'currencies');
 //        $currencies = array_keys($config);

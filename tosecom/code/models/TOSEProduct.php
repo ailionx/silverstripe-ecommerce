@@ -148,6 +148,12 @@ class TOSEProduct extends DataObject {
         $newToField = $fields->dataFieldByName('NewTo');
         $newFromField->setConfig('showcalendar', true);
         $newToField->setConfig('showcalendar', true);
+        $fields->replaceField('CategoryID', $categoryField = new TreeDropdownField('CategoryID', 'Category', "TOSECategory", 'ID', 'Name', FALSE));
+//        var_dump($categoryField->getSourceObject()); die;
+//        $categoryField = $fields->fieldByName('CategoryID'); 
+//        var_dump($categoryField); 
+//        var_dump($fields);
+//        die;
         
         if ($this->ID) {
             

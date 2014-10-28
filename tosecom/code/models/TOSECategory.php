@@ -15,7 +15,7 @@ class TOSECategory extends DataObject {
     );
     
     private static $has_one = array(
-        'ParentCategory' => 'TOSECategory'
+        'Parent' => 'TOSECategory'
     );
     
     private static $has_many = array(
@@ -25,7 +25,7 @@ class TOSECategory extends DataObject {
     
     private static $summary_fields = array(
         'Name' => 'Name',
-        'getParentCategoryName' => 'Parent Category',
+        'getParentName' => 'Parent Category',
         'Link' => 'Link'
     );
     
@@ -34,9 +34,9 @@ class TOSECategory extends DataObject {
      * Function is to get the parent name of a category, return "Root" if doesn't have a parent category
      * @return string
      */
-    public function getParentCategoryName() {
+    public function getParentName() {
         
-        if ($name = $this->ParentCategory()->Name) {
+        if ($name = $this->Parent()->Name) {
             return $name;
         }
         
@@ -78,11 +78,11 @@ class TOSECategory extends DataObject {
     public function getAncerstorCategoriesID() {
         $id = $this->ID;
         $IDArray = array((string)$id);
-        $sql = "select ID, @pv:=ParentCategoryID as 'ParentCategoryID', ClassName, Created, LastEdited, Name from (select * from tosecategory where 1 order by ID DESC)reverse join (select @pv:=$id)tmp where ID=@pv";
+        $sql = "select ID, @pv:=ParentID as 'ParentID', ClassName, Created, LastEdited, Name from (select * from tosecategory where 1 order by ID DESC)reverse join (select @pv:=$id)tmp where ID=@pv";
         
         $result = DB::query($sql);
 
-        $IDArray = array_merge($IDArray, $result->column('ParentCategoryID'));
+        $IDArray = array_merge($IDArray, $result->column('ParentID'));
 
         return $IDArray;
 
@@ -106,10 +106,10 @@ class TOSECategory extends DataObject {
         $category->Level = $level;
         $categories->add($category);
         
-        $parentCategory = $category->ParentCategory();
-        if($parentCategory->ID) {
-            $parentCategory->Level = ++$level;
-            $this->getAncestorCategories($parentCategory->Name, $categories, $level);
+        $parent = $category->Parent();
+        if($parent->ID) {
+            $parent->Level = ++$level;
+            $this->getAncestorCategories($parent->Name, $categories, $level);
         }
         
         return $categories;

@@ -16,8 +16,7 @@ class TOSESpec extends DataObject {
     );
 
     private static $has_one = array(
-        'Product' => 'TOSEProduct'
-        
+        'Product' => 'TOSEProduct'       
     );
     
     private static $has_many = array(
