@@ -17,7 +17,7 @@ class TOSEProduct extends DataObject {
     );
     
     private static $has_one = array(
-        'Category' => 'TOSECategory'
+        'Category' => 'TOSECategory',
     );
     
     private static $has_many = array(
@@ -40,15 +40,42 @@ class TOSEProduct extends DataObject {
     }
 
     /**
-     * Function is to get the default spec of product, for cms
+     * Function is to get the default spec of product
      * @return type
      */
     public function getDefaultSpec() {
-        $Spec = DataObject::get('TOSESpec', "ProductID = '".$this->ID."'")->first();
-        return $Spec;
+        $spec = $this->Specs()->first();
+
+        return $spec ? $spec : FALSE;
     }
     
+    public function getDefaultPrice() {
+        if ($this->getDefaultSpec()) {
+            $price = $this->getDefaultSpec()->getCurrentPrice();
+            return $price ? $price : FALSE;
+        }
+        
+        return FALSE;
+    }
+
+
     /**
+     * Function is to get default image of product
+     * @return type
+     */
+    public function getDefaultImage() {
+        $image = $this->Images()->first();
+        return $image;
+    }
+    
+    public function getLink() {
+        $pageURL = DataObject::get_one('TOSEProductPage')->Link();
+        $link = $pageURL . $this->ID;
+        
+        return $link;
+    }
+
+        /**
      * Function is to check if the Product is enabled, if not, this product should not be shown in front end
      * @return type
      */
@@ -56,29 +83,34 @@ class TOSEProduct extends DataObject {
         return $this->Enabled;
     }
     
+    /**
+     * Function is to check if the product is new product
+     * @return boolean
+     */
     public function isNew() {
+        $today = time();
+        if(($today>strtotime($this->NewFrom)) && ($today<strtotime($this->NewTo))) {
+            return TRUE;
+        }
         
+        return FALSE;
     }
-
+    
+    /**
+     * Function is to get the link of cart page
+     * @return type
+     */
     public function getCartLink() {
         $cartPage = DataObject::get_one('TOSECartPage');
         $link = $cartPage->Link();
         return $link;
     }
 
-//    public function setDefualtSpec($id) {
-//        $this->default_spec = $id;
-//    }
-//    
-    public function getDefaultImage() {
-        if($this->Images()->Count() > 0){
-            return $this->Images()->First();
-        }
-    }
-//    
-//    public function setDefualtImage($id) {
-//        $this->default_image = $id;
-//    }
+    /**
+     * Function is to filter enabled products from a products list
+     * @param type $products
+     * @return type
+     */
     public static function get_enabled_products($products) {
         
         if(is_object($products)) {
@@ -101,13 +133,15 @@ class TOSEProduct extends DataObject {
         
     }
 
-    
+
+    /**
+     * Function is to customize cms fields
+     * @return type
+     */
     public function getCMSFields() {
 
         $fields = parent::getCMSFields();
-        $fields->removeByName('Specs');
-        $fields->removeByName('Images');
-        $fields->removeByName('Enabled');
+        $fields->removeByName(array('Specs', 'Images', 'Enabled', 'CategoryChain'));
         $enabledField = new CheckboxField('Enabled', 'Enabled this product', TRUE);
         $fields->addFieldToTab('Root.Main', $enabledField, 'NewFrom');
         $newFromField = $fields->dataFieldByName('NewFrom');
@@ -151,4 +185,14 @@ class TOSEProduct extends DataObject {
 
         return $fields;
     }
+    
+    
+//    protected function onAfterWrite() {
+//        parent::onAfterWrite();
+//        if (!$this->Specs()) {
+//            
+//        }        
+//        
+//    }
+    
 }

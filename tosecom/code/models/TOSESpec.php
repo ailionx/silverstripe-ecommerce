@@ -80,8 +80,14 @@ class TOSESpec extends DataObject {
         return $currentCurrency;
     }
     
+    /**
+     * Function is to get current price if this spec
+     * @return type
+     */
     public function getCurrentPrice() {
         return $this->getCurrentCurrency()->Price;
     }
+    
+
     
 }

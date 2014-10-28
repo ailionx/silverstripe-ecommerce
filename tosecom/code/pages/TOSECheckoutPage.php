@@ -299,13 +299,11 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
 
         $order->write();
         
-        //Clear form info
-//        Session::clear(TOSEPage::SessionOrderInfo);
-        
         return $order;
         
     }
     
+
 
     /**
      * Function is the action after payment
@@ -331,7 +329,11 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
             $data['IsSuccess'] = true;
             $data['Status'] = Payment::SUCCESS;
             $data['Reference'] = $order->Reference;
-
+        
+            //Clear cart and order information
+            
+            TOSECart::get_current_cart()->clearCart();
+            Session::clear(TOSEPage::SessionOrderInfo);
             //Clear Payment ID from Session
             Session::clear("PaymentID");
         }

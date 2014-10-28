@@ -61,7 +61,6 @@ class TOSEOrder extends DataObject {
             TOSEOrderItem::save($orderItem);
         }
         
-//        TOSECart::get_current_cart()->clearCart();
         
         return $order;
     }

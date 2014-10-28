@@ -25,7 +25,8 @@ class TOSECategory extends DataObject {
     
     private static $summary_fields = array(
         'Name' => 'Name',
-        'getParentCategoryName' => 'Parent Category'
+        'getParentCategoryName' => 'Parent Category',
+        'Link' => 'Link'
     );
     
     
@@ -49,7 +50,7 @@ class TOSECategory extends DataObject {
      * @param type $level
      * @return type
      */
-    public static function get_descendant_categories($categoryName, $categories=null, $level=1) {
+    public function getDescendantCategories($categoryName, $categories=null, $level=1) {
         $categories = $categories ? $categories : new ArrayList();
         $category = DataObject::get_one('TOSECategory', "Name='$categoryName'");
         $childCategories = $category->ChildCategories();
@@ -64,7 +65,7 @@ class TOSECategory extends DataObject {
         $level++;
         foreach ($childCategories as $childCategory) {
 
-            self::get_descendant_categories($childCategory->Name, $categories, $level);
+            $this->getDescendantCategories($childCategory->Name, $categories, $level);
         }
 
         return $categories;
@@ -94,9 +95,13 @@ class TOSECategory extends DataObject {
      * @param type $level
      * @return type
      */
-    public static function get_ancestor_categories($categoryName, $categories=null, $level=1) {
+    public function getAncestorCategories($categoryName, $categories=null, $level=1) {
         $categories = $categories ? $categories : new ArrayList();
-        $category = DataObject::get_one('TOSECategory', "Name='$categoryName'");
+        if($level == 1) {
+            $category = $this;
+        } else {
+            $category = DataObject::get_one('TOSECategory', "Name='$categoryName'");
+        }
 
         $category->Level = $level;
         $categories->add($category);
@@ -104,52 +109,39 @@ class TOSECategory extends DataObject {
         $parentCategory = $category->ParentCategory();
         if($parentCategory->ID) {
             $parentCategory->Level = ++$level;
-            self::get_ancestor_categories($parentCategory->Name, $categories, $level);
+            $this->getAncestorCategories($parentCategory->Name, $categories, $level);
         }
         
         return $categories;
     }
     
+    /**
+     * Function is to get the chain information of this category
+     * @return string
+     */
     public function getCategoryChain() {
-        $categories = self::get_ancestor_categories($this->Name)->sort('Level');
+        $categories = $this->getAncestorCategories($this->Name)->sort('Level');
         $IDs = $categories->column('ID');
-        $chain = implode('-', $IDs);
+        $chain = '-'.implode('-', $IDs).'-';
         return $chain;
     }
 
     /**
-     * Function is to get descendant categories of this category
+     * Function is to get all products belongs to this category and all descendant categories
      * @return type
      */
-    public function getDescendant() {
-        return self::get_descendant_categories($this->Name);
-    }
-    
-    /**
-     * Functon is to get Ancestor categories of this category
-     * @return type
-     */
-    public function getAncestors() {
-        return self::get_ancestor_categories($this->Name);
+    public function getAllProducts() {
+
+        $products = DataObject::get('TOSEProduct')->innerJoin('TOSECategory', "TOSECategory.Chain like '%-{$this->ID}-%' AND TOSEProduct.CategoryID = TOSECategory.ID");
+        
+        return TOSEProduct::get_enabled_products($products);
+        
     }
 
-    
-    public function getDescendantProducts() {
-        
-        
-        
-//        $products = $this->Products();
-//        $productsMap = $products->map('ID', 'Name');
-//
-//        $categories = self::get_descendant_categories($this->Name);
-//        foreach ($categories as $category) {
-//            $Maps = $category->Products()->map('ID', 'Name');
-//            $productsMap = array_merge($productsMap, $Maps);
-//        }
-//        var_dump($productsMap); die;
-//        return TOSEProduct::get_enabled_products($products);
-    }
-    
+        /**
+     * Function is to customize cms fields
+     * @return type
+     */
     public function getCMSFields() {
        $fields = parent::getCMSFields();
        $fields->removeByName('Chain');
@@ -163,7 +155,7 @@ class TOSECategory extends DataObject {
     /**
      * Function is to write in link for category
      */
-    public function onBeforeWrite() {
+    protected function onBeforeWrite() {
         parent::onBeforeWrite();
                 //To setup link
         $link = $this->Name;
@@ -177,23 +169,28 @@ class TOSECategory extends DataObject {
         $link = preg_replace("/[\s_]/", "-", $link);
         
         $this->Link = $link;
+        
+        $chain = $this->getCategoryChain();
+        $this->Chain = $chain;
     }
     
     /**
      * Function is to write in chain information for category
      */
-    public function onAfterWrite() {
-        parent::onAfterWrite();
-        if (!$this->Chain) {
-            $chain = $this->getCategoryChain();
-            $this->Chain = $chain;
-            $this->write();
-        }
-    }
+//    public function onAfterWrite() {
+//        parent::onAfterWrite();
+//        if (!$this->Chain) {
+//            $chain = $this->getCategoryChain();
+//            var_dump($chain);die;
+//            $this->Chain = $chain;
+//            $this->write();
+//        }
+//    }
     
-    public function updateCategoryChain($id) {
-        $categories = DataObject::get('TOSECategory', "Chain like %-$id-%");
-        
-    }
+//    public function updateCategoryChain($id) {
+//        $categories = DataObject::get('TOSECategory', "Chain like %-$id%");
+//        
+//    }
+    
     
 }

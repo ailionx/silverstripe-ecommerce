@@ -1,6 +1,6 @@
 <div style="margin-left: 1rem;">
-    <a href="$Link">[$get_ancestor_categories($Name).count]: $Name</a>
+    <a href="$topLink$Link">[$getAncestorCategories($Name).count]: $Name</a>
     <% loop $ChildCategories %>
-        <% include ChildCategory %>
+        <% include ChildCategory topLink=$topLink %>
     <% end_loop %>
 </div>
