@@ -48,3 +48,7 @@ TOSECurrency:
     extensions:
         - TOSECurrencyExtension
         
+TOSECategory:
+    extensions:
+        - TOSECategoryExtension
+        

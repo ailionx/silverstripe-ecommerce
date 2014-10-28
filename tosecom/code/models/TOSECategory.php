@@ -153,7 +153,32 @@ class TOSECategory extends DataObject {
     }
     
     /**
-     * Function is to write in link for category
+     * Function is to update category chain and product category ID when one category is deleted
+     * @param type $deleteID
+     * @param type $newID
+     */
+    private static function update_category_chain($deleteID, $newID) {
+        $products = DataObject::get('TOSEProduct', "CategoryID='$deleteID'");
+        $categories = DataObject::get('TOSECategory', "Chain like '%-{$deleteID}-%'");
+        if ($products->count()) {
+            foreach ($products as $product) {
+                $product->CategoryID = $newID;
+                $product->write();
+            }
+        }
+        
+        if ($categories->count()) {
+            foreach ($categories as $category) {
+                $category->ParentID = $newID;
+                $category->Chain = $category->getCategoryChain();
+                $category->write();
+            }
+        }
+        
+    }
+    
+    /**
+     * Function is to write in link and chain information for category
      */
     protected function onBeforeWrite() {
         parent::onBeforeWrite();
@@ -174,23 +199,11 @@ class TOSECategory extends DataObject {
         $this->Chain = $chain;
     }
     
-    /**
-     * Function is to write in chain information for category
-     */
-//    public function onAfterWrite() {
-//        parent::onAfterWrite();
-//        if (!$this->Chain) {
-//            $chain = $this->getCategoryChain();
-//            var_dump($chain);die;
-//            $this->Chain = $chain;
-//            $this->write();
-//        }
-//    }
-    
-//    public function updateCategoryChain($id) {
-//        $categories = DataObject::get('TOSECategory', "Chain like %-$id%");
-//        
-//    }
+    protected function onBeforeDelete() {
+        parent::onBeforeDelete();
+        self::update_category_chain($this->ID, $this->ParentID);
+    }
+
     
     
 }
