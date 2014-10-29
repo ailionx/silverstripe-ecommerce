@@ -1,7 +1,7 @@
 <% with $Cart %>
     <% if $cartEmpty %>
         <div>No items in cart yet</div>
-        <a href='$Top.getEcommerceRootPageLink/product/'><button>Go Shopping</button></a>
+        <a href='$Top.getEcommerceRootPageLink/category/'><button>Go Shopping</button></a>
     <% else %>
         <% include CartPanel CartLink=$Top.getCartLink,CurrencySymbol=$Top.CurrentCurrencySymbol %>
     <a href='{$Top.getCartLink}clearCart'><button>Clear Cart</button></a>

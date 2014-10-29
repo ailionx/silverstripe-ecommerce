@@ -49,6 +49,10 @@ class TOSEProduct extends DataObject {
         return $spec ? $spec : FALSE;
     }
     
+    /**
+     * Function is to get default price
+     * @return boolean
+     */
     public function getDefaultPrice() {
         if ($this->getDefaultSpec()) {
             $price = $this->getDefaultSpec()->getCurrentPrice();

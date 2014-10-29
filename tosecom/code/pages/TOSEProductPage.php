@@ -22,8 +22,7 @@ class TOSEProductPage_Controller extends TOSEPage_Controller {
     public function index(SS_HTTPRequest $request) {
         $id = $request->param("ID");
         if(!$id || !is_numeric($id) || !($product = DataObject::get_by_id("TOSEProduct", $id)) || $product->isEnabled()==FALSE){
-//            die("TOS Product NOT FOUND");
-            return $this->redirect($this->Link()."1");
+            die("TOS Product NOT FOUND");
         }
 
         return $this->customise(array("Product" => $product));

@@ -17,7 +17,7 @@ class TOSEValidator {
     public static function data_is_number($data, $fields, $nonZero=FALSE) {
         if(is_array($fields)) {
             foreach ($fields as $field) {
-                if(!is_numeric($data[$field])) {
+                if(!array_key_exists($field, $data) || !is_numeric($data[$field])) {
                     die($field." must be number");
                 }
                 if($nonZero && ($data[$field]<=0)){

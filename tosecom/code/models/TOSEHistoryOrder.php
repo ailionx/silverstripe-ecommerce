@@ -7,14 +7,11 @@
  */
 
 class TOSEHistoryOrder extends DataObject {
-    
-    const PENDING = "Pending";
-    const PAID = "Paid";
-    
+
     private static $db=array(
         'Reference'=>'Varchar(20)',
         'NeedInvoice' => "Boolean",
-//        'Status'=>"Enum('Cancelled, Paid', 'Cancelled')",
+        'Status'=>"Enum('Pending, Delivered', 'Pending')",
         'ShippingFee'=>'Decimal',
         'CustomerName'=>'Varchar',
         'CustomerEmail'=>'Varchar',
@@ -23,11 +20,20 @@ class TOSEHistoryOrder extends DataObject {
     );
         
     private static $has_one=array(
-        'Shipping'=>'TOSEShippingAddress',
-        'Billing'=>'TOSEBillingAddress'
+        'ShippingAddress'=>'TOSEShippingAddress',
+        'BillingAddress'=>'TOSEBillingAddress',
+        'Member' => 'Member'
     );
     
     private static $has_many = array(
         'Items' => "TOSEOrderItem"
+    );
+    
+    private static $summary_fields = array(
+        'Reference' => 'Reference',
+        'getTotalPrice' => 'Total Price',
+        'Created' => 'Created',
+        'CustomerName' => 'Customer Name',
+        'Status' => 'Status'
     );
 }

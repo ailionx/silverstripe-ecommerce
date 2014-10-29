@@ -165,6 +165,10 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         return $this->customise($data)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
     }
     
+    /**
+     * Function is to check if there are multiple payment method
+     * @return boolean
+     */
     public function multiPaymentMethod() {
         $methods = Config::inst()->get('PaymentProcessor', 'supported_methods');
         $envMethods = $methods[SS_ENVIRONMENT_TYPE];
