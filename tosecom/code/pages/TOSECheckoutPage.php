@@ -315,13 +315,12 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      */
     public function result(){
         $payment = DataObject::get_one("Payment", "ID = " . (int)Session::get('PaymentID'));
-        $order = DataObject::get_one('TOSEOrder', "Reference='$payment->Reference'");
 
         //To create default data
         $data = array(
             'IsSuccess' => false,
             'Status' => Payment::FAILURE,
-            'Reference' => $payment->Reference
+            'Reference' => NULL
         );
 
         //use const variable SUCCESS not directly use string
@@ -330,7 +329,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
             //To call save order function to create order
 
             $order = $this->saveOrder();
-            $data['IsSuccess'] = true;
+            $data['IsSuccess'] = TRUE;
             $data['Status'] = Payment::SUCCESS;
             $data['Reference'] = $order->Reference;
         

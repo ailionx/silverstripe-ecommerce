@@ -106,7 +106,7 @@ class TOSEPage extends Page {
      * @return type
      */
     public function getLogInOut() {
-        return Member::currentUserID() ? "logout" : "login";
+        return $this->isCustomerLogin() ? "logout" : "login";
     }
     
     /**

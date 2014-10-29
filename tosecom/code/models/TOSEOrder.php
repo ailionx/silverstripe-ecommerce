@@ -39,7 +39,27 @@ class TOSEOrder extends DataObject {
         'CustomerName' => 'Customer Name',
         'Status' => 'Status'
     );
-
+    
+    
+    /**
+     * OVERRIDE
+     * @param type $member
+     * @return boolean
+     */
+    public function canDelete($member = null) {
+        return FALSE;
+    }
+    
+    
+    /**
+     * OVERRIDE
+     * @param type $member
+     * @return boolean
+     */
+    public function canEdit($member = null) {
+        return FALSE;
+    }
+    
     /**
      * Function is to save order object
      * @param type $data
@@ -117,10 +137,10 @@ class TOSEOrder extends DataObject {
      * @param type $reference
      * @param type $status
      */
-    public function updateOrderStatus($status) {
-        $this->Status = $status;
-        $this->write();
-    }
+//    public function updateOrderStatus($status) {
+//        $this->Status = $status;
+//        $this->write();
+//    }
     
     /**
      * OVERRIDE
@@ -211,7 +231,7 @@ class TOSEOrder extends DataObject {
             $info .= "<tr><td><img src='".$item->Product()->getDefaultImage()->Filename."' style='width:60px;' ></td>"
                     . "<td>$item->Name</td>"
                     . "<td>$item->Category</td>"
-                    . "<td>$item->Price</td>"
+                    . "<td>NZD $$item->Price</td>"
                     . "<td>$item->Quantity</td>"
                     . "<td>$item->Name</td>";
         }
@@ -220,6 +240,50 @@ class TOSEOrder extends DataObject {
         
         return $info;
         
+    }
+
+    /**
+     * Function is to move order from order table to history order table
+     */
+    public function moveToHistory() {
+        $historyOrder = new TOSEHistoryOrder();
+        $historyOrder->Reference = $this->Reference;
+        $historyOrder->NeedInvoice = $this->NeedInvoice;
+        $historyOrder->Status = $this->Status;
+        $historyOrder->ShippingFee = $this->ShippingFee;
+        $historyOrder->CustomerName = $this->CustomerName;
+        $historyOrder->CustomerEmail = $this->CustomerEmail;
+        $historyOrder->CustomerPhone = $this->CustomerPhone;
+        $historyOrder->Comments = $this->Comments;
+        $historyOrder->ShippingAddressID = $this->ShippingAddressID;
+        $historyOrder->BillingAddressID = $this->BillingAddressID;
+        $historyOrder->MemberID = $this->MemberID;
+        $historyOrder->write();
+        
+        // Modify shipping and billing address foreign key
+        $shippingAddress = $this->ShippingAddress();
+        $shippingAddress->OrderID = 0;
+        $shippingAddress->HistoryOrderID = $historyOrder->ID;
+        $shippingAddress->write();
+        $billingAddress = $this->BillingAddress();
+        $billingAddress->OrderID = 0;
+        $billingAddress->HistoryOrderID = $historyOrder->ID;
+        $billingAddress->write();
+        
+        $items = $this->Items();
+        foreach($items as $item) {
+            $item->OrderID = 0;
+            $item->HistoryOrderID = $historyOrder->ID;
+            $item->write();
+        }
+        
+        $this->delete();
+    }
+
+    public function onAfterWrite() {
+        if($this->Status == self::DELIVERED) {
+            $this->moveToHistory();
+        }
     }
 //    public function canPay() {
 //        if($this->Status == TOSEOrder::PENDING) {

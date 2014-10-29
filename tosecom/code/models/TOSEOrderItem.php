@@ -22,7 +22,8 @@ class TOSEOrderItem extends DataObject {
     private static $has_one = array(
         'Product' => 'TOSEProduct',
         'Spec' => 'TOSESpec',
-        'Order' => 'TOSEOrder'
+        'Order' => 'TOSEOrder',
+        'HistoryOrder' => 'TOSEHistoryOrder'
     );
     
     private static $has_many = array();

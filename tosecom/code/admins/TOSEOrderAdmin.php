@@ -16,7 +16,7 @@ class TOSEOrderAdmin extends ModelAdmin {
     private $className = 'TOSEOrder';
     
     
-    private static $managed_models = array('TOSEOrder'); 
+    private static $managed_models = array('TOSEOrder', 'TOSEHistoryOrder'); 
     private static $url_segment = 'orders';
     private static $menu_title = 'Orders';
     
@@ -29,49 +29,45 @@ class TOSEOrderAdmin extends ModelAdmin {
 //        $this->order_type = $status;
 //    }
 
-
-    public function canDelete() {
-        return false;
-    }
     
-    protected function getManagedModelTabs() {
-        $tabs = new ArrayList();
-
-        $tabs->push(new ArrayData(array(
-            'Title'     => 'Pending Orders',
-            'ClassName' => $this->className,
-            'Link' => $this->Link($this->sanitiseClassName($this->className))."?type=" . self::PENDING,
-            'LinkOrCurrent' => ($this->request->getVar('type') == self::PENDING) ? 'current' : 'link'
-        )));
-        
-        $tabs->push(new ArrayData(array(
-            'Title'     => 'History Orders',
-            'ClassName' => $this->className,
-            'Link' => $this->Link($this->sanitiseClassName($this->className))."?type=" . self::HISTORY,
-            'LinkOrCurrent' => ($this->request->getVar('type') == self::HISTORY) ? 'current' : 'link'
-        )));
-//        var_dump($tabs); die;
-        
-        return $tabs;
-    }
-    
-    public function getList() {
-        $list = parent::getList();
-        $status = $this->request->getVar('type');
-        switch ($status) {
-            case self::PENDING: 
-                $thisList = $list->where("Status='".TOSEOrder::PENDING."'");
-                break;
-            case self::HISTORY: 
-                $thisList = $list->where("Status='".TOSEOrder::DELIVERED."'");
-                break;
-            default :
-                $thisList = $list;
-        }
-
-        return $thisList;
-                
-    }
+//    protected function getManagedModelTabs() {
+//        $tabs = new ArrayList();
+//
+//        $tabs->push(new ArrayData(array(
+//            'Title'     => 'Pending Orders',
+//            'ClassName' => $this->className,
+//            'Link' => $this->Link($this->sanitiseClassName($this->className))."?type=" . self::PENDING,
+//            'LinkOrCurrent' => ($this->request->getVar('type') == self::PENDING) ? 'current' : 'link'
+//        )));
+//        
+//        $tabs->push(new ArrayData(array(
+//            'Title'     => 'History Orders',
+//            'ClassName' => $this->className,
+//            'Link' => $this->Link($this->sanitiseClassName($this->className))."?type=" . self::HISTORY,
+//            'LinkOrCurrent' => ($this->request->getVar('type') == self::HISTORY) ? 'current' : 'link'
+//        )));
+////        var_dump($tabs); die;
+//        
+//        return $tabs;
+//    }
+//    
+//    public function getList() {
+//        $list = parent::getList();
+//        $status = $this->request->getVar('type');
+//        switch ($status) {
+//            case self::PENDING: 
+//                $thisList = $list->where("Status='".TOSEOrder::PENDING."'");
+//                break;
+//            case self::HISTORY: 
+//                $thisList = $list->where("Status='".TOSEOrder::DELIVERED."'");
+//                break;
+//            default :
+//                $thisList = $list;
+//        }
+//
+//        return $thisList;
+//                
+//    }
     
     public function getEditForm($id = null, $fields = null) {
         $list = $this->getList();

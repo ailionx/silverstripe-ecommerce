@@ -12,7 +12,8 @@ class TOSEBillingAddress extends TOSEAddress {
     );
 
     private static $has_one = array(
-        'Order' => 'TOSEOder'
+        'Order' => 'TOSEOder',
+        'HistoryOrder' => 'TOSEHistoryOrder'
     );
     
     private static $has_many = array();
