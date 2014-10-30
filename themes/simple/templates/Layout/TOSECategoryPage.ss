@@ -6,14 +6,14 @@
 
     <% if ShowDefault %>
         <% loop $DefaultProducts %>
-            <% include ProductBox CurrencyName=$Top.CurrentCurrencyName, CurrenySymbol=$Top.CurrentCurrencySymbol %>
+            <% include ProductBox CurrencyName=$Top.CurrentCurrencyName, CurrencySymbol=$Top.CurrentCurrencySymbol %>
         <% end_loop %>
     <% end_if %>
     <% if $Category %>
         <% with $Category %>
             <h3>$Name</h3>
             <% loop $AllProducts %>
-                <% include ProductBox CurrencyName=$Top.CurrentCurrencyName, CurrenySymbol=$Top.CurrentCurrencySymbol %>
+                <% include ProductBox CurrencyName=$Top.CurrentCurrencyName, CurrencySymbol=$Top.CurrentCurrencySymbol %>
             <% end_loop %>
         <% end_with %>
     <% end_if %>

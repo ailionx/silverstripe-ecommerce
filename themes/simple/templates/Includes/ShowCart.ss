@@ -4,7 +4,7 @@
         <div>Product Name: $Product.Name</div>
         <% with $Spec %>
             <% if $ExtraInfo %><div>Specification: $ExtraInfo</div><% end_if %>
-            <% with $CurrentCurrency %>
+            <% with $CurrentPrice %>
                 <div>Price: $Currency $get_current_currency_symbol$priceFormatted</div>
             <% end_with %>
         <% end_with %>

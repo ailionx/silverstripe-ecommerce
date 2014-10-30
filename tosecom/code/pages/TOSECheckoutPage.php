@@ -219,7 +219,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         //To create data for payment gateway
         $data = array(
             'Amount' => $this->totalAmount(),
-            'Currency' => TOSECurrency::get_current_currency_name(),
+            'Currency' => TOSEPrice::get_current_currency_name(),
             'Status' => TOSEOrder::PENDING,
             'Reference' => null
         );

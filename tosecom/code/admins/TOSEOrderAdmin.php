@@ -16,7 +16,10 @@ class TOSEOrderAdmin extends ModelAdmin {
     private $className = 'TOSEOrder';
     
     
-    private static $managed_models = array('TOSEOrder', 'TOSEHistoryOrder'); 
+    private static $managed_models = array(
+        'TOSEOrder',
+        'TOSEHistoryOrder'
+    ); 
     private static $url_segment = 'orders';
     private static $menu_title = 'Orders';
     
@@ -28,46 +31,22 @@ class TOSEOrderAdmin extends ModelAdmin {
 //        $status = $this->request->getVar('type');
 //        $this->order_type = $status;
 //    }
+    protected function getManagedModelTabs() {
+        $tabs = parent::getManagedModelTabs();
+        $newTabs = new ArrayList();
+        $items = $tabs->items;
 
-    
-//    protected function getManagedModelTabs() {
-//        $tabs = new ArrayList();
-//
-//        $tabs->push(new ArrayData(array(
-//            'Title'     => 'Pending Orders',
-//            'ClassName' => $this->className,
-//            'Link' => $this->Link($this->sanitiseClassName($this->className))."?type=" . self::PENDING,
-//            'LinkOrCurrent' => ($this->request->getVar('type') == self::PENDING) ? 'current' : 'link'
-//        )));
-//        
-//        $tabs->push(new ArrayData(array(
-//            'Title'     => 'History Orders',
-//            'ClassName' => $this->className,
-//            'Link' => $this->Link($this->sanitiseClassName($this->className))."?type=" . self::HISTORY,
-//            'LinkOrCurrent' => ($this->request->getVar('type') == self::HISTORY) ? 'current' : 'link'
-//        )));
-////        var_dump($tabs); die;
-//        
-//        return $tabs;
-//    }
-//    
-//    public function getList() {
-//        $list = parent::getList();
-//        $status = $this->request->getVar('type');
-//        switch ($status) {
-//            case self::PENDING: 
-//                $thisList = $list->where("Status='".TOSEOrder::PENDING."'");
-//                break;
-//            case self::HISTORY: 
-//                $thisList = $list->where("Status='".TOSEOrder::DELIVERED."'");
-//                break;
-//            default :
-//                $thisList = $list;
-//        }
-//
-//        return $thisList;
-//                
-//    }
+        $items[0]->Title = 'Pending Orders';
+        $items[1]->Title = 'History Orders';
+        
+        foreach ($items as $item) {
+            $newTabs->push($item);
+        }
+
+        return $newTabs;
+    }
+
+
     
     public function getEditForm($id = null, $fields = null) {
         $list = $this->getList();

@@ -14,7 +14,7 @@
                     <div>SKU: $SKU</div>
                     <div>Inventory: $Inventory</div>
                     <% loop Currencies %>
-                        <div>$Currency: $Price</div>
+                        <div>$Currency: $Top.CurrentCurrencySymbol$Price</div>
                     <% end_loop %>
                 </li>
             <% end_loop %>

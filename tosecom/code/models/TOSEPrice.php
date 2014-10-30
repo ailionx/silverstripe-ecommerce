@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-class TOSECurrency extends DataObject {
+class TOSEPrice extends DataObject {
     
         
 //    private static $db = array(
@@ -31,7 +31,7 @@ class TOSECurrency extends DataObject {
 
      
     public static function currency_options() {
-        $config = Config::inst()->get('TOSECurrency', 'currencies');
+        $config = Config::inst()->get('TOSEPrice', 'currencies');
         $currencies = array_keys($config);
         if(!in_array('NZD', $currencies)){
             $currencies[] = 'NZD';
@@ -43,7 +43,7 @@ class TOSECurrency extends DataObject {
     }
 
 //    public static function get_all_currencies() {
-//        $config = Config::inst()->get('TOSECurrency', 'currencies');
+//        $config = Config::inst()->get('TOSEPrice', 'currencies');
 //        $currencies = array_keys($config);
 //        return $currencies;
 //    }
@@ -64,8 +64,8 @@ class TOSECurrency extends DataObject {
      * @return type
      */
     public static function get_current_currency_name() {
-        $multiCurrency = Config::inst()->get('TOSECurrency', 'multiCurrency');
-        $defaultCurrencyName = Config::inst()->get('TOSECurrency', 'defaultCurrency');
+        $multiCurrency = Config::inst()->get('TOSEPrice', 'multiCurrency');
+        $defaultCurrencyName = Config::inst()->get('TOSEPrice', 'defaultCurrency');
         if ($multiCurrency === "TRUE") {
             $currentCurrencyName = Session::get(TOSEPage::SessionCurrencyName);
             return $currentCurrencyName ? $currentCurrencyName : $defaultCurrencyName;
@@ -79,11 +79,10 @@ class TOSECurrency extends DataObject {
      * @return type
      */
     public static function get_current_currency_symbol() {
-        $multiCurrency = Config::inst()->get('TOSECurrency', 'multiCurrency');
-        $defaultCurrencySymbol = Config::inst()->get('TOSECurrency', 'defaultCurrencySymbol');
-        $currencies = Config::inst()->get('TOSECurrency', 'currencies');
+        $multiCurrency = Config::inst()->get('TOSEPrice', 'multiCurrency');
+        $defaultCurrencySymbol = Config::inst()->get('TOSEPrice', 'defaultCurrencySymbol');
+        $currencies = Config::inst()->get('TOSEPrice', 'currencies');
         if ($multiCurrency === "TRUE") {
-            die($multiCurrency);
             $currentCurrencyName = Session::get(TOSEPage::SessionCurrencyName);
             return $currencies[$currentCurrencyName];
         } else {

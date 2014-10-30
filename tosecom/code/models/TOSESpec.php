@@ -20,7 +20,7 @@ class TOSESpec extends DataObject {
     );
     
     private static $has_many = array(
-        'Currencies' => 'TOSECurrency'
+        'Currencies' => 'TOSEPrice'
     );
     
     private static $summary_fields = array(
@@ -31,8 +31,9 @@ class TOSESpec extends DataObject {
         'ExtraInfo' => 'ExtraInfo'
     );
     
+    
 //    public function  getDefaultPrice() {
-//        if($nzPrice = DataObject::get_one('TOSECurrency', "Currency='NZD' And SpecID='".$this->ID."'")) {
+//        if($nzPrice = DataObject::get_one('TOSEPrice', "Currency='NZD' And SpecID='".$this->ID."'")) {
 //            return $nzPrice->Price;
 //        } else {
 //            return '0';
@@ -73,20 +74,21 @@ class TOSESpec extends DataObject {
      * Function is to get current currency
      * @return type
      */
-    public function getCurrentCurrency() {
-        $currentCurrentyName = TOSECurrency::get_current_currency_name();
-        $currentCurrency = DataObject::get_one('TOSECurrency', "SpecID='$this->ID' AND Currency='$currentCurrentyName'");
-        return $currentCurrency;
+    public function getCurrentPrice() {
+        $currentCurrentyName = TOSEPrice::get_current_currency_name();
+        $currentPrice = DataObject::get_one('TOSEPrice', "SpecID='$this->ID' AND Currency='$currentCurrentyName'");
+
+        return $currentPrice ? $currentPrice : FALSE;
     }
     
     /**
      * Function is to get current price if this spec
      * @return type
      */
-    public function getCurrentPrice() {
-        return $this->getCurrentCurrency()->Price;
+    public function getCurrentPriceValue() {
+        $price = $this->getCurrentPrice();
+        return $price ? $price->Price : FALSE;
     }
     
-
     
 }

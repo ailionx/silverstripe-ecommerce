@@ -39,7 +39,7 @@ class TOSECartItem extends DataObject {
     public function subTotalPrice() {
         
         $spec = $this->Spec();
-        $price = $spec->getCurrentPrice();
+        $price = $spec->getCurrentPriceValue();
         $subTotalPrice = $this->Quantity * $price;
         return $subTotalPrice;
     }

@@ -6,14 +6,14 @@
  * and open the template in the editor.
  */
 
-class TOSECurrencyExtension extends DataExtension {
+class TOSEPriceExtension extends DataExtension {
     
     
     
 //    public function extraStatics() {
 //        $db = array();
 //        
-//        $config = Config::inst()->get('TOSECurrency', 'defaultConfig');
+//        $config = Config::inst()->get('TOSEPrice', 'defaultConfig');
 //        $currencies = $config['currencies'];
 //        $currencyNames = array_keys($currencies);
 //        $currencyNamesString = implode(',', $currencyNames);

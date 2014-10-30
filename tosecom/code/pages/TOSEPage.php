@@ -15,7 +15,7 @@ class TOSEPage extends Page {
     /**
      * Save the current currency name
      */
-    const SessionCurrencyName = 'TOSECurrencyName';
+    const SessionCurrencyName = 'TOSEPriceName';
     /**
      * Save the register information
      */
@@ -126,7 +126,7 @@ class TOSEPage extends Page {
      * @return type
      */
     public function getCurrentCurrencySymbol() {
-        return TOSECurrency::get_current_currency_symbol();
+        return TOSEPrice::get_current_currency_symbol();
     }
     
     /**
@@ -134,7 +134,7 @@ class TOSEPage extends Page {
      * @return type
      */
     public function getCurrentCurrencyName() {
-        return TOSECurrency::get_current_currency_name();
+        return TOSEPrice::get_current_currency_name();
     }
     
     /**

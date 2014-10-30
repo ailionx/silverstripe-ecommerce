@@ -36,7 +36,7 @@ TOSECheckoutPage:
     pageTitle: 'Checkout'
     pageURLSegment: 'checkout'
         
-TOSECurrency:
+TOSEPrice:
     defaultCurrency: 'NZD'
     defaultCurrencySymbol: '$'
     multiCurrency: 'FALSE'
@@ -46,7 +46,7 @@ TOSECurrency:
         AUD: '$'
         USD: '$'
     extensions:
-        - TOSECurrencyExtension
+        - TOSEPriceExtension
         
 TOSECategory:
     extensions:

@@ -57,7 +57,7 @@ class TOSEOrder extends DataObject {
      * @return boolean
      */
     public function canEdit($member = null) {
-        return FALSE;
+        return TRUE;
     }
     
     /**
@@ -81,8 +81,8 @@ class TOSEOrder extends DataObject {
             $orderItem['Category'] = $cartItem->Product()->Category()->Name;
             $orderItem['SKU'] = $cartItem->Spec()->SKU;
             $orderItem['Weight'] = $cartItem->Spec()->Weight;
-            $orderItem['Price'] = $cartItem->Spec()->getCurrentPrice() * $cartItem->Quantity;
-            $orderItem['Currency'] = TOSECurrency::get_current_currency_name();
+            $orderItem['Price'] = $cartItem->Spec()->getCurrentPriceValue() * $cartItem->Quantity;
+            $orderItem['Currency'] = TOSEPrice::get_current_currency_name();
             $orderItem['ProductID'] = $cartItem->ProductID;
             $orderItem['SpecID'] = $cartItem->SpecID;
 
