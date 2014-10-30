@@ -18,7 +18,7 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         'clearCart',
         'updateItem',
         'getCart',
-        'deleteItem',
+        'removeItem',
         'cartEmpty'
     );
     
@@ -43,7 +43,7 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
     public function addToCart(SS_HTTPRequest $request) {
         $data = $request->postVars();
         $cart = TOSECart::get_current_cart();
-        $cart->addProduct($data);
+        $cart->addItem($data);
         return $this->redirectBack();
     }
     
@@ -78,12 +78,11 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
     public function updateItem(SS_HTTPRequest $request) {
         $data = $request->postVars();
         $cart = TOSECart::get_current_cart();
-        $item = DataObject::get_one('TOSECartItem',"CartID='$cart->ID' AND ProductID='".$data['ProductID']."' AND SpecID='".$data['SpecID']."'");
+        $item = DataObject::get_one('TOSECartItem',"CartID='$cart->ID' AND SpecID='".$data['SpecID']."'");
         
         // Validate if inputs type is number 
         $numberFields = array(
             'Quantity',
-            'ProductID',
             'SpecID'
         );
         TOSEValidator::data_is_number($data, $numberFields, TRUE);
@@ -102,7 +101,7 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
      * @param SS_HTTPRequest $request
      * @return type
      */
-    public function deleteItem(SS_HTTPRequest $request) {
+    public function removeItem(SS_HTTPRequest $request) {
         $data = $request->getVars();
         $cart = TOSECart::get_current_cart();
         $cart->removeItem($data);

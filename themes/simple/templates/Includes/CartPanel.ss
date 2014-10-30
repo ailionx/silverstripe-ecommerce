@@ -11,11 +11,10 @@
         <form method="post" action="{$CartLink}updateItem">
         <div>Quantity: <input type="number" value="$Quantity" name="Quantity" style="width: 40px" /></div>
         <div>SubTotal: $CurrencySymbol$subTotalPriceFormatted</div>
-        <input type="hidden" value="$Product.ID" name="ProductID" />
         <input type="hidden" value="$Spec.ID" name="SpecID" />
         <button type="submit">update</button>
         </form>
-        <a href="{$CartLink}deleteItem?ProductID=$ProductID&SpecID=$SpecID"><button style="float: none;">delete</button></a>
+        <a href="{$CartLink}removeItem?&SpecID=$SpecID"><button style="float: none;">delete</button></a>
     </div>
 <% end_loop %>
 <div>Total Price: $CurrencySymbol$totalPriceFormatted</div>

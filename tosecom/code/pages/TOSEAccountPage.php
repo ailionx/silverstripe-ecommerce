@@ -11,12 +11,12 @@ class TOSEAccountPage extends TOSEPage {
      * Function is to get orders for current user
      * @return type
      */
-    public function getMyOrders($all=TRUE) {
+    public function getMyOrders($all=FALSE) {
         $memberID = Member::currentUserID();
-        $myOrders = DataObject::get('TOSEOrder', "MemberID='$memberID'");
-        if ($all) {
-            $myOrders = $myOrders->innerJoin('TOSEHistoryOrder', "MemberID = '$memberID'");
-        }
+        $myOrders = DataObject::get('TOSEOrder', "TOSEOrder.MemberID='$memberID'");
+//        if ($all) {
+//
+//        }
         return $myOrders;
     }
     

@@ -22,7 +22,6 @@
         <div style="clear:both">
             Quantity: <input type="text" name="Quantity" />
         </div>
-        <input type="hidden" value="$ID" name="ProductID" />
         <input type="submit" value="add to cart" />
     </form>
 

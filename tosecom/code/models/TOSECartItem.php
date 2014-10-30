@@ -13,7 +13,6 @@ class TOSECartItem extends DataObject {
     );
 
     private static $has_one = array(
-        'Product' => 'TOSEProduct',
         'Spec' => 'TOSESpec',
         'Cart' => 'TOSECart'
     );
@@ -32,6 +31,11 @@ class TOSECartItem extends DataObject {
         return $cartItem;
     }
     
+    public function getProduct() {
+        $spec = $this->Spec();
+        return $spec->Product();
+    }
+
     /**
      * Function is to get sub total price of current item
      * @return type
