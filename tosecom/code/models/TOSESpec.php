@@ -46,14 +46,14 @@ class TOSESpec extends DataObject {
      */
     public function getCMSFields() {
         $fields = parent::getCMSFields();
-        $fields->removeByName('Currencies');
+        $fields->removeByName('Prices');
         $weightField = $fields->dataFieldByName('Weight');
 //        var_dump($weightField); die();
         $weightField->setTitle('Weight (Unit: kg.)');
         
         if ($this->ID) {
             $gridFieldConfig = GridFieldConfig_RelationEditor::create();
-            $gridField = new GridField('Currencies', 'Currencies', $this->Currencies(), $gridFieldConfig);
+            $gridField = new GridField('Prices', 'Prices', $this->Prices(), $gridFieldConfig);
             $fields->addFieldToTab('Root.Main', $gridField);
         } else {
             

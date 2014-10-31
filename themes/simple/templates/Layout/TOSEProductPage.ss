@@ -12,10 +12,8 @@
                     <div>$ExtraInfo</div>
                     <div>Weight: $Weight</div>
                     <div>SKU: $SKU</div>
-                    <div>Inventory: $Inventory</div>
-                    <% loop Prices %>
-                        <div>$Nice</div>
-                    <% end_loop %>
+                    <div>Inventory: $Inventory</div
+                    <div>$CurrentPrice.Nice</div>
                 </li>
             <% end_loop %>
         </ul>
