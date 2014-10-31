@@ -93,10 +93,15 @@ class TOSEPrice extends DataObject {
     /**
      * Returns the number as a currency, eg “$1,000.00”.
      */
-    public static function nice($value) {
-        $val = self::get_current_currency_name() . " " . self::get_current_currency_symbol() . number_format(abs($value), 2);
-        if($value < 0) return "($val)";
+    public function Nice() {
+        $val = self::get_current_currency_name() . " " . self::get_current_currency_symbol() . number_format(abs($this->Price), 2);
+        if($this->Price < 0) return "($val)";
         else return $val;
     }
+    
+    public function forTemplate() {
+        return $this->Price;
+    }
+    
     
 }

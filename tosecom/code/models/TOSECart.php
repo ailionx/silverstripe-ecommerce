@@ -183,11 +183,15 @@ class TOSECart extends DataObject {
      */
     public function totalPrice($nice=FALSE) {
         $items = $this->getCartItems();
-        $totalPrice = 0;
+        $totalPriceVal = 0;
         foreach ($items as $item) {
-            $totalPrice += $item->subTotalPrice();
+            $totalPriceVal += $item->subTotalPrice()->Price;
         }
-        return $nice ? TOSEPrice::nice($totalPrice) : $totalPrice;
+        $totalPrice = new TOSEPrice();
+        $totalPrice->Currency = TOSEPrice::get_current_currency_name();
+        $totalPrice->Price = $totalPriceVal;
+        
+        return $totalPrice;
     }
 
 }

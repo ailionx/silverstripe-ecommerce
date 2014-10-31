@@ -40,12 +40,13 @@ class TOSECartItem extends DataObject {
      * Function is to get sub total price of current item
      * @return type
      */
-    public function subTotalPrice($nice=FALSE) {
+    public function subTotalPrice() {
         $spec = $this->Spec();
-        $price = $spec->getCurrentPriceValue();
-        $subTotalPrice = $this->Quantity * $price;
-        
-        return $nice ? TOSEPrice::nice($subTotalPrice) : $subTotalPrice;
+        $price = $spec->getCurrentPrice();
+        $totalPrice = new TOSEPrice();
+        $totalPrice->Currency = $price->Currency;
+        $totalPrice->Price = $price->Price * $this->Quantity;
+        return $totalPrice;
     }
     
     

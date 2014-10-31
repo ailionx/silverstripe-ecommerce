@@ -20,7 +20,7 @@ class TOSESpec extends DataObject {
     );
     
     private static $has_many = array(
-        'Currencies' => 'TOSEPrice'
+        'Prices' => 'TOSEPrice'
     );
     
     private static $summary_fields = array(
@@ -75,10 +75,41 @@ class TOSESpec extends DataObject {
      * @return type
      */
     public function getCurrentPrice() {
-        $currentCurrentyName = TOSEPrice::get_current_currency_name();
-        $currentPrice = DataObject::get_one('TOSEPrice', "SpecID='$this->ID' AND Currency='$currentCurrentyName'");
+        $currentCurrencyName = TOSEPrice::get_current_currency_name();
+        $currentPrice = $this->Prices()->find('Currency', $currentCurrencyName);
 
-        return $currentPrice ? $currentPrice : FALSE;
+        return $currentPrice ? $currentPrice : NULL;
+    }
+    
+    /**
+     * Function is to get current currency name
+     * @return type
+     */
+    public static function get_current_currency_name() {
+        $multiCurrency = Config::inst()->get('TOSEPrice', 'multiCurrency');
+        $defaultCurrencyName = Config::inst()->get('TOSEPrice', 'defaultCurrency');
+        if ($multiCurrency === "TRUE") {
+            $currentCurrencyName = Session::get(TOSEPage::SessionCurrencyName);
+            return $currentCurrencyName ? $currentCurrencyName : $defaultCurrencyName;
+        } else {
+            return $defaultCurrencyName;
+        }
+    }           
+    
+    /**
+     * Function is to get the symbol of current currency
+     * @return type
+     */
+    public static function get_current_currency_symbol() {
+        $multiCurrency = Config::inst()->get('TOSEPrice', 'multiCurrency');
+        $defaultCurrencySymbol = Config::inst()->get('TOSEPrice', 'defaultCurrencySymbol');
+        $currencies = Config::inst()->get('TOSEPrice', 'currencies');
+        if ($multiCurrency === "TRUE") {
+            $currentCurrencyName = Session::get(TOSEPage::SessionCurrencyName);
+            return $currencies[$currentCurrencyName];
+        } else {
+            return $defaultCurrencySymbol;
+        }
     }
     
     /**
@@ -87,7 +118,7 @@ class TOSESpec extends DataObject {
      */
     public function getCurrentPriceValue() {
         $price = $this->getCurrentPrice();
-        return $price ? $price->Price : FALSE;
+        return $price ? $price->Price : NULL;
     }
     
     
