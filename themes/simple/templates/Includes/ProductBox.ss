@@ -3,7 +3,7 @@
         <div><img src="$DefaultImage.Filename" style="width: 100px;"></div>
         <div><h4>$Name</h4></div>
         <% if $DefaultPrice %>
-            <div>{$CurrencyName}:{$CurrencySymbol}$DefaultPrice</div>
+            <div>$DefaultPrice.Nice</div>
         <% end_if %>
     </div>
 </a>

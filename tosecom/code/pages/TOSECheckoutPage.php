@@ -47,30 +47,28 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      * @return \Form
      */
     public function orderForm() {
-        $memberAddress = TOSEAddress::getCurrentMemberAddress();
-        $member = Member::currentUser();
         $fields = new FieldList();
         $customerInfoFields = new CompositeField();
         $customerInfoFields->addExtraClass('customer-info');
         $customerInfoFields->push(new LiteralField('CustomerInfo', '<h3>Customer Information</h3>'));
-        $customerInfoFields->push(new TextField('CustomerName', 'Name', $member->FirstName." ".$member->Surname));
-        $customerInfoFields->push(new EmailField('CustomerEmail', 'Email', $member->Email));
-        $customerInfoFields->push(new TextField('CustomerPhone', 'Phone', $member->Phone));
+        $customerInfoFields->push(new TextField('CustomerName', 'Name'));
+        $customerInfoFields->push(new EmailField('CustomerEmail', 'Email'));
+        $customerInfoFields->push(new TextField('CustomerPhone', 'Phone'));
         $fields->push($customerInfoFields);
         
         $shippingFields = new CompositeField();
         $shippingFields->addExtraClass('shipping-info');
         $shippingFields->push(new LiteralField('ShippingInfo', '<h3>Shipping Address</h3>'));
-        $shippingFields->push(new TextField('ShippingFirstName', 'First Name', $member->FirstName));
-        $shippingFields->push(new TextField('ShippingSurName', 'SurName', $member->Surname));
-        $shippingFields->push(new TextField('ShippingPhone', 'Phone', $member->Phone));
-        $shippingFields->push(new NumericField('ShippingStreetNumber', 'Street Number', $memberAddress->StreetNumber));
-        $shippingFields->push(new TextField('ShippingStreetName', 'Street Name', $memberAddress->StreetName));
-        $shippingFields->push(new TextField('ShippingSuburb', 'Suburb', $memberAddress->Suburb));
-        $shippingFields->push(new TextField('ShippingCity', 'City', $memberAddress->City));
-        $shippingFields->push(new TextField('ShippingRegion', 'Region', $memberAddress->Region));
-        $shippingFields->push(new TextField('ShippingCountry', 'Country', $memberAddress->Country));
-        $shippingFields->push(new NumericField('ShippingPostCode', 'PostCode', $memberAddress->PostCode));
+        $shippingFields->push(new TextField('ShippingFirstName', 'First Name'));
+        $shippingFields->push(new TextField('ShippingSurName', 'SurName'));
+        $shippingFields->push(new TextField('ShippingPhone', 'Phone'));
+        $shippingFields->push(new TextField('ShippingStreetNumber', 'Street Number'));
+        $shippingFields->push(new TextField('ShippingStreetName', 'Street Name'));
+        $shippingFields->push(new TextField('ShippingSuburb', 'Suburb'));
+        $shippingFields->push(new TextField('ShippingCity', 'City'));
+        $shippingFields->push(new TextField('ShippingRegion', 'Region'));
+        $shippingFields->push(new TextField('ShippingCountry', 'Country'));
+        $shippingFields->push(new NumericField('ShippingPostCode', 'PostCode'));
         $fields->push($shippingFields);
         
         $invoiceFields = new CompositeField();
@@ -81,16 +79,16 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $billingFields = new CompositeField();
         $billingFields->addExtraClass('billing-info');
         $billingFields->push(new LiteralField('BillingInfo', '<h3>Billing Address</h3>'));
-        $billingFields->push(new TextField('BillingFirstName', 'First Name', $member->FirstName));
-        $billingFields->push(new TextField('BillingSurName', 'SurName', $member->Surname));
-        $billingFields->push(new TextField('BillingPhone', 'Phone', $member->Phone));
-        $billingFields->push(new NumericField('BillingStreetNumber', 'Street Number', $memberAddress->StreetNumber));
-        $billingFields->push(new TextField('BillingStreetName', 'Street Name', $memberAddress->StreetName));
-        $billingFields->push(new TextField('BillingSuburb', 'Suburb', $memberAddress->Suburb));
-        $billingFields->push(new TextField('BillingCity', 'City', $memberAddress->City));
-        $billingFields->push(new TextField('BillingRegion', 'Region', $memberAddress->Region));
-        $billingFields->push(new TextField('BillingCountry', 'Country', $memberAddress->Country));
-        $billingFields->push(new NumericField('BillingPostCode', 'PostCode', $memberAddress->PostCode));
+        $billingFields->push(new TextField('BillingFirstName', 'First Name'));
+        $billingFields->push(new TextField('BillingSurName', 'SurName'));
+        $billingFields->push(new TextField('BillingPhone', 'Phone'));
+        $billingFields->push(new TextField('BillingStreetNumber', 'Street Number'));
+        $billingFields->push(new TextField('BillingStreetName', 'Street Name'));
+        $billingFields->push(new TextField('BillingSuburb', 'Suburb'));
+        $billingFields->push(new TextField('BillingCity', 'City'));
+        $billingFields->push(new TextField('BillingRegion', 'Region'));
+        $billingFields->push(new TextField('BillingCountry', 'Country'));
+        $billingFields->push(new NumericField('BillingPostCode', 'PostCode'));
         $fields->push($billingFields);
         
         $commentField = new TextareaField('Comments', '');
@@ -131,8 +129,36 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $form = new Form($this, 'orderForm', $fields, $actions, $required);
         
         if($data = unserialize(Session::get(TOSEPage::SessionOrderInfo))) {
-
             $form->loadDataFrom($data);
+        } elseif (TOSEMember::is_customer_login()) {
+            $memberAddress = TOSEAddress::getCurrentMemberAddress();
+            $member = Member::currentUser();
+            $loadData = array(
+                'CustomerName' => $member->FirstName." ".$member->Surname,
+                'CustomerEmail' => $member->Email,
+                'CustomerPhone' => $member->Phone,
+                'ShippingFirstName' => $member->FirstName,
+                'ShippingSurName' => $member->Surname,
+                'ShippingPhone' => $member->Phone,
+                'ShippingStreetNumber' => $memberAddress->StreetNumber,
+                'ShippingStreetName' => $memberAddress->StreetName,
+                'ShippingSuburb' => $memberAddress->Suburb,
+                'ShippingCity' => $memberAddress->City,
+                'ShippingRegion' => $memberAddress->Region,
+                'ShippingCountry' => $memberAddress->Country,
+                'ShippingPostCode' => $memberAddress->PostCode,
+                'BillingFirstName' => $member->FirstName,
+                'BillingSurName' => $member->Surname,
+                'BillingPhone' => $member->Phone,
+                'BillingStreetNumber' => $memberAddress->StreetNumber,
+                'BillingStreetName' => $memberAddress->StreetName,
+                'BillingSuburb' => $memberAddress->Suburb,
+                'BillingCity' => $memberAddress->City,
+                'BillingRegion' => $memberAddress->Region,
+                'BillingCountry' => $memberAddress->Country,
+                'BillingPostCode' => $memberAddress->PostCode
+            );
+            $form->loadDataFrom($loadData);
         }
         
         return $form;
@@ -194,7 +220,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      */
     public function totalAmount() {
         
-        $productAmount = TOSECart::get_current_cart()->totalPrice();
+        $productAmount = TOSECart::get_current_cart()->totalPrice()->Price;
         $shippingFee = $this->getShippingFee();
         $totalAmount = $productAmount + $shippingFee;
         return $totalAmount;

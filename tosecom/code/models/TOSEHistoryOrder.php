@@ -170,7 +170,7 @@ class TOSEHistoryOrder extends DataObject {
         $info = "<table style='border-spacing: 50px 5px; border-collapse:separate'>"
                 . "<tr><th></th><th>Name</th><th>Category</th><th>Price</th><th>QTY</th><th>Sub Total</th></tr>";
         foreach ($items as $item) {
-            $info .= "<tr><td><img src='".$item->Product()->getDefaultImage()->Filename."' style='width:60px;' ></td>"
+            $info .= "<tr><td><img src='".$item->getProduct()->getDefaultImage()->Filename."' style='width:60px;' ></td>"
                     . "<td>$item->Name</td>"
                     . "<td>$item->Category</td>"
                     . "<td>NZD $$item->Price</td>"

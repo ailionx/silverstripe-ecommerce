@@ -55,11 +55,11 @@ class TOSEProduct extends DataObject {
      */
     public function getDefaultPrice() {
         if ($this->getDefaultSpec()) {
-            $price = $this->getDefaultSpec()->getCurrentPriceValue();
-            return $price ? $price : FALSE;
+            $price = $this->getDefaultSpec()->getCurrentPrice();
+            return $price ? $price : NULL;
         }
         
-        return FALSE;
+        return NULL;
     }
 
 

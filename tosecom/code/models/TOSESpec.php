@@ -110,16 +110,6 @@ class TOSESpec extends DataObject {
         } else {
             return $defaultCurrencySymbol;
         }
-    }
-    
-    /**
-     * Function is to get current price if this spec
-     * @return type
-     */
-    public function getCurrentPriceValue() {
-        $price = $this->getCurrentPrice();
-        return $price ? $price->Price : NULL;
-    }
-    
+    }   
     
 }

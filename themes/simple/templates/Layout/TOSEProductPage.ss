@@ -13,8 +13,8 @@
                     <div>Weight: $Weight</div>
                     <div>SKU: $SKU</div>
                     <div>Inventory: $Inventory</div>
-                    <% loop Currencies %>
-                        <div>$Currency: $Top.CurrentCurrencySymbol$Price</div>
+                    <% loop Prices %>
+                        <div>$Nice</div>
                     <% end_loop %>
                 </li>
             <% end_loop %>
