@@ -91,11 +91,12 @@ class TOSEPrice extends DataObject {
     }
     
     /**
-     * Function is to format price to be more readable
-     * @return type
+     * Returns the number as a currency, eg “$1,000.00”.
      */
-    public function priceFormatted() {
-        return number_format($this->Price, 2);
+    public static function nice($value) {
+        $val = self::get_current_currency_name() . " " . self::get_current_currency_symbol() . number_format(abs($value), 2);
+        if($value < 0) return "($val)";
+        else return $val;
     }
     
 }

@@ -48,7 +48,7 @@ class TOSECart extends DataObject {
      * @return type
      */
     public function cartEmpty() {
-        return $this->itemsCount() ? FALSE : TRUE;
+        return !$this->getCartItems()->exists();
     }
     
     /**
@@ -68,19 +68,19 @@ class TOSECart extends DataObject {
             return $this->CartItems();
         } else {
             $sessionCartItems = Session::get(TOSEPage::SessionCart);
-            $cartItems = new ArrayList();
+            $items = new ArrayList();
             if (!$sessionCartItems) {
-                return $cartItems;
+                return $items;
             } 
             
             $itemsArray = unserialize($sessionCartItems);
-            foreach ($itemsArray as $item) {
-                $cartItem = new TOSECartItem();
-                $cartItem->update($item);
-                $cartItems->push($cartItem);
+            foreach ($itemsArray as $itemArray) {
+                $item = new TOSECartItem();
+                $item->update($itemArray);
+                $items->push($item);
             }
 
-            return $cartItems;
+            return $items;
         }
     }
     
@@ -91,17 +91,10 @@ class TOSECart extends DataObject {
      */
     public function productsCount() {
         $productCount = 0;
-        if (TOSEMember::is_customer_login()) {
-
-            $cartItems = $this->CartItems();
-            foreach ($cartItems as $item) {
-                $productCount += $item->Quantity;
-            }
-        } else {
-            $itemsArray = unserialize(Session::get(TOSEPage::SessionCart));
-            foreach ($itemsArray as $item) {
-                $productCount += $item['Quantity'];
-            }
+        
+        $items = $this->getCartItems();
+        foreach ($items as $item) {
+            $productCount += $item->Quantity;
         }
 
         return $productCount;
@@ -113,18 +106,8 @@ class TOSECart extends DataObject {
      * @return boolean
      */
     public function existItem($data) {
-        if ($this->cartEmpty()) {
-            return FALSE;
-        }
-        if(TOSEMember::is_customer_login()) {
-            $item = $this->CartItems()->filter('SpecID', $data['SpecID'])->first();
-            return $item;
-        } else {
-            $specID = $data['SpecID'];
-            $itemsArray = unserialize(Session::get(TOSEPage::SessionCart));
-            return array_key_exists($specID, $itemsArray) ? $itemsArray[$specID] : NULL;
-        }
-
+        $item = $this->getCartItems()->find('SpecID', $data['SpecID']);
+        return $item;
     }
     
     /**
@@ -132,7 +115,7 @@ class TOSECart extends DataObject {
      * @param type $data
      */
     public function addProduct($data) {
-        
+
         // Validate the input data
         $numberFields = array(
             'Quantity',
@@ -141,16 +124,7 @@ class TOSECart extends DataObject {
         TOSEValidator::data_is_number($data, $numberFields, TRUE);
         
         $productInventory = DataObject::get_one('TOSESpec', "ID='".$data['SpecID']."'")->Inventory;
-        if ($exitItem = $this->existItem($data)) {
-            $Quantity = $exitItem->Quantity;
-            $Quantity += $data['Quantity'];
-        } else {
-            $Quantity = $data['Quantity'];
-        }
 
-        if($Quantity > $productInventory) {
-            die('Out of inventory');
-        }
         $this->existItem($data) ? $this->updateItem($data) : $this->addItem($data);
     }
 
@@ -159,19 +133,11 @@ class TOSECart extends DataObject {
      * @param type $data
      */
     public function addItem($data) {
-        if (TOSEMember::is_customer_login()) {
-            $item = new TOSECartItem();
-            $item->update($data);
-            $item->CartID = $this->ID;
-            $item->write();
-        } else {
-            $itemsArray = unserialize(Session::get(TOSEPage::SessionCart));
-            $item['SpecID'] = $data['SpecID'];
-            $item['Quantity'] = $data['Quantity'];
-            $itemsArray['SpecID'] = $item;
-            Session::set(TOSEPage::SessionCart, serialize($itemsArray));
-        }
-
+        $item = new TOSECartItem();
+        $item->update($data);
+        $item->CartID = $this->ID;
+        $item->checkInventory();
+        $item->write();
     }
     
     /**
@@ -179,85 +145,49 @@ class TOSECart extends DataObject {
      * @param type $data
      */
     public function updateItem($data) {
-        if (TOSEMember::is_customer_login()) {
-            $item = $this->CartItems()->filter('SpecID', $data['SpecID'])->first();
-            if ($item) {
-                $item->Quantity += $data['Quantity'];                
-            } else {
-                $item = new TOSECartItem();
-                $item->update($data);
-                $item->CartID = $this->ID;
-            }
-            
-            $item->write();
-            
-        } else {
-            $specID = $data['SpecID'];
-            $itemsArray = unserialize(Session::get(TOSEPage::SessionCart));
-            if(array_key_exists($specID, $itemsArray)) {
-                $item = $itemsArray[$specID];
-                $item['Quantity'] += $data['Quantity'];
-            } else {
-                $item['SpecID'] = $specID;
-                $item['Quantity'] = $data['Quantity'];
-                $itemsArray[$specID] = $item;
-            }
-            
-            Session::set(TOSEPage::SessionCart, serialize($itemsArray));
-        }
-    }    
+        $item = $this->getCartItems()->find('SpecID', $data['SpecID']);
+        $quantity = $item->Quantity + $data['Quantity'];
+        $this->itemAssignQuantity($data['SpecID'], $quantity);
+    }
+    
+    public function itemAssignQuantity($specID, $quantity) {
+        $item = $this->getCartItems()->find('SpecID', $specID);
+        $item->Quantity = $quantity;
+        $item->checkInventory();
+        $item->write();
+    }
+    
 
     /**
      * Function is to remove item in cart, can be optimized
      * @param type $data
      */
     public function removeItem($data) {
-        if (TOSEMember::is_customer_login()){
-            $cartItems = $this->CartItems();
-            $item = $cartItems->filter('SpecID', $data['SpecID'])->first();
-            $item->delete();
-        } else {
-            $itemsArray = unserialize(Session::get(TOSEPage::SessionCart));
-            $specID = $data['SpecID'];
-            unset($itemsArray[$specID]);
-            Session::set(TOSEPage::SessionCart, serialize($itemsArray));
-        }
+        $item = $this->getCartItems()->find('SpecID', $data['SpecID']);
+        $item->delete();
     }
 
     /**
      * Function is to clear all items in cart
      */
     public function clearCart() {
-        if (TOSEMember::is_customer_login()) {
-            $cartItems = $this->CartItems();
-            foreach ($cartItems as $item) {
-                $item->delete();
-            }
-        } else {
-            Session::clear(TOSEPage::SessionCart);
+        $cartItems = $this->getCartItems();
+        foreach ($cartItems as $item) {
+            $item->delete();
         }
-        
     }
     
     /** 
      * Function is to get total price of items in cart
      * @return type
      */
-    public function totalPrice() {
-        $cartItems = $this->CartItems();
+    public function totalPrice($nice=FALSE) {
+        $items = $this->getCartItems();
         $totalPrice = 0;
-        foreach ($cartItems as $item) {
+        foreach ($items as $item) {
             $totalPrice += $item->subTotalPrice();
         }
-        return $totalPrice;
+        return $nice ? TOSEPrice::nice($totalPrice) : $totalPrice;
     }
-    
-    /**
-     * Function is to format total price to be more readable
-     * @return type
-     */
-    public function totalPriceFormatted() {
-        return number_format($this->totalPrice(), 2);
-    }
-    
+
 }

@@ -16,8 +16,7 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
     private static $allowed_actions = array(
         'addToCart',
         'clearCart',
-        'updateItem',
-        'getCart',
+        'updateQuantity',
         'removeItem',
         'cartEmpty'
     );
@@ -43,21 +42,9 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
     public function addToCart(SS_HTTPRequest $request) {
         $data = $request->postVars();
         $cart = TOSECart::get_current_cart();
-        $cart->addItem($data);
+        $cart->addProduct($data);
         return $this->redirectBack();
     }
-    
-//    public function getCartItems() {
-//        $cart = TOSECart::get_current_cart();
-//        $cartItems = $cart->getCartItems();
-//        if ($cartItems->count() > 0) {
-//            foreach ($cartItems as $item) {
-//                $tester = $item->Product(); 
-//            }
-//        }
-////        var_dump($tester); die();
-//        return $cartItems;
-//    }
     
     
     /**
@@ -75,24 +62,16 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
      * @param SS_HTTPRequest $request
      * @return type
      */
-    public function updateItem(SS_HTTPRequest $request) {
+    public function updateQuantity(SS_HTTPRequest $request) {
         $data = $request->postVars();
-        $cart = TOSECart::get_current_cart();
-        $item = DataObject::get_one('TOSECartItem',"CartID='$cart->ID' AND SpecID='".$data['SpecID']."'");
-        
         // Validate if inputs type is number 
         $numberFields = array(
             'Quantity',
             'SpecID'
         );
         TOSEValidator::data_is_number($data, $numberFields, TRUE);
-        
-        $inventory = $item->spec()->Inventory;
-        if ($data['Quantity']>$inventory) {
-            die('Out of inventory');
-        }
-        $item->update($data);
-        $item->write();
+        $cart = TOSECart::get_current_cart();
+        $cart->itemAssignQuantity($data['SpecID'], $data['Quantity']);
         return $this->redirectBack();
     }
     
@@ -108,8 +87,5 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         return $this->redirectBack();
     }
     
-//    public function cartEmpty() {
-//        die('test');
-//    }
     
 }

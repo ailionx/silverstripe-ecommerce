@@ -40,20 +40,57 @@ class TOSECartItem extends DataObject {
      * Function is to get sub total price of current item
      * @return type
      */
-    public function subTotalPrice() {
-        
+    public function subTotalPrice($nice=FALSE) {
         $spec = $this->Spec();
         $price = $spec->getCurrentPriceValue();
         $subTotalPrice = $this->Quantity * $price;
-        return $subTotalPrice;
+        
+        return $nice ? TOSEPrice::nice($subTotalPrice) : $subTotalPrice;
     }
     
-    /**
-     * Function is to format sub total price to be more readable
-     * @return type
-     */
-    public function subTotalPriceFormatted() {
-        return number_format($this->subTotalPrice(), 2);
+    
+    public function checkInventory() {
+        return $this->Quantity > $this->Spec()->Inventory ? FALSE : TRUE;
     }
+    
+    public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false) {
+        if(TOSEMember::is_customer_login()) {
+            return parent::write($showDebug, $forceInsert, $forceWrite, $writeComponents);
+        } else {
+            $this->writeToSession();
+        }
+    }
+    
+    public function writeToSession() {
+        $allItemsArray = unserialize(Session::get(TOSEPage::SessionCart));
+        if (!$allItemsArray) {
+            $id = 1;
+        } else {
+            foreach ($allItemsArray as $item) {
+                if ($item['SpecID'] == $this->SpecID) {
+                    $id = $item['ID'];
+                }
+            }
+            $id = $id ? $id : (max(array_keys($allItemsArray))) + 1;
+        }
+        $itemArray = array();
+        $itemArray['ID'] = $id;
+        $itemArray['SpecID'] = $this->SpecID;
+        $itemArray['Quantity'] = $this->Quantity;
+        $allItemsArray[$id] = $itemArray;
+        Session::set(TOSEPage::SessionCart, serialize($allItemsArray));
+        return $id;
+    }
+
+    public function delete() {
+        if(TOSEMember::is_customer_login()) {
+            parent::delete();
+        } else {
+            $itemsArray = unserialize(Session::get(TOSEPage::SessionCart));
+            unset($itemsArray[$this->ID]);
+            Session::set(TOSEPage::SessionCart, serialize($itemsArray));
+        }
+    }
+    
     
 }
