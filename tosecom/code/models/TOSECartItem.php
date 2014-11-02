@@ -31,6 +31,10 @@ class TOSECartItem extends DataObject {
         return $cartItem;
     }
     
+    /**
+     * Function is to get product belongs to this cart item based on spec
+     * @return type
+     */
     public function getProduct() {
         $spec = $this->Spec();
         return $spec->Product();
@@ -49,11 +53,22 @@ class TOSECartItem extends DataObject {
         return $totalPrice;
     }
     
-    
+    /**
+     * Function is to check if the quantity beyonds inventory
+     * @return type
+     */
     public function checkInventory() {
         return $this->Quantity > $this->Spec()->Inventory ? FALSE : TRUE;
     }
     
+    /**
+     * OVERRIDE
+     * @param type $showDebug
+     * @param type $forceInsert
+     * @param type $forceWrite
+     * @param type $writeComponents
+     * @return type
+     */
     public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false) {
         if(TOSEMember::is_customer_login()) {
             return parent::write($showDebug, $forceInsert, $forceWrite, $writeComponents);
@@ -62,6 +77,10 @@ class TOSECartItem extends DataObject {
         }
     }
     
+    /**
+     * Function is to save cart item to session
+     * @return type
+     */
     public function writeToSession() {
         $allItemsArray = unserialize(Session::get(TOSEPage::SessionCart));
         if (!$allItemsArray) {
@@ -83,6 +102,9 @@ class TOSECartItem extends DataObject {
         return $id;
     }
 
+    /**
+     * OVERRIDE
+     */
     public function delete() {
         if(TOSEMember::is_customer_login()) {
             parent::delete();

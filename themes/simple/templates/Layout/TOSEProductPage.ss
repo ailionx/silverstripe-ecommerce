@@ -5,18 +5,18 @@
         <img src="$Filename" style="width:100px;">
     <% end_loop %>
     <form method="post" action="{$getCartLink}addToCart">
-        <ul>
-            <% loop Specs %>
+        <% loop Specs %>
+            <ul>
                 <li style="float: left; margin-right: 30px;">
                     <input type="radio" name="SpecID" value="$ID" />&nbsp;&nbsp;Specification:
                     <div>$ExtraInfo</div>
                     <div>Weight: $Weight</div>
                     <div>SKU: $SKU</div>
-                    <div>Inventory: $Inventory</div
+                    <div>Inventory: $Inventory</div>
                     <div>$CurrentPrice.Nice</div>
                 </li>
-            <% end_loop %>
-        </ul>
+            </ul>
+        <% end_loop %>
         <div style="clear:both">
             Quantity: <input type="text" name="Quantity" />
         </div>

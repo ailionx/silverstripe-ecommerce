@@ -28,6 +28,10 @@ class TOSEOrderItem extends DataObject {
     
     private static $has_many = array();
     
+    /**
+     * Function is to save order item
+     * @param type $data
+     */
     public static function save($data) {
         $orderItem = new TOSEOrderItem();
         $orderItem->update($data);

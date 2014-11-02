@@ -83,7 +83,7 @@ class TOSEOrder extends DataObject {
             $orderItem['Weight'] = $cartItem->Spec()->Weight;
             $orderItem['Price'] = $cartItem->subTotalPrice()->Price;
             $orderItem['Currency'] = TOSEPrice::get_current_currency_name();
-            $orderItem['ProductID'] = $cartItem->ProductID;
+            $orderItem['ProductID'] = $cartItem->getProduct()->ID;
             $orderItem['SpecID'] = $cartItem->SpecID;
 
             TOSEOrderItem::save($orderItem);
@@ -222,12 +222,16 @@ class TOSEOrder extends DataObject {
         return $info;
     }
     
+    /**
+     * Function is to get items HTML codes for cms
+     * @return string
+     */
     public function getItemsInfo4CMS() {
         $items = $this->items();
         $info = "<table style='border-spacing: 50px 5px; border-collapse:separate'>"
                 . "<tr><th></th><th>Name</th><th>Category</th><th>Price</th><th>QTY</th><th>Sub Total</th></tr>";
         foreach ($items as $item) {
-            $info .= "<tr><td><img src='".$item->getProduct()->getDefaultImage()->Filename."' style='width:60px;' ></td>"
+            $info .= "<tr><td><img src='".$item->Product()->getDefaultImage()->Filename."' style='width:60px;' ></td>"
                     . "<td>$item->Name</td>"
                     . "<td>$item->Category</td>"
                     . "<td>NZD $$item->Price</td>"
@@ -278,11 +282,39 @@ class TOSEOrder extends DataObject {
         
         $this->delete();
     }
-
+    
+    /**
+     * Function is to move order to history order if status is latest
+     */
     public function onAfterWrite() {
         if($this->Status == self::DELIVERED) {
             $this->moveToHistory();
         }
+    }
+    
+    /**
+     * Function is to delete the accessory data
+     */
+    public function onBeforeDelete() {
+        parent::onBeforeDelete();
+        $items = $this->Items();
+        if ($items->exists()) {
+            foreach ($items as $item) {
+                if(!$item->HistoryOrderID) {
+                    $item->delete();
+                }
+            }
+        }
+        $shippingAddress = $this->ShippingAddress();
+        if($shippingAddress->ID && !$shippingAddress->HistoryOrderID) {
+            $this->ShippingAddress()->delete();
+        }
+        
+        $billingAddress = $this->BillingAddress();
+        if($billingAddress->ID && !$billingAddress->HistoryOrderID) {
+            $this->BillingAddress()->delete();
+        }
+
     }
 //    public function canPay() {
 //        if($this->Status == TOSEOrder::PENDING) {
