@@ -27,7 +27,7 @@ class TOSESpec extends DataObject {
         'Weight' => "Weight",
         'SKU' => "SKU",
         'Inventory' => 'Inventory',
-        'getDefaultPrice' => 'Price (NZD)',
+        'getCurrentPriceValue' => 'Price',
         'ExtraInfo' => 'ExtraInfo'
     );
     
@@ -53,8 +53,14 @@ class TOSESpec extends DataObject {
         
         if ($this->ID) {
             $gridFieldConfig = GridFieldConfig_RelationEditor::create();
+            $gridFieldConfig
+                    ->removeComponentsByType('GridFieldAddNewButton')
+                    ->removeComponentsByType('GridFieldAddExistingAutocompleter')
+                    ->removeComponentsByType('GridFieldDeleteAction');
+            //var_dump($gridFieldConfig); die;
             $gridField = new GridField('Prices', 'Prices', $this->Prices(), $gridFieldConfig);
             $fields->addFieldToTab('Root.Main', $gridField);
+            
         } else {
             
             $fields->addFieldToTab(
@@ -75,41 +81,36 @@ class TOSESpec extends DataObject {
      * @return type
      */
     public function getCurrentPrice() {
-        $currentCurrencyName = TOSEPrice::get_current_currency_name();
-        $currentPrice = $this->Prices()->find('Currency', $currentCurrencyName);
+        $Name = TOSEPrice::get_active_currency_name();
+        $currentPrice = $this->Prices()->find('Currency', $Name);
 
         return $currentPrice ? $currentPrice : NULL;
     }
     
     /**
-     * Function is to get current currency name
+     * Function is to get the value of current price
      * @return type
      */
-    public static function get_current_currency_name() {
-        $multiCurrency = Config::inst()->get('TOSEPrice', 'multiCurrency');
-        $defaultCurrencyName = Config::inst()->get('TOSEPrice', 'defaultCurrency');
-        if ($multiCurrency === "TRUE") {
-            $currentCurrencyName = Session::get(TOSEPage::SessionCurrencyName);
-            return $currentCurrencyName ? $currentCurrencyName : $defaultCurrencyName;
-        } else {
-            return $defaultCurrencyName;
-        }
-    }           
-    
+    public function getCurrentPriceValue() {
+        return $this->getCurrentPrice()->Nice();
+    }
+
     /**
-     * Function is to get the symbol of current currency
-     * @return type
+     * Write in default price after this spec written
      */
-    public static function get_current_currency_symbol() {
-        $multiCurrency = Config::inst()->get('TOSEPrice', 'multiCurrency');
-        $defaultCurrencySymbol = Config::inst()->get('TOSEPrice', 'defaultCurrencySymbol');
-        $currencies = Config::inst()->get('TOSEPrice', 'currencies');
-        if ($multiCurrency === "TRUE") {
-            $currentCurrencyName = Session::get(TOSEPage::SessionCurrencyName);
-            return $currencies[$currentCurrencyName];
-        } else {
-            return $defaultCurrencySymbol;
+    public function onAfterWrite() {
+        parent::onAfterWrite();
+        $currencyNames = TOSEPrice::get_currency_names();
+        $childPrices = $this->Prices()->column('Currency');
+        foreach ($currencyNames as $name) {
+            if(!in_array($name, $childPrices)) {
+                $price = new TOSEPrice();
+                $price->Currency = $name;
+                $price->Price = 0.00;
+                $price->SpecID = $this->ID;
+                $price->write();
+            }
         }
-    }   
+    }
     
 }

@@ -1,5 +1,5 @@
 <% with $Cart %>
-    <% include CartPanel CartLink=$Top.getCartLink,CurrencySymbol=$Top.CurrentCurrencySymbol %>
+    <% include CartPanel CartLink=$Top.getCartLink %>
 <% end_with %>
 <div>
     $orderForm

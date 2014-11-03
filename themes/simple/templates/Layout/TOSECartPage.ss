@@ -3,7 +3,7 @@
         <div>No items in cart yet</div>
         <a href='$Top.getEcommerceRootPageLink/category/'><button>Go Shopping</button></a>
     <% else %>
-        <% include CartPanel CartLink=$Top.getCartLink,CurrencySymbol=$Top.CurrentCurrencySymbol %>
+        <% include CartPanel CartLink=$Top.getCartLink %>
         <a href='{$Top.getCartLink}clearCart'><button>Clear Cart</button></a>
         <a href="$Top.getEcommerceRootPageLink/checkout"><button>Checkout</button></a>
     <% end_if %>

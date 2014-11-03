@@ -1,5 +1,5 @@
 en:
-    TOSE_Admin:
+    TOSE_ADMIN:
         VALIDATION:
             CATEGORY:
                 NAME:
@@ -14,6 +14,7 @@ en:
                     MONEY : Please enter corret money format!
         MESSAGE:
             IS_ROOT_CATEGORY: Root Category
+            ADD_PRICE_VALUE: Click to add price value
             NEW_CATEGORY_SUB_CATEGORY: You can create sub-category after creating new CATEGORY
             NEW_CATEGORY_PRODUCT: You can add product after creating new CATEGORY
             NEW_PRODUCT_PRICE: You can add price after creating new PRODUCT

@@ -82,7 +82,7 @@ class TOSEOrder extends DataObject {
             $orderItem['SKU'] = $cartItem->Spec()->SKU;
             $orderItem['Weight'] = $cartItem->Spec()->Weight;
             $orderItem['Price'] = $cartItem->subTotalPrice()->Price;
-            $orderItem['Currency'] = TOSEPrice::get_current_currency_name();
+            $orderItem['Currency'] = TOSEPrice::get_active_currency_name();
             $orderItem['ProductID'] = $cartItem->getProduct()->ID;
             $orderItem['SpecID'] = $cartItem->SpecID;
 

@@ -43,7 +43,7 @@ class TOSEHistoryOrder extends DataObject {
      * @return boolean
      */
     public function canDelete($member = null) {
-        return TRUE;
+        return FALSE;
     }
     
     

@@ -188,7 +188,7 @@ class TOSECart extends DataObject {
             $totalPriceVal += $item->subTotalPrice()->Price;
         }
         $totalPrice = new TOSEPrice();
-        $totalPrice->Currency = TOSEPrice::get_current_currency_name();
+        $totalPrice->Currency = TOSEPrice::get_active_currency_name();
         $totalPrice->Price = $totalPriceVal;
         
         return $totalPrice;
