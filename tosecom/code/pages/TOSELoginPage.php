@@ -17,6 +17,13 @@ class TOSELoginPage_Controller extends TOSEPage_Controller {
         'LoginForm'
     );
 
+    public function index() {
+        if(!TOSEMember::need_login()) {
+            die('No such page');
+        }
+        
+        return $this;
+    }
 
     public function LoginForm() {
         return parent::LoginForm();

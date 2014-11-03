@@ -66,7 +66,7 @@ class TOSEMember extends DataExtension {
             }
         }
         
-        die("needLogin is not defined correctly, it only can be".self::NeedLoginYes.", ".self::NeedLoginNo." or ".self::NeedLoginBoth."please see config.yaml");
+        die("needLogin is not defined correctly, it only can be".self::NeedLoginYes.", ".self::NeedLoginNo." or ".self::NeedLoginBoth."please check config file");
     }
     
     public static function get_customer_group_code() {
@@ -75,5 +75,13 @@ class TOSEMember extends DataExtension {
         return strtolower($lcCode);
     }
     
+    
+    public static function check_purchase_permission() {
+        if((self::need_login()===self::NeedLoginYes) && !self::is_customer_login()) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
     
 }

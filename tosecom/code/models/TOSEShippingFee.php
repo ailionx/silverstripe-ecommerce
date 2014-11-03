@@ -8,6 +8,6 @@
 
 interface TOSEShippingFee {
     
-    function calculateShippingFee();
+    abstract function calculateShippingPrice();
     
 }

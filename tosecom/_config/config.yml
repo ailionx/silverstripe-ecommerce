@@ -1,4 +1,5 @@
 Member:
+#needLogin options: "Yes"/"No"/"Both"
     needLogin: 'Both'
     customerGroup: 'customer'
     extensions:
@@ -45,8 +46,6 @@ TOSEPrice:
         CNY: '¥'
         AUD: '$'
         USD: '$'
-    extensions:
-        - TOSEPriceExtension
         
 TOSECategory:
     extensions:

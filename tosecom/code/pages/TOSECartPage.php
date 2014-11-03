@@ -42,6 +42,9 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
      * @return type
      */
     public function addToCart(SS_HTTPRequest $request) {
+        if(!TOSEMember::check_purchase_permission()) {
+            return $this->redirect(TOSEPage::get_page_link('TOSELoginPage'));
+        }
         $data = $request->postVars();
         $cart = TOSECart::get_current_cart();
         $cart->addProduct($data);

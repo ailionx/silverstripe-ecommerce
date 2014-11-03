@@ -92,7 +92,17 @@ class TOSEPage extends Page {
         
         return $config;
     }
-
+    
+    /**
+     * Function is to get page link based on page class name
+     * @param type $pageName
+     * @return type
+     */
+    public static function get_page_link($pageName) {
+        $page = SiteTree::get_one($pageName);
+        
+        return $page->Link();
+    }  
     /**
      * Function is to check if customer member logged in
      * @return type
@@ -121,21 +131,6 @@ class TOSEPage extends Page {
         return FALSE;
     }
     
-    /**
-     * Function is to get symbol current currency symbol
-     * @return type
-     */
-    public function getSymbol() {
-        return TOSEPrice::get_active_currency_symbol();
-    }
-    
-    /**
-     * Function is to get symbol current currency name
-     * @return type
-     */
-    public function getName() {
-        return TOSEPrice::get_active_currency_name();
-    }
     
     /**
      * Function is to get current cart object
@@ -162,9 +157,8 @@ class TOSEPage_Controller extends Page_Controller {
     public function logout() {
         TOSEMember::logout();
         return $this->redirect('ecommerce/login');
-    }
+    }  
     
-        
     /**
      * Function is to get the link of ecommerce page
      * @return type
@@ -173,7 +167,7 @@ class TOSEPage_Controller extends Page_Controller {
         $page = DataObject::get_one('SiteTree', "ClassName='TOSEPage'");
         return $page->URLSegment;
     }
-    
+
     /**
      * Function is to get current cart link
      * @return type
