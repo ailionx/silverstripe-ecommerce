@@ -92,7 +92,7 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         
         $cart = TOSECart::get_current_cart();
         $specID = $data['SpecID'];
-        $item = DataObject::get_one('TOSECartItem', "SpecID = '$specID' AND CartID = '{$cart->ID}'");
+        $item = $cart->getCartItems()->find('SpecID', $specID);
         $quantity = $item->Quantity - 1;
         $cart->itemAssignQuantity($specID, $quantity);
         
@@ -115,7 +115,7 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         
         $cart = TOSECart::get_current_cart();
         $specID = $data['SpecID'];
-        $item = DataObject::get_one('TOSECartItem', "SpecID = '$specID' AND CartID = '{$cart->ID}'");
+        $item = $cart->getCartItems()->find('SpecID', $specID);
         $quantity = $item->Quantity + 1;
         $cart->itemAssignQuantity($specID, $quantity);
         
