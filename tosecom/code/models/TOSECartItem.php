@@ -46,12 +46,27 @@ class TOSECartItem extends DataObject {
      */
     public function subTotalPrice() {
         $spec = $this->Spec();
-        $price = $spec->getCurrentPrice();
+        $price = $spec->getActivePrice();
         $totalPrice = new TOSEPrice();
         $totalPrice->Currency = $price->Currency;
         $totalPrice->Price = $price->Price * $this->Quantity;
         return $totalPrice;
     }
+    
+    
+    /**
+     * Function is to get sub total price of current item
+     * @return type
+     */
+    public function subTotalPriceToPay() {
+        $spec = $this->Spec();
+        $price = $spec->getActivePrice();
+        $totalPrice = new TOSEPrice();
+        $totalPrice->Currency = $price->Currency;
+        $totalPrice->Price = $price->Price * $this->Quantity;
+        return $totalPrice;
+    }
+    
     
     /**
      * Function is to check if the quantity beyonds inventory

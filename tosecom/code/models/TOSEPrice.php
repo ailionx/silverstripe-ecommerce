@@ -45,16 +45,16 @@ class TOSEPrice extends DataObject {
      * Function is to get default currency name
      * @return type
      */
-    public static function get_default_currency_name() {
-        return Config::inst()->get('TOSEPrice', 'defaultCurrency');
+    public static function get_primary_currency_name() {
+        return Config::inst()->get('TOSEPrice', 'primaryCurrency');
     }
     
     /**
      * Function is to get default currency symbol
      * @return type
      */
-    public static function get_default_currency_symbol() {
-        return Config::inst()->get('TOSEPrice', 'defaultCurrencySymbol');
+    public static function get_primary_currency_symbol() {
+        return Config::inst()->get('TOSEPrice', 'primaryCurrencySymbol');
     }
     
     /**
@@ -62,11 +62,11 @@ class TOSEPrice extends DataObject {
      * @return type
      */
     public static function get_all_currencies() {
-        $currencies = Config::inst()->get('TOSEPrice', 'currencies');
-        $defaultCurrencyName = self::get_default_currency_name();
-        if(!array_key_exists($defaultCurrencyName, $currencies)) {
-            $currencies[$defaultCurrencyName] = self::get_default_currency_symbol();
-        }
+        $primaryCurrencyName = self::get_primary_currency_name();
+        $primaryOurrency[$primaryCurrencyName] = self::get_primary_currency_symbol();
+        $optionalCurrencies = Config::inst()->get('TOSEPrice', 'optionalCurrencies');
+
+        $currencies = array_merge($primaryOurrency, $optionalCurrencies);
         
         return $currencies;
     }
@@ -103,12 +103,12 @@ class TOSEPrice extends DataObject {
      */
     public static function get_active_currency_name() {
         $multiCurrency = Config::inst()->get('TOSEPrice', 'multiCurrency');
-        $defaultCurrencyName = self::get_default_currency_name();
+        $primaryCurrencyName = self::get_primary_currency_name();
         if ($multiCurrency === "TRUE") {
             $Name = Session::get(TOSEPage::SessionCurrencyName);
-            return $Name ? $Name : $defaultCurrencyName;
+            return $Name ? $Name : $primaryCurrencyName;
         } else {
-            return $defaultCurrencyName;
+            return $primaryCurrencyName;
         }
     }           
     
@@ -142,17 +142,6 @@ class TOSEPrice extends DataObject {
         else return $val;
     }
     
-    /**
-     * Function is to give message of price value in summary fields
-     * @return type
-     */
-//    public function priceMessage4CMS() {
-//        if($this->Price == 0) {
-//            return _t("TOSE_ADMIN.MESSAGE.ADD_PRICE_VALUE");
-//        } 
-//        
-//        return $this->Nice();
-//    }
     
     /**
      * For template

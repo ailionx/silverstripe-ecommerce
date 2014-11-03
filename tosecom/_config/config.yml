@@ -37,10 +37,10 @@ TOSECheckoutPage:
     pageURLSegment: 'checkout'
         
 TOSEPrice:
-    defaultCurrency: 'NZD'
-    defaultCurrencySymbol: '$'
+    primaryCurrency: 'NZD'
+    primaryCurrencySymbol: '$'
     multiCurrency: 'FALSE'
-    currencies:
+    optionalCurrencies:
         GBP: '£'
         CNY: '¥'
         AUD: '$'

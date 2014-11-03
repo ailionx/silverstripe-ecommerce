@@ -27,18 +27,11 @@ class TOSESpec extends DataObject {
         'Weight' => "Weight",
         'SKU' => "SKU",
         'Inventory' => 'Inventory',
-        'getCurrentPriceValue' => 'Price',
+        'getActivePriceValue' => 'Price',
         'ExtraInfo' => 'ExtraInfo'
     );
     
     
-//    public function  getDefaultPrice() {
-//        if($nzPrice = DataObject::get_one('TOSEPrice', "Currency='NZD' And SpecID='".$this->ID."'")) {
-//            return $nzPrice->Price;
-//        } else {
-//            return '0';
-//        }
-//    }
 
     /**
      * Setup CMS fields
@@ -80,19 +73,31 @@ class TOSESpec extends DataObject {
      * Function is to get current currency
      * @return type
      */
-    public function getCurrentPrice() {
+    public function getActivePrice() {
         $Name = TOSEPrice::get_active_currency_name();
-        $currentPrice = $this->Prices()->find('Currency', $Name);
+        $activePrice = $this->Prices()->find('Currency', $Name);
 
-        return $currentPrice ? $currentPrice : NULL;
+        return $activePrice ? $activePrice : NULL;
     }
+    
+    /**
+     * Function is to get current currency
+     * @return type
+     */
+    public function getPrimaryPrice() {
+        $Name = TOSEPrice::get_primary_currency_name();
+        $primaryPrice = $this->Prices()->find('Currency', $Name);
+
+        return $primaryPrice ? $primaryPrice : NULL;
+    }
+    
     
     /**
      * Function is to get the value of current price
      * @return type
      */
-    public function getCurrentPriceValue() {
-        return $this->getCurrentPrice()->Nice();
+    public function getActivePriceValue() {
+        return $this->getActivePrice()->Nice();
     }
 
     /**

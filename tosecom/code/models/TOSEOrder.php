@@ -15,7 +15,8 @@ class TOSEOrder extends DataObject {
         'Reference'=>'Varchar(20)',
         'NeedInvoice' => "Boolean",
         'Status'=>"Enum('Pending, Delivered', 'Pending')",
-        'ShippingFee'=>'Decimal',
+        'ShippingFee' => 'Currency',
+        'Currency' => 'Varchar(10)',
         'CustomerName'=>'Varchar',
         'CustomerEmail'=>'Varchar',
         'CustomerPhone'=>'Varchar',
@@ -82,7 +83,7 @@ class TOSEOrder extends DataObject {
             $orderItem['SKU'] = $cartItem->Spec()->SKU;
             $orderItem['Weight'] = $cartItem->Spec()->Weight;
             $orderItem['Price'] = $cartItem->subTotalPrice()->Price;
-            $orderItem['Currency'] = TOSEPrice::get_active_currency_name();
+            $orderItem['Currency'] = TOSEPrice::get_primary_currency_name();
             $orderItem['ProductID'] = $cartItem->getProduct()->ID;
             $orderItem['SpecID'] = $cartItem->SpecID;
 
@@ -111,12 +112,15 @@ class TOSEOrder extends DataObject {
      * Function is to get total products price
      * @return type
      */
-    public function getProductsPrice() {
+    public function getItemsPrice() {
         $items = $this->Items();
-        $productPrice = 0;
+        $productPriceValue = 0;
         foreach ($items as $item) {
-            $productPrice += $item->Price;
+            $productPriceValue += $item->Price;
         }
+        $productPrice = new TOSEPrice();
+        $productPrice->Price = $productPriceValue;
+        $productPrice->Currency = TOSEPrice::get_active_currency_name();
         return $productPrice;        
     }
 
@@ -126,8 +130,11 @@ class TOSEOrder extends DataObject {
      */        
     public function getTotalPrice() {
 
-        $totalPrice = $this->getProductsPrice() + $this->ShippingFee;
-        
+        $totalPriceValue = $this->getItemsPrice()->Price + $this->ShippingFee;
+        $totalPrice = new TOSEPrice();
+        $totalPrice->Price = $totalPriceValue;
+        $totalPrice->Currency = TOSEPrice::get_active_currency_name();
+ 
         return $totalPrice;
     }
 
@@ -171,9 +178,9 @@ class TOSEOrder extends DataObject {
         $orderInfoField->push(new HeaderField('orderInfoHeader', 'Order Information'));
         $orderInfoField->push(new ReadonlyField('Created', 'Created'));
         $orderInfoField->push(new ReadonlyField('NeedInvoiceString', 'Need Invoice?', $this->NeedInvoice ? 'Yes' : 'No'));
-        $orderInfoField->push(new ReadonlyField(FALSE, 'Product Price', "NZD $".$this->getProductsPrice()));
-        $orderInfoField->push(new ReadonlyField(FALSE, 'Shipping fee', "NZD $".$this->ShippingFee));
-        $orderInfoField->push(new ReadonlyField(FALSE, 'Total Price', "NZD $".$this->getTotalPrice()));
+        $orderInfoField->push(new ReadonlyField(FALSE, 'Product Price', $this->getItemsPrice()->Nice()));
+        $orderInfoField->push(new ReadonlyField(FALSE, 'Shipping fee', $this->Currency." ".  TOSEPrice::get_currency_symbol($this->Currency).$this->ShippingFee));
+        $orderInfoField->push(new ReadonlyField(FALSE, 'Total Price', $this->getTotalPrice()->Nice()));
         $fields->push($orderInfoField);
         
         $itemsInfoFields = new CompositeField();
@@ -254,6 +261,7 @@ class TOSEOrder extends DataObject {
         $historyOrder->NeedInvoice = $this->NeedInvoice;
         $historyOrder->Status = $this->Status;
         $historyOrder->ShippingFee = $this->ShippingFee;
+        $historyOrder->Currency = $this->Currency;
         $historyOrder->CustomerName = $this->CustomerName;
         $historyOrder->CustomerEmail = $this->CustomerEmail;
         $historyOrder->CustomerPhone = $this->CustomerPhone;

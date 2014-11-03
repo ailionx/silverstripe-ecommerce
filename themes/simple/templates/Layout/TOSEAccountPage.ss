@@ -16,7 +16,7 @@
                         <div>$Name</div>
                     <% end_loop %>
                 </td>
-                <td>$TotalPrice</td>
+                <td>$TotalPrice.Nice</td>
                 <td>$Status</td>
                 <td>$Created</td>
             </tr>        

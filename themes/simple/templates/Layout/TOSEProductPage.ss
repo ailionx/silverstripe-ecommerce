@@ -13,7 +13,7 @@
                     <div>Weight: $Weight</div>
                     <div>SKU: $SKU</div>
                     <div>Inventory: $Inventory</div>
-                    <div>$CurrentPrice.Nice</div>
+                    <div>$ActivePrice.Nice</div>
                 </li>
             </ul>
         <% end_loop %>

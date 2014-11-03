@@ -210,20 +210,27 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      * Function is to get the shipping fee
      * @return int
      */
-    public function getShippingFee() {
-        return 10;
+    public function getShippingPrice($value=10) {
+        $ShippingPrice = new TOSEPrice();
+        $ShippingPrice->Price = $value;
+        $ShippingPrice->Currency = TOSEPrice::get_active_currency_name();
+        return $ShippingPrice;    
+
     }
     
     /**
      * Function si to calculate the total amount of the order
      * @return type
      */
-    public function totalAmount() {
+    public function getTotalPrice() {
         
         $productAmount = TOSECart::get_current_cart()->totalPrice()->Price;
-        $shippingFee = $this->getShippingFee();
-        $totalAmount = $productAmount + $shippingFee;
-        return $totalAmount;
+        $shippingFee = $this->getShippingPrice()->Price;
+        $totalPriceValue = $productAmount + $shippingFee;
+        $totalPrice = new TOSEPrice();
+        $totalPrice->Price = $totalPriceValue;
+        $totalPrice->Currency = TOSEPrice::get_active_currency_name();
+        return $totalPrice;
     }
     
 
@@ -244,8 +251,8 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
 
         //To create data for payment gateway
         $data = array(
-            'Amount' => $this->totalAmount(),
-            'Currency' => TOSEPrice::get_active_currency_name(),
+            'Amount' => $this->getTotalPrice()->Price,
+            'Currency' => $this->getTotalPrice()->Currency,
             'Status' => TOSEOrder::PENDING,
             'Reference' => null
         );
@@ -311,7 +318,8 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $orderData['Reference'] = TOSEOrder::create_reference();
         $orderData['NeedInvoice'] = array_key_exists('NeedInvoice', $orderInfo);
         $orderData['Status'] = TOSEOrder::PENDING;
-        $orderData['ShippingFee'] = $this->getShippingFee();
+        $orderData['ShippingFee'] = $this->getShippingPrice()->Price;
+        $orderData['Currency'] = TOSEPrice::get_primary_currency_name();
         $orderData['CustomerName'] = $orderInfo['CustomerName'];
         $orderData['CustomerEmail'] = $orderInfo['CustomerEmail'];
         $orderData['CustomerPhone'] = $orderInfo['CustomerPhone'];
