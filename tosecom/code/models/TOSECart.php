@@ -136,7 +136,7 @@ class TOSECart extends DataObject {
         $item = new TOSECartItem();
         $item->update($data);
         $item->CartID = $this->ID;
-        $item->checkInventory();
+        $item->checkQuantity();
         $item->write();
     }
     
@@ -153,7 +153,7 @@ class TOSECart extends DataObject {
     public function itemAssignQuantity($specID, $quantity) {
         $item = $this->getCartItems()->find('SpecID', $specID);
         $item->Quantity = $quantity;
-        $item->checkInventory();
+        $item->checkQuantity();
         $item->write();
     }
     

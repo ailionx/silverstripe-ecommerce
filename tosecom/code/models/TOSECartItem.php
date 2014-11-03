@@ -72,10 +72,25 @@ class TOSECartItem extends DataObject {
      * Function is to check if the quantity beyonds inventory
      * @return type
      */
-    public function checkInventory() {
-        return $this->Quantity > $this->Spec()->Inventory ? FALSE : TRUE;
+    public function checkQuantity() {
+        if ($this->Quantity > $this->Spec()->Inventory) {
+            die('Out of inventory');
+        }
+        
+        if ($this->Quantity<1) {
+            $this->delete();
+        }
+        
     }
     
+    public function QuantityReachMin($num=1) {
+        return $this->Quantity <= $num;
+    }
+    
+    public function QuantityReachMax() {
+        return $this->Quantity >= $this->Inventory;
+    }
+
     /**
      * OVERRIDE
      * @param type $showDebug

@@ -9,12 +9,17 @@
             <% end_with %>
         <% end_with %>
         <form method="post" action="{$CartLink}updateQuantity">
-        <div>Quantity: <input type="number" value="$Quantity" name="Quantity" style="width: 40px" /></div>
+        <div>Quantity: 
+            <input type="number" value="$Quantity" name="Quantity" style="width: 40px" />
+        </div>
+        
         <div>SubTotal: $subTotalPrice.Nice</div>
         <input type="hidden" value="$Spec.ID" name="SpecID" />
         <button type="submit">update</button>
         </form>
-        <a href="{$CartLink}removeItem?&SpecID=$SpecID"><button style="float: none;">delete</button></a>
+            <a href='{$CartLink}quantityMinus?SpecID=$SpecID'><button style='float:none'>-</button></a>
+            <a href='{$CartLink}quantityPlus?SpecID=$SpecID'><button style='float:none'>+</button></a>
+        <a href="{$CartLink}removeItem?SpecID=$SpecID"><button style="float: none;">delete</button></a>
     </div>
 <% end_loop %>
 <div>Total Price: $totalPrice.Nice</div>

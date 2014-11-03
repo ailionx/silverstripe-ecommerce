@@ -18,7 +18,9 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         'clearCart',
         'updateQuantity',
         'removeItem',
-        'cartEmpty'
+        'cartEmpty',
+        'quantityMinus',
+        'quantityPlus'
     );
     
     private static $url_handlers = array(
@@ -75,6 +77,52 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         return $this->redirectBack();
     }
     
+    /**
+     * Function is to make item quantity minus 1
+     * @param SS_HTTPRequest $request
+     * @return type
+     */
+    public function quantityMinus(SS_HTTPRequest $request) {
+        $data = $request->getVars();
+        // Validate if inputs type is number 
+        $numberFields = array(
+            'SpecID'
+        );
+        TOSEValidator::data_is_number($data, $numberFields, TRUE);
+        
+        $specID = $data['SpecID'];
+        $item = DataObject::get_one('TOSECartItem', "SpecID = '$specID'");
+        $quantity = $item->Quantity - 1;
+        $cart = TOSECart::get_current_cart();
+        $cart->itemAssignQuantity($specID, $quantity);
+        
+        return $this->redirectBack();
+        
+    }
+    
+    /**
+     * Function is to make item quantity plus 1
+     * @param SS_HTTPRequest $request
+     * @return type
+     */
+    public function quantityPlus(SS_HTTPRequest $request) {
+        $data = $request->getVars();
+        // Validate if inputs type is number 
+        $numberFields = array(
+            'SpecID'
+        );
+        TOSEValidator::data_is_number($data, $numberFields, TRUE);
+        
+        $specID = $data['SpecID'];
+        $item = DataObject::get_one('TOSECartItem', "SpecID = '$specID'");
+        $quantity = $item->Quantity + 1;
+        $cart = TOSECart::get_current_cart();
+        $cart->itemAssignQuantity($specID, $quantity);
+        
+        return $this->redirectBack();
+        
+    }
+
     /**
      * Function is to delete item in cart page
      * @param SS_HTTPRequest $request
