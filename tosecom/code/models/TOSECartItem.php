@@ -88,7 +88,8 @@ class TOSECartItem extends DataObject {
     }
     
     public function QuantityReachMax() {
-        return $this->Quantity >= $this->Inventory;
+        $inventory = $this->Spec()->Inventory;
+        return $this->Quantity >= $inventory;
     }
 
     /**

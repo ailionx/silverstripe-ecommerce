@@ -90,10 +90,10 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         );
         TOSEValidator::data_is_number($data, $numberFields, TRUE);
         
-        $specID = $data['SpecID'];
-        $item = DataObject::get_one('TOSECartItem', "SpecID = '$specID'");
-        $quantity = $item->Quantity - 1;
         $cart = TOSECart::get_current_cart();
+        $specID = $data['SpecID'];
+        $item = DataObject::get_one('TOSECartItem', "SpecID = '$specID' AND CartID = '{$cart->ID}'");
+        $quantity = $item->Quantity - 1;
         $cart->itemAssignQuantity($specID, $quantity);
         
         return $this->redirectBack();
@@ -113,10 +113,10 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         );
         TOSEValidator::data_is_number($data, $numberFields, TRUE);
         
-        $specID = $data['SpecID'];
-        $item = DataObject::get_one('TOSECartItem', "SpecID = '$specID'");
-        $quantity = $item->Quantity + 1;
         $cart = TOSECart::get_current_cart();
+        $specID = $data['SpecID'];
+        $item = DataObject::get_one('TOSECartItem', "SpecID = '$specID' AND CartID = '{$cart->ID}'");
+        $quantity = $item->Quantity + 1;
         $cart->itemAssignQuantity($specID, $quantity);
         
         return $this->redirectBack();

@@ -17,8 +17,12 @@
         <input type="hidden" value="$Spec.ID" name="SpecID" />
         <button type="submit">update</button>
         </form>
+        <% if not $QuantityReachMin %>
             <a href='{$CartLink}quantityMinus?SpecID=$SpecID'><button style='float:none'>-</button></a>
+        <% end_if %>
+        <% if not $QuantityReachMax %>
             <a href='{$CartLink}quantityPlus?SpecID=$SpecID'><button style='float:none'>+</button></a>
+        <% end_if %>
         <a href="{$CartLink}removeItem?SpecID=$SpecID"><button style="float: none;">delete</button></a>
     </div>
 <% end_loop %>
