@@ -4,7 +4,7 @@
                 <% if $isCustomerLogin %>
                     User: $MemberName<br>
                 <% end_if %>
-                <a style="float:right;" href="$getEcommerceRootPageLink/$getLogInOut"><button>$getLogInOut</button></a>
+                <a style="float:right;" href="$get_page_link('TOSEPage')$getLogInOut"><button>$getLogInOut</button></a>
             </div>
             <div class="unit size4of4 lastUnit">
                     <a href="{$BaseHref}ecommerce" class="brand" rel="home">

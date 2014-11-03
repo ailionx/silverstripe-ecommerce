@@ -4,7 +4,7 @@
     <% loop Images %>
         <img src="$Filename" style="width:100px;">
     <% end_loop %>
-    <form method="post" action="{$getCartLink}addToCart">
+    <form method="post" action="{$Top.get_page_link('TOSECartPage')}addToCart">
         <% loop Specs %>
             <ul>
                 <li style="float: left; margin-right: 30px;">

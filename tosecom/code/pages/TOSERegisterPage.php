@@ -73,7 +73,7 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
         $form = new Form($this, 'registerForm', $fields, $actions, $required);
         
         if(TOSEMember::is_customer_login()) {
-            return $this->redirect($this->getEcommerceRootPageLink()."/".Config::inst()->get('TOSEAccountPage', 'pageURLSegment'));
+            return $this->redirect(TOSEPage::get_page_link('TOSEAccountPage'));
         }
         
         if($data = Session::get(TOSEPage::SessionRegisterInfo)) {

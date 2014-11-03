@@ -72,14 +72,13 @@ class TOSECategory extends DataObject {
     }
     
     /**
-     * Function is to get the all the ancerstor categories IDs of an given category
+     * Function is to get the all the ancerstor categories IDs of an given category with sql
      * @return type
      */
     public function getAncerstorCategoriesID() {
         $id = $this->ID;
         $IDArray = array((string)$id);
-        $sql = "select ID, @pv:=ParentID as 'ParentID', ClassName, Created, LastEdited, Name from (select * from tosecategory where 1 order by ID DESC)reverse join (select @pv:=$id)tmp where ID=@pv";
-        
+        $sql = "select ID, @pv:=ParentID as 'ParentID', ClassName, Created, LastEdited, Name from (select * from tosecategory where 1 order by ID DESC)reverse join (select @pv:=$id)tmp where ID=@pv";        
         $result = DB::query($sql);
 
         $IDArray = array_merge($IDArray, $result->column('ParentID'));

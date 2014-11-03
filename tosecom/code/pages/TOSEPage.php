@@ -82,7 +82,7 @@ class TOSEPage extends Page {
      * @param type $pageName
      * @return type
      */
-    public static function get_page_URLSegment($pageName) {
+    public static function page_URLSegment_config($pageName) {
         $config = Config::inst()->get($pageName, 'pageURLSegment');
         if(!$config) {
             $defaultTitle = self::$default_page_title[$pageName];
@@ -99,8 +99,8 @@ class TOSEPage extends Page {
      * @return type
      */
     public static function get_page_link($pageName) {
-        $page = SiteTree::get_one($pageName);
-        
+        $page = DataObject::get_one('SiteTree', "ClassName='$pageName'");
+
         return $page->Link();
     }  
     /**
@@ -156,30 +156,7 @@ class TOSEPage_Controller extends Page_Controller {
      */
     public function logout() {
         TOSEMember::logout();
-        return $this->redirect('ecommerce/login');
+        return $this->redirect(TOSEPage::get_page_link('TOSELoginPage'));
     }  
-    
-    /**
-     * Function is to get the link of ecommerce page
-     * @return type
-     */
-    public function getEcommerceRootPageLink() {
-        $page = DataObject::get_one('SiteTree', "ClassName='TOSEPage'");
-        return $page->URLSegment;
-    }
-
-    /**
-     * Function is to get current cart link
-     * @return type
-     */
-    public function getCartLink() {
-        $cartPage = DataObject::get_one('SiteTree', "ClassName='TOSECartPage'");
-        return $cartPage->Link();
-    }
-    
-    public function getCheckoutLink() {
-        $checkoutPage = DataObject::get_one('TOSECheckoutPage');
-        return $checkoutPage->Link();
-    }
     
 }

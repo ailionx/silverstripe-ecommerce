@@ -1,10 +1,5 @@
 <% with $Cart %>
-    <% if $cartEmpty %>
-        <div>No items in cart yet</div>
-        <a href='$Top.getEcommerceRootPageLink/product/'><button>Go Shopping</button></a>
-    <% else %>
-        <% include ShowCart CartLink=$Top.getCartLink %>
-    <% end_if %>
+    <% include ShowCart %>
 <% end_with %>
 
 <div id="customer-info" style="margin-top: 30px;">

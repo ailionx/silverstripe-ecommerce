@@ -1,10 +1,10 @@
 <% with $Cart %>
     <% if $cartEmpty %>
         <div>No items in cart yet</div>
-        <a href='$Top.getEcommerceRootPageLink/category/'><button>Go Shopping</button></a>
+        <a href="$Top.get_page_link('TOSECategoryPage')"><button>Go Shopping</button></a>
     <% else %>
-        <% include CartPanel CartLink=$Top.getCartLink %>
-        <a href='{$Top.getCartLink}clearCart'><button>Clear Cart</button></a>
-        <a href="$Top.getEcommerceRootPageLink/checkout"><button>Checkout</button></a>
+        <% include CartPanel CartLink=$Top.get_page_link('TOSECartPage') %>
+        <a href='{$Top.get_page_link('TOSECartPage')}clearCart'><button>Clear Cart</button></a>
+        <a href="$Top.get_page_link('TOSECheckoutPage')"><button>Checkout</button></a>
     <% end_if %>
 <% end_with %>

@@ -100,15 +100,6 @@ class TOSEProduct extends DataObject {
         return FALSE;
     }
     
-    /**
-     * Function is to get the link of cart page
-     * @return type
-     */
-    public function getCartLink() {
-        $cartPage = DataObject::get_one('TOSECartPage');
-        $link = $cartPage->Link();
-        return $link;
-    }
 
     /**
      * Function is to filter enabled products from a products list
