@@ -113,7 +113,7 @@ class TOSECartItem extends DataObject {
      * @return type
      */
     public function writeToSession() {
-        $allItemsArray = unserialize(Session::get(TOSEPage::SessionCart));
+        $allItemsArray = unserialize(Session::get(TOSECart::SessionCart));
         if (!$allItemsArray) {
             $id = 1;
         } else {
@@ -129,7 +129,7 @@ class TOSECartItem extends DataObject {
         $itemArray['SpecID'] = $this->SpecID;
         $itemArray['Quantity'] = $this->Quantity;
         $allItemsArray[$id] = $itemArray;
-        Session::set(TOSEPage::SessionCart, serialize($allItemsArray));
+        Session::set(TOSECart::SessionCart, serialize($allItemsArray));
         return $id;
     }
 
@@ -140,9 +140,9 @@ class TOSECartItem extends DataObject {
         if(TOSEMember::is_customer_login()) {
             parent::delete();
         } else {
-            $itemsArray = unserialize(Session::get(TOSEPage::SessionCart));
+            $itemsArray = unserialize(Session::get(TOSECart::SessionCart));
             unset($itemsArray[$this->ID]);
-            Session::set(TOSEPage::SessionCart, serialize($itemsArray));
+            Session::set(TOSECart::SessionCart, serialize($itemsArray));
         }
     }
     

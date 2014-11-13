@@ -5,19 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-/*
-		'FirstName' => 'Varchar',
-		'Surname' => 'Varchar',
-		'Email' => 'Varchar(256)', // See RFC 5321, Section 4.5.3.1.3.
-        'Phone' => 'Varchar(100)',
-        'StreetNumber' => 'Int',
-        'StreetName' => 'Varchar(100)',
-        'Suburb' => 'Varchar(100)',
-        'City' => 'Varchar(100)',
-        'Region' => 'Varchar(100)',
-        'Country' => 'Varchar(100)',
-        'PostCode' => 'Int'
- */
+
 class TOSERegisterPage extends TOSEPage {
     
 
@@ -30,7 +18,11 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
         'registerForm',
         'success'
     );
-
+    
+    /**
+     * Save the register information
+     */
+    const SessionRegisterInfo = 'TOSERegisterInfo';
 
     public function registerForm() {
         $fields = new FieldList();
@@ -76,7 +68,7 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
             return $this->redirect(TOSEPage::get_page_link('TOSEAccountPage'));
         }
         
-        if($data = Session::get(TOSEPage::SessionRegisterInfo)) {
+        if($data = Session::get(self::SessionRegisterInfo)) {
             $form->loadDataFrom($data);
         }
         
@@ -93,7 +85,7 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
     
     public function doRegister($data, $form) {
         
-        Session::set(TOSEPage::SessionRegisterInfo, $data);
+        Session::set(self::SessionRegisterInfo, $data);
         if ($this->checkMailExist($data['Email'])) {
             $fieldName = 'Email';
             $message = 'This Email Address has been registerd, please use another one or go to login';
@@ -118,7 +110,7 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
         $member->AddressID = $address->ID;
         $member->addToGroupByCode($groupCode);
         $member->write();
-        Session::clear(TOSEPage::SessionRegisterInfo);
+        Session::clear(self::SessionRegisterInfo);
         
         return $this->redirect($this->Link()."success");
     }

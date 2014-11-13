@@ -20,6 +20,11 @@ class TOSECart extends DataObject {
         'CartItems' => 'TOSECartItem'
     );
     
+        
+    /**
+     * Save the cart information. For non-login user
+     */
+    const SessionCart = 'TOSECart';
     
     /**
      * Function is to get current cart
@@ -67,7 +72,7 @@ class TOSECart extends DataObject {
         if(TOSEMember::is_customer_login()) {
             return $this->CartItems();
         } else {
-            $sessionCartItems = Session::get(TOSEPage::SessionCart);
+            $sessionCartItems = Session::get(self::SessionCart);
             $items = new ArrayList();
             if (!$sessionCartItems) {
                 return $items;

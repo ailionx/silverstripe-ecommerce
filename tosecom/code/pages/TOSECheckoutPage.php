@@ -23,8 +23,14 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
     
     private static $url_handlers = array(
         'empty' => 'cartEmpty'
-    );
+    );      
+    
+    /**
+     * Save the order information
+     */
+    const SessionOrderInfo = 'TOSEOderInfo';
 
+    
     /**
      * Function is to do initial redirect
      * @param SS_HTTPRequest $request
@@ -128,7 +134,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         
         $form = new Form($this, 'orderForm', $fields, $actions, $required);
         
-        if($data = unserialize(Session::get(TOSEPage::SessionOrderInfo))) {
+        if($data = unserialize(Session::get(self::SessionOrderInfo))) {
             $form->loadDataFrom($data);
         } elseif (TOSEMember::is_customer_login()) {
             $memberAddress = TOSEAddress::getCurrentMemberAddress();
@@ -171,7 +177,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      */
     public function doNext($data) {
         $sessionData = serialize($data);
-        Session::set(TOSEPage::SessionOrderInfo, $sessionData);
+        Session::set(self::SessionOrderInfo, $sessionData);
 
         return $this->redirect($this->Link('confirm'));
     }
@@ -185,7 +191,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         if ($cart->cartEmpty()) {
             return $this->redirect($this->Link()."cartEmpty");
         }
-        $data = unserialize(Session::get(TOSEPage::SessionOrderInfo));
+        $data = unserialize(Session::get(self::SessionOrderInfo));
         $data['NeedInvoice'] = key_exists('NeedInvoice', $data) ? TRUE : FALSE;
 
         return $this->customise($data)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
@@ -239,7 +245,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      * @param SS_HTTPRequest $request
      */
     public function doPay() {
-        $orderInfo = unserialize(Session::get(TOSEPage::SessionOrderInfo));
+        $orderInfo = unserialize(Session::get(self::SessionOrderInfo));
         $method = $orderInfo['PaymentMethod'];
 
         $processor = PaymentFactory::factory($method);
@@ -314,7 +320,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      * @return type
      */
     public function saveOrder() {
-        $orderInfo = unserialize(Session::get(TOSEPage::SessionOrderInfo));
+        $orderInfo = unserialize(Session::get(self::SessionOrderInfo));
         $orderData['Reference'] = TOSEOrder::create_reference();
         $orderData['NeedInvoice'] = array_key_exists('NeedInvoice', $orderInfo);
         $orderData['Status'] = TOSEOrder::PENDING;
@@ -370,7 +376,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
             //Clear cart and order information
             
             TOSECart::get_current_cart()->clearCart();
-            Session::clear(TOSEPage::SessionOrderInfo);
+            Session::clear(self::SessionOrderInfo);
             //Clear Payment ID from Session
             Session::clear("PaymentID");
         }

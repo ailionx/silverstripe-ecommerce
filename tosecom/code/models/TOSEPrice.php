@@ -42,6 +42,11 @@ class TOSEPrice extends DataObject {
     );
     
     /**
+     * Save the current currency name
+     */
+    const SessionCurrencyName = 'TOSEPriceName';
+    
+    /**
      * Function is to get default currency name
      * @return type
      */
@@ -94,7 +99,7 @@ class TOSEPrice extends DataObject {
             die('No option for the currency name');
         }
         
-        Session::set(TOSEPage::SessionCurrencyName, $currencyName);            
+        Session::set(self::SessionCurrencyName, $currencyName);            
     }
 
     /**
@@ -105,7 +110,7 @@ class TOSEPrice extends DataObject {
         $multiCurrency = Config::inst()->get('TOSEPrice', 'multiCurrency');
         $primaryCurrencyName = self::get_primary_currency_name();
         if ($multiCurrency === "TRUE") {
-            $Name = Session::get(TOSEPage::SessionCurrencyName);
+            $Name = Session::get(self::SessionCurrencyName);
             return $Name ? $Name : $primaryCurrencyName;
         } else {
             return $primaryCurrencyName;

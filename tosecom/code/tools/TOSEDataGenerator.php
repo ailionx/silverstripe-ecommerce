@@ -84,7 +84,7 @@ class TOSEDataGenerator {
     public static function gen_TOSEPage() {
         $page = new TOSEPage();
         $page->Title = TOSEPage::get_page_title('TOSEPage');
-        $page->URLSegment = TOSEPage::page_URLSegment_config('TOSEPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSEPage');
         $page->Status = 'Published';
         $page->ShowInMenus = 0;
         $page->ShowInSearch = 0;
@@ -100,7 +100,7 @@ class TOSEDataGenerator {
     public static function gen_TOSECategoryPage($parentID) {
         $page = new TOSECategoryPage();
         $page->Title = TOSEPage::get_page_title('TOSECategoryPage');
-        $page->URLSegment = TOSEPage::page_URLSegment_config('TOSECategoryPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSECategoryPage');
         $page->Status = 'Published';
         $page->ShowInMenus = 0;
         $page->ShowInSearch = 0;
@@ -115,7 +115,7 @@ class TOSEDataGenerator {
     public static function gen_TOSEProductPage($parentID) {
         $page = new TOSEProductPage();
         $page->Title = TOSEPage::get_page_title('TOSEProductPage');
-        $page->URLSegment = TOSEPage::page_URLSegment_config('TOSEProductPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSEProductPage');
         $page->Status = 'Published';
         $page->ShowInMenus = 0;
         $page->ShowInSearch = 0;
@@ -130,7 +130,7 @@ class TOSEDataGenerator {
     public static function gen_TOSECartPage($parentID) {
         $page = new TOSECartPage();
         $page->Title = TOSEPage::get_page_title('TOSECartPage');
-        $page->URLSegment = TOSEPage::page_URLSegment_config('TOSECartPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSECartPage');
         $page->Status = 'Published';
         $page->ShowInMenus = 0;
         $page->ShowInSearch = 0;
@@ -145,7 +145,7 @@ class TOSEDataGenerator {
     public static function gen_TOSECheckoutPage($parentID) {
         $page = new TOSECheckoutPage();
         $page->Title = TOSEPage::get_page_title('TOSECheckoutPage');
-        $page->URLSegment = TOSEPage::page_URLSegment_config('TOSECheckoutPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSECheckoutPage');
         $page->Status = 'Published';
         $page->ShowInMenus = 0;
         $page->ShowInSearch = 0;
@@ -160,7 +160,7 @@ class TOSEDataGenerator {
     public static function gen_TOSERegisterPage($parentID) {
         $page = new TOSERegisterPage();
         $page->Title = TOSEPage::get_page_title('TOSERegisterPage');
-        $page->URLSegment = TOSEPage::page_URLSegment_config('TOSERegisterPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSERegisterPage');
         $page->Status = 'Published';
         $page->ShowInMenus = 0;
         $page->ShowInSearch = 0;
@@ -175,7 +175,7 @@ class TOSEDataGenerator {
     public static function gen_TOSELoginPage($parentID) {
         $page = new TOSELoginPage();
         $page->Title = TOSEPage::get_page_title('TOSELoginPage');
-        $page->URLSegment = TOSEPage::page_URLSegment_config('TOSELoginPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSELoginPage');
         $page->Status = 'Published';
         $page->ShowInMenus = 0;
         $page->ShowInSearch = 0;
@@ -190,7 +190,7 @@ class TOSEDataGenerator {
     public static function gen_TOSEAccountPage($parentID) {
         $page = new TOSEAccountPage();
         $page->Title = TOSEPage::get_page_title('TOSEAccountPage');
-        $page->URLSegment = TOSEPage::page_URLSegment_config('TOSEAccountPage');
+        $page->URLSegment = TOSEPage::get_page_URLSegment('TOSEAccountPage');
         $page->Status = 'Published';
         $page->ShowInMenus = 0;
         $page->ShowInSearch = 0;
