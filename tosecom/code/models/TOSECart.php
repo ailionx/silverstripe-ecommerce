@@ -147,7 +147,7 @@ class TOSECart extends DataObject {
         );
         TOSEValidator::data_is_number($data, $numberFields, TRUE);
 
-        $this->existItem($data) ? $this->updateItem($data) : $this->addItem($data);
+        return $this->existItem($data) ? $this->updateItem($data) : $this->addItem($data);
     }
 
     /**
@@ -160,6 +160,8 @@ class TOSECart extends DataObject {
         $item->CartID = $this->ID;
         $item->checkQuantity();
         $item->write();
+        
+        return $item;
     }
     
     /**
@@ -170,6 +172,8 @@ class TOSECart extends DataObject {
         $item = $this->getCartItems()->find('SpecID', $data['SpecID']);
         $quantity = $item->Quantity + $data['Quantity'];
         $this->itemAssignQuantity($data['SpecID'], $quantity);
+        
+        return $item;
     }
     
     public function itemAssignQuantity($specID, $quantity) {

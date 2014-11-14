@@ -142,4 +142,20 @@ class TOSEPage_Controller extends Page_Controller {
         return $this->redirect(TOSEPage::get_page_link('TOSELoginPage'));
     }  
     
+    /**
+     * Function is to handle AJAX response
+     * @param type $data
+     * @param type $success
+     * @param type $message 
+     */
+    public function handleAJAXResponse($data = array(), $success = true, $message = null){
+        $response = new AjaxResponse();
+        
+        $response->setData($data);
+        $response->setSuccess($success);
+        $response->setMessage($message);
+        
+        echo $response->getJSONResult();
+    }//END function
+    
 }

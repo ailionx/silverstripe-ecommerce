@@ -47,7 +47,19 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         }
         $data = $request->postVars();
         $cart = TOSECart::get_current_cart();
-        $cart->addToCart($data);
+        $item = $cart->addToCart($data);        
+        
+        if($request->isAjax()) {
+            $response = array(
+                'subTotalPrice' => $item->subTotalPrice()->Price,
+                'totalPrice' => $cart->totalPrice()->Price,
+                'specID' => $item->ID,
+                'Quantity' => $item->Quantity
+            );
+
+            return $this->handleAJAXResponse($response);
+        }
+        
         return $this->redirectBack();
     }
     
@@ -56,9 +68,18 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
      * Function is to clear current cart
      * @return type
      */
-    public function clearCart() {
+    public function clearCart(SS_HTTPRequest $request) {
         $cart = TOSECart::get_current_cart();
         $cart->clearCart();
+        
+        if($request->isAjax()) {
+            $response = array(
+                'totalPrice' => $cart->totalPrice()->Price
+            );
+
+            return $this->handleAJAXResponse($response);
+        }
+        
         return $this->redirectBack();
     }
     
