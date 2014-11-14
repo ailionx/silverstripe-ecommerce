@@ -49,5 +49,5 @@ TOSEPrice:
         
 TOSECategory:
     extensions:
-        - TOSECategoryExtension
+        - TOSECategoryTreeHierarchy
         

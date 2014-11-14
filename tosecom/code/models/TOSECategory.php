@@ -75,17 +75,17 @@ class TOSECategory extends DataObject {
      * Function is to get the all the ancerstor categories IDs of an given category with sql
      * @return type
      */
-    public function getAncerstorCategoriesID() {
-        $id = $this->ID;
-        $IDArray = array((string)$id);
-        $sql = "select ID, @pv:=ParentID as 'ParentID', ClassName, Created, LastEdited, Name from (select * from tosecategory where 1 order by ID DESC)reverse join (select @pv:=$id)tmp where ID=@pv";        
-        $result = DB::query($sql);
-
-        $IDArray = array_merge($IDArray, $result->column('ParentID'));
-
-        return $IDArray;
-
-    }
+//    public function getAncerstorCategoriesID() {
+//        $id = $this->ID;
+//        $IDArray = array((string)$id);
+//        $sql = "select ID, @pv:=ParentID as 'ParentID', ClassName, Created, LastEdited, Name from (select * from tosecategory where 1 order by ID DESC)reverse join (select @pv:=$id)tmp where ID=@pv";        
+//        $result = DB::query($sql);
+//
+//        $IDArray = array_merge($IDArray, $result->column('ParentID'));
+//
+//        return $IDArray;
+//
+//    }
 
     /**
      * Function is to get ancoestor categories of a given category
@@ -119,9 +119,9 @@ class TOSECategory extends DataObject {
      * @return string
      */
     public function getCategoryChain() {
-        $categories = $this->getAncestorCategories($this->Name)->sort('Level');
+        $categories = $this->getAncestorCategories($this->Name)->sort('Level DESC');
         $IDs = $categories->column('ID');
-        $chain = '-'.implode('-', $IDs).'-';
+        $chain = implode('-', $IDs);
         return $chain;
     }
 
@@ -131,7 +131,11 @@ class TOSECategory extends DataObject {
      */
     public function getAllProducts() {
 
-        $products = DataObject::get('TOSEProduct')->innerJoin('TOSECategory', "TOSECategory.Chain like '%-{$this->ID}-%' AND TOSEProduct.CategoryID = TOSECategory.ID");
+        $products = DataObject::get('TOSEProduct')
+                ->innerJoin(
+                        'TOSECategory', 
+                        "(TOSECategory.Chain LIKE '{$this->Chain}-%' OR TOSECategory.Chain='{$this->Chain}') AND TOSEProduct.CategoryID = TOSECategory.ID"
+                );
         
         return TOSEProduct::get_enabled_products($products);
         

@@ -139,10 +139,10 @@ class TOSEProduct extends DataObject {
         $fields->removeByName(array('Specs', 'Images', 'Enabled', 'CategoryChain'));
         $enabledField = new CheckboxField('Enabled', 'Enabled this product', TRUE);
         $fields->addFieldToTab('Root.Main', $enabledField, 'NewFrom');
-        $newFromField = $fields->dataFieldByName('NewFrom');
-        $newToField = $fields->dataFieldByName('NewTo');
-        $newFromField->setConfig('showcalendar', true);
-        $newToField->setConfig('showcalendar', true);
+        $newFromField = $fields->dataFieldByName('NewFromDate');
+        $newToField = $fields->dataFieldByName('NewToDate');
+//        $newFromField->setConfig('showcalendar', true);
+//        $newToField->setConfig('showcalendar', true);
         $fields->replaceField('CategoryID', $categoryField = new TreeDropdownField('CategoryID', 'Category', "TOSECategory", 'ID', 'Name', FALSE));
 //        var_dump($categoryField->getSourceObject()); die;
 //        $categoryField = $fields->fieldByName('CategoryID'); 
