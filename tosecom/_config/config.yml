@@ -50,4 +50,7 @@ TOSEPrice:
 TOSECategory:
     extensions:
         - TOSECategoryTreeHierarchy
+
+TOSEProduct:
+    hasInventory: 'Yes'
         

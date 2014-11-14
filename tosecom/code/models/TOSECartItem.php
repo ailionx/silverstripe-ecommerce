@@ -73,6 +73,10 @@ class TOSECartItem extends DataObject {
      * @return type
      */
     public function checkQuantity() {
+        if(!TOSEProduct::has_inventory()) {
+            return;
+        }
+        
         if ($this->Quantity > $this->Spec()->Inventory) {
             die('Out of inventory');
         }
@@ -88,6 +92,9 @@ class TOSECartItem extends DataObject {
     }
     
     public function QuantityReachMax() {
+        if(!TOSEProduct::has_inventory()) {
+            return FALSE;
+        }
         $inventory = $this->Spec()->Inventory;
         return $this->Quantity >= $inventory;
     }
@@ -104,7 +111,7 @@ class TOSECartItem extends DataObject {
         if(TOSEMember::is_customer_login()) {
             return parent::write($showDebug, $forceInsert, $forceWrite, $writeComponents);
         } else {
-            $this->writeToSession();
+            $this->writeToNonDB();
         }
     }
     
@@ -112,8 +119,8 @@ class TOSECartItem extends DataObject {
      * Function is to save cart item to session
      * @return type
      */
-    public function writeToSession() {
-        $allItemsArray = unserialize(Session::get(TOSECart::SessionCart));
+    public function writeToNonDB() {
+        $allItemsArray = TOSECart::get_cart_data_from_nondb();
         if (!$allItemsArray) {
             $id = 1;
         } else {
@@ -129,7 +136,7 @@ class TOSECartItem extends DataObject {
         $itemArray['SpecID'] = $this->SpecID;
         $itemArray['Quantity'] = $this->Quantity;
         $allItemsArray[$id] = $itemArray;
-        Session::set(TOSECart::SessionCart, serialize($allItemsArray));
+        TOSECart::set_cart_data_to_nondb($allItemsArray);
         return $id;
     }
 
@@ -140,9 +147,9 @@ class TOSECartItem extends DataObject {
         if(TOSEMember::is_customer_login()) {
             parent::delete();
         } else {
-            $itemsArray = unserialize(Session::get(TOSECart::SessionCart));
+            $itemsArray = TOSECart::get_cart_data_from_nondb();
             unset($itemsArray[$this->ID]);
-            Session::set(TOSECart::SessionCart, serialize($itemsArray));
+            TOSECart::set_cart_data_to_nondb($itemsArray);
         }
     }
     

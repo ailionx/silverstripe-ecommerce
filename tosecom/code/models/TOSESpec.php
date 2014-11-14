@@ -40,6 +40,9 @@ class TOSESpec extends DataObject {
     public function getCMSFields() {
         $fields = parent::getCMSFields();
         $fields->removeByName('Prices');
+        if(!TOSEProduct::has_inventory()){
+            $fields->removeByName('Inventory');
+        }
         $weightField = $fields->dataFieldByName('Weight');
 //        var_dump($weightField); die();
         $weightField->setTitle('Weight (Unit: kg.)');

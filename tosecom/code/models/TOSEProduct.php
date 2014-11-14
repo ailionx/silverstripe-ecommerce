@@ -30,6 +30,12 @@ class TOSEProduct extends DataObject {
         'getCategoryName' => 'Category',
         'Description' => 'Description'
     );
+    
+    
+    public static function has_inventory() {
+        $config = Config::inst()->get('TOSEProduct', 'hasInventory');
+        return ($config == 'Yes') ? TRUE :FALSE;
+    }
 
     /**
      * Function is to get Category name of product, for cms
@@ -139,8 +145,8 @@ class TOSEProduct extends DataObject {
         $fields->removeByName(array('Specs', 'Images', 'Enabled', 'CategoryChain'));
         $enabledField = new CheckboxField('Enabled', 'Enabled this product', TRUE);
         $fields->addFieldToTab('Root.Main', $enabledField, 'NewFrom');
-        $newFromField = $fields->dataFieldByName('NewFromDate');
-        $newToField = $fields->dataFieldByName('NewToDate');
+//        $newFromField = $fields->dataFieldByName('NewFromDate');
+//        $newToField = $fields->dataFieldByName('NewToDate');
 //        $newFromField->setConfig('showcalendar', true);
 //        $newToField->setConfig('showcalendar', true);
         $fields->replaceField('CategoryID', $categoryField = new TreeDropdownField('CategoryID', 'Category', "TOSECategory", 'ID', 'Name', FALSE));

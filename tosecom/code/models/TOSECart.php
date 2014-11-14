@@ -65,6 +65,26 @@ class TOSECart extends DataObject {
     }
     
     /**
+     * Function is to get cart data from non database container (currently session)
+     * @return type
+     */
+    public static function get_cart_data_from_nondb() {
+        $data = Session::get(self::SessionCart);
+        $itemsArray = unserialize($data);
+        
+        return $itemsArray;
+    }
+    
+    /**
+     * Function is to set cart data to non database container (currently session)
+     * @param type $data
+     */
+    public static function set_cart_data_to_nondb($data){
+        $dataSerial = serialize($data);
+        Session::set(TOSECart::SessionCart, $dataSerial);
+    }
+
+    /**
      * Function is to get the items of cart
      * @return \ArrayList
      */
@@ -72,13 +92,12 @@ class TOSECart extends DataObject {
         if(TOSEMember::is_customer_login()) {
             return $this->CartItems();
         } else {
-            $sessionCartItems = Session::get(self::SessionCart);
             $items = new ArrayList();
-            if (!$sessionCartItems) {
+            $itemsArray = self::get_cart_data_from_nondb();
+            if (empty($itemsArray)) {
                 return $items;
             } 
             
-            $itemsArray = unserialize($sessionCartItems);
             foreach ($itemsArray as $itemArray) {
                 $item = new TOSECartItem();
                 $item->update($itemArray);
@@ -119,7 +138,7 @@ class TOSECart extends DataObject {
      * Function is to add new products in to cart
      * @param type $data
      */
-    public function addProduct($data) {
+    public function addToCart($data) {
 
         // Validate the input data
         $numberFields = array(
@@ -127,8 +146,6 @@ class TOSECart extends DataObject {
             'SpecID'
         );
         TOSEValidator::data_is_number($data, $numberFields, TRUE);
-        
-        $productInventory = DataObject::get_one('TOSESpec', "ID='".$data['SpecID']."'")->Inventory;
 
         $this->existItem($data) ? $this->updateItem($data) : $this->addItem($data);
     }

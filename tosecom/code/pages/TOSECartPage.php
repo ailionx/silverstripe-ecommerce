@@ -47,7 +47,7 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         }
         $data = $request->postVars();
         $cart = TOSECart::get_current_cart();
-        $cart->addProduct($data);
+        $cart->addToCart($data);
         return $this->redirectBack();
     }
     
