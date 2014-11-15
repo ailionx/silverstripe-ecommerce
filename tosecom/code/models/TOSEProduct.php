@@ -159,7 +159,8 @@ class TOSEProduct extends DataObject {
         if ($this->ID) {
             
             // add specifications gridfield
-            $gridFieldConfig = GridFieldConfig_RelationEditor::create();
+            $gridFieldConfig = GridFieldConfig_RelationEditor::create()
+                    ->removeComponentsByType('GridFieldAddExistingAutocompleter');
             $gridField = new GridField("Specs", "Product Specification", $this->Specs(), $gridFieldConfig);
             
             $fields->addFieldToTab('Root.Main', $gridField);

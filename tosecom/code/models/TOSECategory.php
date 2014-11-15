@@ -147,10 +147,22 @@ class TOSECategory extends DataObject {
      */
     public function getCMSFields() {
        $fields = parent::getCMSFields();
-       $fields->removeByName('Chain');
-       $fields->removeByName('Link');
+       $fields->removeByName(array('Chain', 'Link', 'ChildCategories', 'Products'));
+       $fields->replaceField('ParentID', $categoryField = new TreeDropdownField('ParentID', 'Parent', "TOSECategory", 'ID', 'Name', FALSE));
 //       $fields->replaceField('Chain', new HiddenField('Chain', '', $this->getCategoryChain()));
-       
+// add child category gridfield
+        if ($this->ID) {
+            $gridFieldConfig = GridFieldConfig_RelationEditor::create();
+            $gridField = new GridField("ChildCategories", "Child Categories", $this->ChildCategories(), $gridFieldConfig);
+            $fields->addFieldToTab('Root.Main', $gridField);   
+            
+            $gridFieldConfig = GridFieldConfig_RelationEditor::create();
+            $gridField = new GridField("Products", "Products", $this->Products(), $gridFieldConfig);
+            $fields->addFieldToTab('Root.Main', $gridField);  
+        }
+
+         
+         
        return $fields;
        
     }
