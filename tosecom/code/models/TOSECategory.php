@@ -149,14 +149,20 @@ class TOSECategory extends DataObject {
        $fields = parent::getCMSFields();
        $fields->removeByName(array('Chain', 'Link', 'ChildCategories', 'Products'));
        $fields->replaceField('ParentID', $categoryField = new TreeDropdownField('ParentID', 'Parent', "TOSECategory", 'ID', 'Name', FALSE));
+       $fields->addFieldToTab('Root.Main', new TreeDropdownField('MoveToCategory', 'Move Subordinate To Category', "TOSECategory", 'ID', 'Name', FALSE));
 //       $fields->replaceField('Chain', new HiddenField('Chain', '', $this->getCategoryChain()));
 // add child category gridfield
         if ($this->ID) {
-            $gridFieldConfig = GridFieldConfig_RelationEditor::create();
+            $gridFieldConfig = GridFieldConfig_RelationEditor::create()
+                    ->removeComponentsByType('GridFieldAddNewButton')
+                    ->addComponent(new TOSEGridFieldAddNewButton('buttons-before-left', 'Add New Subcategpry'));
+            
             $gridField = new GridField("ChildCategories", "Child Categories", $this->ChildCategories(), $gridFieldConfig);
             $fields->addFieldToTab('Root.Main', $gridField);   
             
-            $gridFieldConfig = GridFieldConfig_RelationEditor::create();
+            $gridFieldConfig = GridFieldConfig_RelationEditor::create()
+                    ->removeComponentsByType('GridFieldAddNewButton')
+                    ->addComponent(new TOSEGridFieldAddNewButton('buttons-before-left', 'Add New Product'));
             $gridField = new GridField("Products", "Products", $this->Products(), $gridFieldConfig);
             $fields->addFieldToTab('Root.Main', $gridField);  
         }

@@ -7,10 +7,11 @@
  */
 
 /**
- * Description of GridFieldRemoveToCategory
+ * Description of TOSEGridFieldDetailForm
  *
  * @author Shawn
  */
-class GridFieldRemoveToCategory {
+class TOSEGridFieldDetailForm extends GridFieldDetailForm{
     //put your code here
+    
 }
