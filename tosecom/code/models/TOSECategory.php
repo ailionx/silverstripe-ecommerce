@@ -170,7 +170,7 @@ class TOSECategory extends DataObject {
        $fields->removeByName(array('Chain', 'Link', 'ChildCategories', 'Products'));
        $fields->replaceField('ParentID', $categoryField = new TreeDropdownField('ParentID', 'Parent', "TOSECategory", 'ID', 'Name', FALSE));
        
-       $modCategoryFields = new ModCategoryField();
+       $modCategoryFields = new CompositeField();
        $modCategoryFields->addExtraClass('tose-mod-category');
        $removeField = new DropdownField('removeSub', 'Remove products and sub-categories belong to this category', array('Yes', 'No'));
        $modCategoryFields->push($removeField);
