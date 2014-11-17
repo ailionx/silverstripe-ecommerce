@@ -7,14 +7,12 @@
 ;(function($){
     $.entwine('ss', function($){
         
-        $(".cms-edit-form .Actions button.action").click(function(){
+        $(".cms-edit-form .Actions .action-delete-mod").click(function(){
 
-            if($(this).hasClass('action-move-category')){
-                return confirm('move?');
-            }
-            
-            if($(this).hasClass('tose-not-empty', 'action-delete')){
-                return alert('This Category has products or sub-categories, please remove them or move them under another category first');
+            if($(this).hasClass('tose-not-empty')){
+                $(".tose-mod-category").show();
+                return false;
+                return confirm('This Category has products or sub-categories, please remove them or move them under another category first');
             }
             
         });

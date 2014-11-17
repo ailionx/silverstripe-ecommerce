@@ -56,6 +56,6 @@ TOSEProduct:
 
 TOSEProductAdmin:
     extra_requirements_javascript: 
-        - 'tosecom/javascript/admin/EditFormMoveCategory.js'
+        - 'tosecom/javascript/forms/EditFormMoveCategory.js'
     extra_requirements_css:
-        - 'tosecom/css/admin/EditFormMoveCategory.css'
+        - 'tosecom/css/forms/EditFormMoveCategory.css'

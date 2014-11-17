@@ -171,6 +171,8 @@ class TOSECategory extends DataObject {
        $fields->replaceField('ParentID', $categoryField = new TreeDropdownField('ParentID', 'Parent', "TOSECategory", 'ID', 'Name', FALSE));
        
        $modCategoryFields = new CompositeField();
+       $modCategoryHeader = new LiteralField('modCateHeader', '<h3>This Category has products or sub-categories. Before delete it, please remove them or move them under another category first</h3>');
+       $modCategoryFields->push($modCategoryHeader);
        $modCategoryFields->addExtraClass('tose-mod-category');
        $removeField = new DropdownField('removeSub', 'Remove products and sub-categories belong to this category', array('Yes', 'No'));
        $modCategoryFields->push($removeField);

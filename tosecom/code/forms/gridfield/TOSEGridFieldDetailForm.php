@@ -172,4 +172,39 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
                 $controller = $this->getToplevelController();
             	return $this->edit($controller->getRequest());
         }
+        
+        public function doDelete($data, $form) {
+		$title = $this->record->Title;
+		try {
+			if (!$this->record->canDelete()) {
+				throw new ValidationException(
+					_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"),0);
+			}
+
+//			$this->record->delete();
+		} catch(ValidationException $e) {
+			$form->sessionMessage($e->getResult()->message(), 'bad');
+			return $this->getToplevelController()->redirectBack();
+		}
+
+		$message = sprintf(
+			_t('GridFieldDetailForm.Deleted', 'Deleted %s %s'),
+			$this->record->i18n_singular_name(),
+			htmlspecialchars($title, ENT_QUOTES)
+		);
+		
+		$toplevelController = $this->getToplevelController();
+		if($toplevelController && $toplevelController instanceof LeftAndMain) {
+			$backForm = $toplevelController->getEditForm();
+			$backForm->sessionMessage($message, 'good');
+		} else {
+			$form->sessionMessage($message, 'good');
+		}
+
+		//when an item is deleted, redirect to the parent controller
+		$controller = $this->getToplevelController();
+		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
+
+		return $controller->redirect($this->getBacklink(), 302); //redirect back to admin section
+	}
 }
