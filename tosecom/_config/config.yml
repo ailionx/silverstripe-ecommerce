@@ -53,4 +53,7 @@ TOSECategory:
 
 TOSEProduct:
     hasInventory: 'Yes'
-        
+
+TOSEProductAdmin:
+    extra_requirements_javascript: 
+        - 'tosecom/javascript/admin/EditFormMoveCategory.js'

@@ -19,7 +19,10 @@ en:
             NEW_CATEGORY_PRODUCT: You can add product after creating new CATEGORY
             NEW_PRODUCT_PRICE: You can add price after creating new PRODUCT
             NEW_PRODUCT_IMAGE: You can add images after creating new PRODUCT
-     
+        Gridfield:
+            GridFieldDetailForm:
+                MoveCategory: Move Category
+                
     TOSE:
         FORM:
             ORDER:

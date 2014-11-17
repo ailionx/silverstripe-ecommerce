@@ -117,6 +117,7 @@ class TOSEProduct extends DataObject {
         if(is_object($products)) {
             $className = get_class($products);
             if($className=="ArrayList" || $className=="DataList") {
+
                 return $products->filter('Enabled','1');
             }
         }
@@ -144,7 +145,7 @@ class TOSEProduct extends DataObject {
         $fields = parent::getCMSFields();
         $fields->removeByName(array('Specs', 'Images', 'Enabled', 'CategoryChain'));
         $enabledField = new CheckboxField('Enabled', 'Enabled this product', TRUE);
-        $fields->addFieldToTab('Root.Main', $enabledField, 'NewFrom');
+        $fields->addFieldToTab('Root.Main', $enabledField, 'Enable this product?');
 //        $newFromField = $fields->dataFieldByName('NewFromDate');
 //        $newToField = $fields->dataFieldByName('NewToDate');
 //        $newFromField->setConfig('showcalendar', true);
@@ -160,9 +161,8 @@ class TOSEProduct extends DataObject {
             
             // add specifications gridfield
             $gridFieldConfig = GridFieldConfig_RelationEditor::create()
-                    ->removeComponentsByType('GridFieldAddExistingAutocompleter')
-                    ->removeComponentsByType('GridFieldAddNewButton')
-                    ->addComponent(new TOSEGridFieldAddNewButton('buttons-before-left', 'Add New Specification'));
+                    ->removeComponentsByType('GridFieldAddExistingAutocompleter');
+            $gridFieldConfig->getComponentByType('GridFieldAddNewButton')->setButtonName('Add New Specification');
             $gridField = new GridField("Specs", "Product Specification", $this->Specs(), $gridFieldConfig);
             
             $fields->addFieldToTab('Root.Main', $gridField);

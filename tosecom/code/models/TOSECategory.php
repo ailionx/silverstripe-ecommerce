@@ -42,6 +42,17 @@ class TOSECategory extends DataObject {
         
         return 'Root';
     }   
+    
+    public function categoryEmpty() {
+        $productNum = $this->getAllProducts()->count();
+        $subCateNum = $this->getDescendantCategories()->count();
+
+        if($productNum || $subCateNum) {
+            return FALSE;
+        }
+
+        return TRUE;
+    }
 
     /**
      * Function is to get all descendant categories in whole hierachy picture
@@ -50,26 +61,31 @@ class TOSECategory extends DataObject {
      * @param type $level
      * @return type
      */
-    public function getDescendantCategories($categoryName, $categories=null, $level=1) {
-        $categories = $categories ? $categories : new ArrayList();
-        $category = DataObject::get_one('TOSECategory', "Name='$categoryName'");
-        $childCategories = $category->ChildCategories();
-
-        $category->Level = $level;
-        $categories->add($category);
+    public function getDescendantCategories() {
+        $categories = DataObject::get('TOSECategory', "Chain LIKE '{$this->Chain}-%'");
         
-        if (!$childCategories->count()) {
-            return $categories;
-        }
-        
-        $level++;
-        foreach ($childCategories as $childCategory) {
-
-            $this->getDescendantCategories($childCategory->Name, $categories, $level);
-        }
-
         return $categories;
     }
+//    public function getDescendantCategories($categoryName, $categories=null, $level=1) {
+//        $categories = $categories ? $categories : new ArrayList();
+//        $category = DataObject::get_one('TOSECategory', "Name='$categoryName'");
+//        $childCategories = $category->ChildCategories();
+//
+//        $category->Level = $level;
+//        $categories->add($category);
+//        
+//        if (!$childCategories->count()) {
+//            return $categories;
+//        }
+//        
+//        $level++;
+//        foreach ($childCategories as $childCategory) {
+//
+//            $this->getDescendantCategories($childCategory->Name, $categories, $level);
+//        }
+//
+//        return $categories;
+//    }
     
     /**
      * Function is to get the all the ancerstor categories IDs of an given category with sql
@@ -120,6 +136,7 @@ class TOSECategory extends DataObject {
      */
     public function getCategoryChain() {
         $categories = $this->getAncestorCategories($this->Name)->sort('Level DESC');
+
         $IDs = $categories->column('ID');
         $chain = implode('-', $IDs);
         return $chain;
@@ -136,12 +153,15 @@ class TOSECategory extends DataObject {
                         'TOSECategory', 
                         "(TOSECategory.Chain LIKE '{$this->Chain}-%' OR TOSECategory.Chain='{$this->Chain}') AND TOSEProduct.CategoryID = TOSECategory.ID"
                 );
-        
-        return TOSEProduct::get_enabled_products($products);
-        
-    }
-
         /**
+         * Should get all products include those not enabled, filter them after this. For the CMS delete tree judgement
+         */
+//        return TOSEProduct::get_enabled_products($products);
+        return $products;
+    }
+    
+    
+    /**
      * Function is to customize cms fields
      * @return type
      */
@@ -149,20 +169,27 @@ class TOSECategory extends DataObject {
        $fields = parent::getCMSFields();
        $fields->removeByName(array('Chain', 'Link', 'ChildCategories', 'Products'));
        $fields->replaceField('ParentID', $categoryField = new TreeDropdownField('ParentID', 'Parent', "TOSECategory", 'ID', 'Name', FALSE));
-       $fields->addFieldToTab('Root.Main', new TreeDropdownField('MoveToCategory', 'Move Subordinate To Category', "TOSECategory", 'ID', 'Name', FALSE));
+       
+       $modCategoryFields = new ModCategoryField();
+       $modCategoryFields->addExtraClass('tose-mod-category');
+       $removeField = new DropdownField('removeSub', 'Remove products and sub-categories belong to this category', array('Yes', 'No'));
+       $modCategoryFields->push($removeField);
+       $moveField = new TreeDropdownField('moveSub', 'Move products and sub-categories to another category', "TOSECategory", 'ID', 'Name', FALSE);
+       $modCategoryFields->push($moveField);
+       
+       
+       $fields->addFieldToTab('Root.Main', $modCategoryFields);
 //       $fields->replaceField('Chain', new HiddenField('Chain', '', $this->getCategoryChain()));
 // add child category gridfield
         if ($this->ID) {
-            $gridFieldConfig = GridFieldConfig_RelationEditor::create()
-                    ->removeComponentsByType('GridFieldAddNewButton')
-                    ->addComponent(new TOSEGridFieldAddNewButton('buttons-before-left', 'Add New Subcategpry'));
-            
+            $gridFieldConfig = GridFieldConfig_RelationEditor::create();
+            $gridFieldConfig->getComponentByType('GridFieldDetailForm')->setItemRequestClass('TOSECategoryGridFieldDetailForm_ItemRequest');
+            $gridFieldConfig->getComponentByType('GridFieldAddNewButton')->setButtonName('Add New Subcategory');
             $gridField = new GridField("ChildCategories", "Child Categories", $this->ChildCategories(), $gridFieldConfig);
             $fields->addFieldToTab('Root.Main', $gridField);   
             
-            $gridFieldConfig = GridFieldConfig_RelationEditor::create()
-                    ->removeComponentsByType('GridFieldAddNewButton')
-                    ->addComponent(new TOSEGridFieldAddNewButton('buttons-before-left', 'Add New Product'));
+            $gridFieldConfig = GridFieldConfig_RelationEditor::create();
+            $gridFieldConfig->getComponentByType('GridFieldAddNewButton')->setButtonName('Add New Product');
             $gridField = new GridField("Products", "Products", $this->Products(), $gridFieldConfig);
             $fields->addFieldToTab('Root.Main', $gridField);  
         }
@@ -215,11 +242,19 @@ class TOSECategory extends DataObject {
         $link = preg_replace("/[\s_]/", "-", $link);
         
         $this->Link = $link;
-        
         $chain = $this->getCategoryChain();
         $this->Chain = $chain;
     }
     
+    protected function onAfterWrite() {
+        parent::onAfterWrite();
+        if(!$this->Chain) {
+            $chain = $this->getCategoryChain();
+            $this->Chain = $chain;
+            $this->write();
+        }
+    }
+
     protected function onBeforeDelete() {
         parent::onBeforeDelete();
         self::update_category_chain($this->ID, $this->ParentID);

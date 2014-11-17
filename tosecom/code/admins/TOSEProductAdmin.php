@@ -17,8 +17,6 @@ class TOSEProductAdmin extends ModelAdmin {
 		$exportButton = new GridFieldExportButton('before');
 		$exportButton->setExportColumns($this->getExportFields());
                 
-                $addNewName = $this->modelClass=='TOSEProduct' ? 'Add New Product' : 'Add New Category';
-                
 		$listField = GridField::create(
 			$this->sanitiseClassName($this->modelClass),
 			false,
@@ -27,10 +25,14 @@ class TOSEProductAdmin extends ModelAdmin {
 				->addComponent($exportButton)
 				->removeComponentsByType('GridFieldFilterHeader')
 				->addComponents(new GridFieldPrintButton('before'))
-                                ->removeComponentsByType('GridFieldAddNewButton')
-                                ->addComponent(new TOSEGridFieldAddNewButton('buttons-before-left', $addNewName))
 		);
-
+                if($this->modelClass === 'TOSECategory') {
+                    $fieldConfig->getComponentByType('GridFieldDetailForm')->setItemRequestClass('TOSECategoryGridFieldDetailForm_ItemRequest');
+                    $fieldConfig->getComponentByType('GridFieldAddNewButton')->setButtonName('Add New Category');
+                } else {
+                    $fieldConfig->getComponentByType('GridFieldAddNewButton')->setButtonName('Add New Product');
+                }
+                
 		// Validation
 		if(singleton($this->modelClass)->hasMethod('getCMSValidator')) {
 			$detailValidator = singleton($this->modelClass)->getCMSValidator();
