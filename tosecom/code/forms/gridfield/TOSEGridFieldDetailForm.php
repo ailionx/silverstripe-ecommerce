@@ -63,6 +63,7 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 //					->addExtraClass('ss-ui-action-destructive action-delete'));
                                 
                                 if(!$this->record->categoryEmpty()) {
+                                    
                                     $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
 					->setUseButtonTag(true)
 					->addExtraClass('ss-ui-action-destructive action-delete-mod'));
@@ -82,6 +83,11 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 					->setUseButtonTag(true)
 					->addExtraClass('ss-ui-action-destructive action-delete'));
                                 }
+                                
+                                $actions->push(new LiteralField(
+                                            'testAction',
+                                            '<button class="action-test">Test</button>'
+                                        ));
 			}                        
 
 

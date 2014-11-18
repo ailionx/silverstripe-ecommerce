@@ -5,7 +5,32 @@
  */
 
 ;(function($){
-    $.entwine('ss', function($){
+    	window.onbeforeunload = function(e) {
+		var form = $('.cms-edit-form');
+		form.trigger('beforesubmitform');
+		if(form.is('.changed')) return ss.i18n._t('LeftAndMain.CONFIRMUNSAVEDSHORT');
+	};
+        $.entwine('ss', function($){
+            $(".cms-edit-form .Actions .action-test").entwine({
+                    onclick: function(e) {
+				// Confirmation on delete. 
+				if(
+					this.hasClass('gridfield-button-delete')
+					&& !confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))
+				) {
+					e.preventDefault();
+					return false;
+				}
+
+				if(!this.is(':disabled')) {
+					this.parents('form').trigger('submit', [this]);
+				}
+				e.preventDefault();
+				return false;
+			}
+            });
+        });
+
         
         var _$modCategoryFields = $(".cms-edit-form .mod-category-fields");
         var _$modCategoryMoveSub = $(".cms-edit-form .mod-category-fields #moveSub");
@@ -15,10 +40,12 @@
         var _$modCategoryDelete = $(".cms-edit-form .Actions .action-delete-mod, .cms-edit-form .Actions .action-delete");
         var _$modCategoryCancel = $(".cms-edit-form .mod-category-cancel");
         
-        $(".cms-edit-form .Actions .action-delete-mod").click(function(){
-            
+        
+//        $(".cms-edit-form .Actions .action-delete-mod").click(function(){
+        $(".cms-edit-form .Actions .action-test").click(function(){
+            alert(_$modCategoryFields); return false;
             if(_$modCategoryFields.get(0)){
-//                console.log(_$modOptionMove.hasClass("result-selected")); return false;
+                
                 _$modCategoryFields.show();
                 _$modCategoryConfirm.show();
                 _$modCategoryCancel.show();
@@ -54,24 +81,8 @@
             checkOptionMove();
         });
         
-//            $(".cms-edit-form .Actions button.action").entwine({
-//                    /**
-//                     * Function: onclick
-//                     */
-//                    onclick: function(e) {
-//                            // Confirmation on delete. 
-//                            if(
-//                                    this.hasClass('action-move-category')
-//                                    && !confirm(ss.i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))
-//                            ) {
-//                                    e.preventDefault();
-//                                    return false;
-//                            }
-//
-//                            return false;
-//                    }
-//            });   
+ 
             
-    });
+
     
 })(jQuery);
