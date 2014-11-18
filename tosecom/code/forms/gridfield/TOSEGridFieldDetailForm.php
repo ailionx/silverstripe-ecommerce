@@ -52,14 +52,12 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 					->setAttribute('data-icon', 'accept'));
 			}
                         
-//                        $actions->push(FormAction::create('moveCategory', _t('TOSE_Admin.Gridfield.GridFieldDetailForm.MoveCategory', 'Move Category'))
-//                                    ->setUseButtonTag(true)
-//                                    ->addExtraClass('ss-ui-action-constructive action-move-category'));
                                 
 
                         
 			if($canDelete) {
-
+//                                    $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
+//					->setUseButtonTag(true)
 //					->addExtraClass('ss-ui-action-destructive action-delete'));
                                 
                                 if(!$this->record->categoryEmpty()) {
@@ -86,7 +84,7 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
                                 
                                 $actions->push(new LiteralField(
                                             'testAction',
-                                            '<button class="action-test">Test</button>'
+                                            '<button class="ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ss-ui-action-destructive action-test">Test</button>'
                                         ));
 			}                        
 
