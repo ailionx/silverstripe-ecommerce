@@ -21,7 +21,7 @@ en:
             NEW_PRODUCT_IMAGE: You can add images after creating new PRODUCT
         Gridfield:
             GridFieldDetailForm:
-                MoveCategory: Move Category
+                ModCategory: Confirm
                 
     TOSE:
         FORM:

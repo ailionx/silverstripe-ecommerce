@@ -141,6 +141,18 @@ class TOSECategory extends DataObject {
         $chain = implode('-', $IDs);
         return $chain;
     }
+    
+    /**
+     * Function is to update the chain information into database, based on the parentID
+     * @return \TOSECategory
+     */
+    public function updateCategoryChain() {
+        $chain = $this->getCategoryChain();
+        $this->Chain = $chain;
+        $this->write();
+        
+        return $this;
+    }
 
     /**
      * Function is to get all products belongs to this category and all descendant categories
@@ -170,17 +182,29 @@ class TOSECategory extends DataObject {
        $fields->removeByName(array('Chain', 'Link', 'ChildCategories', 'Products'));
        $fields->replaceField('ParentID', $categoryField = new TreeDropdownField('ParentID', 'Parent', "TOSECategory", 'ID', 'Name', FALSE));
        
-       $modCategoryFields = new CompositeField();
-       $modCategoryHeader = new LiteralField('modCateHeader', '<h3>This Category has products or sub-categories. Before delete it, please remove them or move them under another category first</h3>');
-       $modCategoryFields->push($modCategoryHeader);
-       $modCategoryFields->addExtraClass('tose-mod-category');
-       $removeField = new DropdownField('removeSub', 'Remove products and sub-categories belong to this category', array('Yes', 'No'));
-       $modCategoryFields->push($removeField);
-       $moveField = new TreeDropdownField('moveSub', 'Move products and sub-categories to another category', "TOSECategory", 'ID', 'Name', FALSE);
-       $modCategoryFields->push($moveField);
+       if(!$this->categoryEmpty()) {
+            $modCategoryFields = new CompositeField();
+            $modCategoryHeader = new LiteralField(
+                    'modCateHeader',
+                    '<h3>Attention: This Category still has products or sub-categories. Before delete it, please remove them or move them under another category first</h3>'
+                );
+            $modCategoryFields->push($modCategoryHeader);
+            $modCategoryFields->addExtraClass('mod-category-fields');
+            $removeField = new DropdownField('modOptions', 'Choose what you want?', array(
+                    'Remove products and sub-categories belong to this category',
+                    'Move products and sub-categories to another category'
+                ));
+            $modCategoryFields->push($removeField);
+            $moveField = new TreeDropdownField('moveSub', 'Which category do you want move to?', "TOSECategory", 'ID', 'Name', FALSE);
+            $modCategoryFields->push($moveField);
+//            $confirmAction = FormAction::create('doModCategory', 'Confirm');
+//
+//            $modCategoryFields->push($confirmAction);
+//            $modCategoryFields->push($cancelAction);
+            $fields->addFieldToTab('Root.Main', $modCategoryFields);
+       }
        
        
-       $fields->addFieldToTab('Root.Main', $modCategoryFields);
 //       $fields->replaceField('Chain', new HiddenField('Chain', '', $this->getCategoryChain()));
 // add child category gridfield
         if ($this->ID) {
@@ -197,7 +221,6 @@ class TOSECategory extends DataObject {
         }
 
          
-         
        return $fields;
        
     }
@@ -207,26 +230,60 @@ class TOSECategory extends DataObject {
      * @param type $deleteID
      * @param type $newID
      */
-    private static function update_category_chain($deleteID, $newID) {
-        $products = DataObject::get('TOSEProduct', "CategoryID='$deleteID'");
-        $categories = DataObject::get('TOSECategory', "Chain like '%-{$deleteID}-%'");
-        if ($products->count()) {
-            foreach ($products as $product) {
-                $product->CategoryID = $newID;
-                $product->write();
-            }
+//    public static function update_category_chain($deleteID, $newID) {
+//        $products = DataObject::get('TOSEProduct', "CategoryID='$deleteID'");
+//        $categories = DataObject::get('TOSECategory', "Chain like '%-{$deleteID}-%'");
+//        if ($products->count()) {
+//            foreach ($products as $product) {
+//                $product->CategoryID = $newID;
+//                $product->write();
+//            }
+//        }
+//        
+//        if ($categories->count()) {
+//            foreach ($categories as $category) {
+//                $category->ParentID = $newID;
+//                $category->Chain = $category->getCategoryChain();
+//                $category->write();
+//            }
+//        }
+//        
+//    }
+    
+    /**
+     * Function is to handle move all sub-categories and all products belong to this category to another category. And update chain for categories
+     * @param type $newCategoryID
+     */
+    public function moveDescendants($newCategoryID) {
+        
+        /**
+         *  Move sub products to new category
+         */
+        $products = $this->Products();
+        foreach($products as $product) {
+            $product->CategoryID = $newCategoryID;
+            $product->write();
         }
         
-        if ($categories->count()) {
-            foreach ($categories as $category) {
-                $category->ParentID = $newID;
-                $category->Chain = $category->getCategoryChain();
-                $category->write();
-            }
+        /**
+         * Move sub categories to new category
+         */
+        $subCategories = $this->ChildCategories();
+        foreach ($subCategories as $category) {
+            $category->ParentID = $newCategoryID;
+            $category->write();
+        }
+        
+        /**
+         * Update chain information for all descendants categories
+         */
+        $descendantCategories = $this->getDescendantCategories(); /** We can use this function since it's based on old chain*/
+        foreach ($descendantCategories as $category) {
+            $this->updateCategoryChain();   /** This updating action is based on parentID which is expected to be all correctly changed **/
         }
         
     }
-    
+
     /**
      * Function is to write in link and chain information for category
      */

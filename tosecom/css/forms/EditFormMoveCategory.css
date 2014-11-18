@@ -1,10 +1,39 @@
-.tose-mod-category{
+.mod-category-fields{
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 52px;
+    left: 160px;
+    background-color: #ECEFF1;
+    z-index: 100;
+    padding: 50px;
+    margin: 0 auto 0 auto;
+    border: 1px solid #B3B3B3;
+    display: none;
+}
+
+/*.mod-category-fields h3{
     position: absolute;
-    bottom: 0px;
-    background-color: #fff;
-    z-index: 10;
-    width: 700px;
-    margin-left: 50px;
-    border: 1px solid rgb(68,​ 68,​ 68);
+    width: 60%;
+    margin: 70px auto 0px auto;
+}
+
+.mod-category-fields #modOptions{
+    position: absolute;
+    width: 80%;
+    margin: 180px auto 0px auto;
+}
+
+.mod-category-fields #moveSub{
+    position: absolute;
+    width: 80%;
+    margin: 230px auto 0px auto;
+}*/
+
+.mod-category-fields #moveSub{
+    display: none;
+}
+
+.cms-edit-form .Actions .mod-category-confirm, .cms-edit-form .Actions .mod-category-cancel{
     display: none;
 }

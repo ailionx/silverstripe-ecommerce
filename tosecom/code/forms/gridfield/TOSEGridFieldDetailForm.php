@@ -59,16 +59,29 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 
                         
 			if($canDelete) {
-				$actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
+
+//					->addExtraClass('ss-ui-action-destructive action-delete'));
+                                
+                                if(!$this->record->categoryEmpty()) {
+                                    $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
 					->setUseButtonTag(true)
 					->addExtraClass('ss-ui-action-destructive action-delete-mod'));
-//					->addExtraClass('ss-ui-action-destructive action-delete'));
-                            
-                            if (!$this->record->categoryEmpty()) {
-                            //    var_dump($actions); die;
-                                $actions->fieldByName('action_doDelete')->addExtraClass('tose-not-empty');
-                            }
-
+                                    
+                                    $actions->push(FormAction::create('doModCategory', _t('TOSE_Admin.Gridfield.GridFieldDetailForm.ModCategory', 'Confirm'))
+                                        ->setUseButtonTag(true)
+					->addExtraClass('ss-ui-action-constructive mod-category-confirm')
+                                        ->setAttribute('data-icon', 'accept')); 
+                                    
+                                    $actions->push(new LiteralField(
+                                            'CancelModCategory',
+                                            '<button class="ss-ui-button ss-ui-action-destructive ui-corner-all mod-category-cancel">Cancel</button>'
+                                        ));
+                                    
+                                } else {
+                                    $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
+					->setUseButtonTag(true)
+					->addExtraClass('ss-ui-action-destructive action-delete'));
+                                }
 			}                        
 
 
@@ -94,6 +107,7 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 		}
 
 		$fields = $this->component->getFields();
+                
 		if(!$fields) $fields = $this->record->getCMSFields();
 
 		// If we are creating a new record in a has-many list, then
@@ -168,10 +182,6 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 		return $form;
 	}
         
-        public function moveCategory($data, $form) {
-                $controller = $this->getToplevelController();
-            	return $this->edit($controller->getRequest());
-        }
         
         public function doDelete($data, $form) {
 		$title = $this->record->Title;
@@ -207,4 +217,31 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 
 		return $controller->redirect($this->getBacklink(), 302); //redirect back to admin section
 	}
+        
+        public function doModCategory($data, $form) {
+
+            $descendantCategories = $this->record->getDescendantCategories();
+            $allProducts = $this->record->getAllProducts();
+            
+            if($data['modOptions'] == '0') {
+                
+                foreach ($descendantCategories as $category) {
+                    $category->ParentID = 0;
+                    $category->write();
+//                    $category->delete();
+                }
+                foreach ($allProducts as $product) {
+                    $product->CategoryID = 0;
+                    $product->write();
+//                    $product->delete();
+                }
+                
+            } elseif (($data['modOptions'] == '1') && $data['moveSub']) {
+                $parentID = $data['moveSub'];
+                $this->record->moveDescendants($parentID);
+            }
+            
+            $controller = $this->getToplevelController();
+            return $this->edit($controller->getRequest());
+        }
 }
