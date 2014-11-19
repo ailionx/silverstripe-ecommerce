@@ -150,19 +150,14 @@ class TOSEProduct extends DataObject {
     public function getCMSFields() {
 
         $fields = parent::getCMSFields();
-        $fields->removeByName(array('Specs', 'Images', 'Enabled', 'CategoryChain'));
-        $enabledField = new CheckboxField('Enabled', 'Enabled this product', TRUE);
-        $fields->addFieldToTab('Root.Main', $enabledField, 'Enable this product?');
+        $fields->removeByName(array('Specs', 'Images', 'Enabled'));
+        $enabledField = new CheckboxField('Enabled', 'Enabled this product?', TRUE);
+        $fields->addFieldToTab('Root.Main', $enabledField);
 //        $newFromField = $fields->dataFieldByName('NewFromDate');
 //        $newToField = $fields->dataFieldByName('NewToDate');
 //        $newFromField->setConfig('showcalendar', true);
-//        $newToField->setConfig('showcalendar', true);
+
         $fields->replaceField('CategoryID', $categoryField = new TreeDropdownField('CategoryID', 'Category', "TOSECategory", 'ID', 'Name', FALSE));
-//        var_dump($categoryField->getSourceObject()); die;
-//        $categoryField = $fields->fieldByName('CategoryID'); 
-//        var_dump($categoryField); 
-//        var_dump($fields);
-//        die;
         
         if ($this->ID) {
             
@@ -203,13 +198,5 @@ class TOSEProduct extends DataObject {
         return $fields;
     }
     
-    
-//    protected function onAfterWrite() {
-//        parent::onAfterWrite();
-//        if (!$this->Specs()) {
-//            
-//        }        
-//        
-//    }
     
 }

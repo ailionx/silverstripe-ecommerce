@@ -97,7 +97,19 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         );
         TOSEValidator::data_is_number($data, $numberFields, TRUE);
         $cart = TOSECart::get_current_cart();
-        $cart->itemAssignQuantity($data['SpecID'], $data['Quantity']);
+        $item = $cart->itemAssignQuantity($data['SpecID'], $data['Quantity']);
+        
+        if($request->isAjax()) {
+            $response = array(
+                'subTotalPrice' => $item->subTotalPrice()->Price,
+                'totalPrice' => $cart->totalPrice()->Price,
+                'specID' => $item->ID,
+                'Quantity' => $item->Quantity
+            );
+
+            return $this->handleAJAXResponse($response);
+        }
+        
         return $this->redirectBack();
     }
     
@@ -118,7 +130,18 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         $specID = $data['SpecID'];
         $item = $cart->getCartItems()->find('SpecID', $specID);
         $quantity = $item->Quantity - 1;
-        $cart->itemAssignQuantity($specID, $quantity);
+        $item = $cart->itemAssignQuantity($specID, $quantity);
+        
+        if($request->isAjax()) {
+            $response = array(
+                'subTotalPrice' => $item->subTotalPrice()->Price,
+                'totalPrice' => $cart->totalPrice()->Price,
+                'specID' => $item->ID,
+                'Quantity' => $item->Quantity
+            );
+
+            return $this->handleAJAXResponse($response);
+        }
         
         return $this->redirectBack();
         
@@ -141,7 +164,18 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         $specID = $data['SpecID'];
         $item = $cart->getCartItems()->find('SpecID', $specID);
         $quantity = $item->Quantity + 1;
-        $cart->itemAssignQuantity($specID, $quantity);
+        $item = $cart->itemAssignQuantity($specID, $quantity);
+                
+        if($request->isAjax()) {
+            $response = array(
+                'subTotalPrice' => $item->subTotalPrice()->Price,
+                'totalPrice' => $cart->totalPrice()->Price,
+                'specID' => $item->ID,
+                'Quantity' => $item->Quantity
+            );
+
+            return $this->handleAJAXResponse($response);
+        }
         
         return $this->redirectBack();
         
@@ -156,6 +190,16 @@ class TOSECartPage_Controller extends TOSEPage_Controller {
         $data = $request->getVars();
         $cart = TOSECart::get_current_cart();
         $cart->removeItem($data);
+        
+        if($request->isAjax()) {
+            $response = array(
+                'totalPrice' => $cart->totalPrice()->Price,
+                'specID' => $data['SpecID']
+            );
+
+            return $this->handleAJAXResponse($response);
+        }
+        
         return $this->redirectBack();
     }
     

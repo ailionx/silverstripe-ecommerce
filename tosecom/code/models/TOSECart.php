@@ -186,6 +186,8 @@ class TOSECart extends DataObject {
         $item->Quantity = $quantity;
         $item->checkQuantity();
         $item->write();
+        
+        return $item;
     }
     
 
