@@ -40,6 +40,14 @@ class TOSEHistoryOrder extends DataObject {
     
     /**
      * OVERRIDE
+     * @return type
+     */
+    public function getTitle() {
+        return $this->Reference;
+    }
+    
+    /**
+     * OVERRIDE
      * @param type $member
      * @return boolean
      */

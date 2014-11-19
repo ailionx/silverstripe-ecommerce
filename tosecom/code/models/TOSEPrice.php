@@ -147,6 +147,14 @@ class TOSEPrice extends DataObject {
         
         return $fields;
     }
+    
+    /**
+     * OVERRIDE
+     * @return type
+     */
+    public function getTitle() {
+        return $this->Currency;
+    }
 
     /**
      * Returns the number as a currency, eg “$1,000.00”.

@@ -29,31 +29,19 @@ class TOSEOrderAdmin extends ModelAdmin {
      */
     public $showImportForm = false;
     
-    
-//    public function init() {
-//        parent::init();
-//        $status = $this->request->getVar('type');
-//        $this->order_type = $status;
-//    }
+
     /**
      * OVERRIDE
-     * @return \ArrayList
+     * @return type
      */
-    protected function getManagedModelTabs() {
-        $tabs = parent::getManagedModelTabs();
-        $newTabs = new ArrayList();
-        $items = $tabs->items;
-
-        $items[0]->Title = 'Pending Orders';
-        $items[1]->Title = 'History Orders';
+    public function getManagedModels() {            
+            $models = array();
         
-        foreach ($items as $item) {
-            $newTabs->push($item);
-        }
+            $models['TOSEOrder'] = array('title' => 'Pending Orders');
+            $models['TOSEHistoryOrder'] = array('title' => 'History Orders');
 
-        return $newTabs;
+            return $models;
     }
-
 
     /**
      * OVERRIDE

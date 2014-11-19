@@ -12,6 +12,37 @@ class TOSEProductAdmin extends ModelAdmin {
     private static $url_segment = 'products';
     private static $menu_title = 'Products';
     
+    
+    
+    /**
+     * OVERRIDE
+     * @return type
+     */
+    public function getManagedModels() {
+            $models = $this->stat('managed_models');
+            if(is_string($models)) {
+                    $models = array($models);
+            }
+            if(!count($models)) {
+                    user_error(
+                            'ModelAdmin::getManagedModels(): 
+                            You need to specify at least one DataObject subclass in public static $managed_models.
+                            Make sure that this property is defined, and that its visibility is set to "public"', 
+                            E_USER_ERROR
+                    );
+            }
+
+            // Normalize models to have their model class in array key
+            foreach($models as $k => $v) {
+                    if(is_numeric($k)) {
+                            $models[$v] = array('title' => substr($v, '4')."s");
+                            unset($models[$k]);
+                    }
+            }
+            
+            return $models;
+    }
+    
     /**
      * OVERRIDE
      * @param type $id

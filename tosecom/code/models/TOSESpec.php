@@ -102,6 +102,14 @@ class TOSESpec extends DataObject {
     public function getActivePriceValue() {
         return $this->getActivePrice()->Nice();
     }
+    
+    /**
+     * OVERRIDE
+     * @return type
+     */
+    public function getTitle() {
+        return "SKU".$this->SKU;
+    }
 
     /**
      * Write in default price after this spec written

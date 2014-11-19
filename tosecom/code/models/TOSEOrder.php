@@ -41,7 +41,14 @@ class TOSEOrder extends DataObject {
         'Status' => 'Status'
     );
     
-    
+    /**
+     * OVERRIDE
+     * @return type
+     */
+    public function getTitle() {
+        return $this->Reference;
+    }
+
     /**
      * OVERRIDE
      * @param type $member
