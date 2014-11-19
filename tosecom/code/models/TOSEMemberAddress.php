@@ -14,6 +14,11 @@ class TOSEMemberAddress extends TOSEAddress {
         'Member' => 'Member'
     );
     
+    /**
+     * OVERRIDE
+     * @param type $data
+     * @return \TOSEMemberAddress
+     */
     public static function save($data) {
         
         $memberAddress = new TOSEMemberAddress();

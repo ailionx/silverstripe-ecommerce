@@ -12,6 +12,12 @@ class TOSEProductAdmin extends ModelAdmin {
     private static $url_segment = 'products';
     private static $menu_title = 'Products';
     
+    /**
+     * OVERRIDE
+     * @param type $id
+     * @param type $fields
+     * @return type
+     */
     	public function getEditForm($id = null, $fields = null) {
 		$list = $this->getList();
 		$exportButton = new GridFieldExportButton('before');
@@ -25,10 +31,13 @@ class TOSEProductAdmin extends ModelAdmin {
 				->addComponent($exportButton)
 				->removeComponentsByType('GridFieldFilterHeader')
 				->addComponents(new GridFieldPrintButton('before'))
+                                ->removeComponentsByType('GridFieldDeleteAction')
+
 		);
                 if($this->modelClass === 'TOSECategory') {
                     $fieldConfig->getComponentByType('GridFieldDetailForm')->setItemRequestClass('TOSECategoryGridFieldDetailForm_ItemRequest');
                     $fieldConfig->getComponentByType('GridFieldAddNewButton')->setButtonName('Add New Category');
+
                 } else {
                     $fieldConfig->getComponentByType('GridFieldAddNewButton')->setButtonName('Add New Product');
                 }

@@ -21,6 +21,11 @@ class TOSECategoryPage_Controller extends TOSEPage_Controller {
         '$cateoryLink' => "index"
     );
 
+    /**
+     * Function is to filter url data and direct to category page
+     * @param SS_HTTPRequest $request
+     * @return type
+     */
     public function index(SS_HTTPRequest $request) {
         $params = $request->allParams();
         $cateoryLink = $params['cateoryLink'];
@@ -44,6 +49,10 @@ class TOSECategoryPage_Controller extends TOSEPage_Controller {
         
     }
     
+    /**
+     * Function is to get all root categories
+     * @return type
+     */
     public function getRootCategories() {
 
         $rootCategories = DataObject::get('TOSECategory', "ParentID='0'");
@@ -51,6 +60,10 @@ class TOSECategoryPage_Controller extends TOSEPage_Controller {
         return $rootCategories;
     }
     
+    /**
+     * Function is to set default products in category page when category name not given
+     * @return type
+     */
     public function getDefaultProducts() {
         $products = DataObject::get('TOSEProduct');
         

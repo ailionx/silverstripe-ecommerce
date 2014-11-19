@@ -25,6 +25,11 @@ class TOSEAddress extends DataObject {
     
     private static $has_many = array();
     
+    /**
+     * Function is to save data into database
+     * @param type $data
+     * @return \TOSEAddress
+     */
     public static function save($data) {
         
         $address = new TOSEAddress();
@@ -33,6 +38,10 @@ class TOSEAddress extends DataObject {
         return $address;
     }
     
+    /**
+     * Function is to get address of current member
+     * @return boolean
+     */
     public static function getCurrentMemberAddress() {
         if(TOSEMember::is_customer_login()) {
             $member = Member::currentUser();

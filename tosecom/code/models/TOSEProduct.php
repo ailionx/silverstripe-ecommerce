@@ -31,7 +31,10 @@ class TOSEProduct extends DataObject {
         'Description' => 'Description'
     );
     
-    
+    /**
+     * Function is to check the config if inventory feature is enabled
+     * @return type
+     */
     public static function has_inventory() {
         $config = Config::inst()->get('TOSEProduct', 'hasInventory');
         return ($config == 'Yes') ? TRUE :FALSE;
@@ -78,6 +81,10 @@ class TOSEProduct extends DataObject {
         return $image;
     }
     
+    /**
+     * Function is to get product link based on product id
+     * @return string
+     */
     public function getLink() {
         $pageURL = DataObject::get_one('TOSEProductPage')->Link();
         $link = $pageURL . $this->ID;

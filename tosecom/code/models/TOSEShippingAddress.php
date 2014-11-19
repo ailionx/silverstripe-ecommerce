@@ -18,6 +18,11 @@ class TOSEShippingAddress extends TOSEAddress {
     
     private static $has_many = array();
     
+    /**
+     * OVERRIDE
+     * @param type $data
+     * @return \TOSEShippingAddress
+     */
     public static function save($data) {
         $shippingAddress = new TOSEShippingAddress();
 

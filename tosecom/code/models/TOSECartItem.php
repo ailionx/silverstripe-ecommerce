@@ -87,10 +87,19 @@ class TOSECartItem extends DataObject {
         
     }
     
+    /**
+     * Function is to check if the cart item quantity has reached to the min number
+     * @param type $num
+     * @return type
+     */
     public function QuantityReachMin($num=1) {
         return $this->Quantity <= $num;
     }
     
+    /**
+     * Function is to check if the cart item quantity has reached to the max number
+     * @return boolean
+     */
     public function QuantityReachMax() {
         if(!TOSEProduct::has_inventory()) {
             return FALSE;

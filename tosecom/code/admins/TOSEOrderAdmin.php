@@ -23,6 +23,10 @@ class TOSEOrderAdmin extends ModelAdmin {
     private static $url_segment = 'orders';
     private static $menu_title = 'Orders';
     
+    /**
+     * We shouldn't import any data into orders
+     * @var type 
+     */
     public $showImportForm = false;
     
     
@@ -31,6 +35,10 @@ class TOSEOrderAdmin extends ModelAdmin {
 //        $status = $this->request->getVar('type');
 //        $this->order_type = $status;
 //    }
+    /**
+     * OVERRIDE
+     * @return \ArrayList
+     */
     protected function getManagedModelTabs() {
         $tabs = parent::getManagedModelTabs();
         $newTabs = new ArrayList();
@@ -47,7 +55,12 @@ class TOSEOrderAdmin extends ModelAdmin {
     }
 
 
-    
+    /**
+     * OVERRIDE
+     * @param type $id
+     * @param type $fields
+     * @return type
+     */
     public function getEditForm($id = null, $fields = null) {
         $list = $this->getList();
         

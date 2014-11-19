@@ -171,6 +171,10 @@ class TOSEHistoryOrder extends DataObject {
         return $info;
     }
     
+    /**
+     * Function is to get items literal info for CMS
+     * @return string
+     */
     public function getItemsInfo4CMS() {
         $items = $this->items();
         $info = "<table style='border-spacing: 50px 5px; border-collapse:separate'>"

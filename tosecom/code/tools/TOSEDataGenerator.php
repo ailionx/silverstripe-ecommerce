@@ -73,6 +73,9 @@ class TOSEDataGenerator {
             
     }
     
+    /**
+     * Function is to gen preparasion data of tose module
+     */
     public static function gen_TOSEModules() {        
         $groupCode = TOSEMember::get_customer_group_code();
         if(!$group = DataObject::get_one('Group', "Code='$groupCode'")) {
@@ -201,6 +204,10 @@ class TOSEDataGenerator {
         DB::alteration_message('TOSEAccountPage created', 'created'); 
     }
     
+    /**
+     * Function is to generate customer group
+     * @param type $code
+     */
     public static function gen_customer_group($code) {
         $group = new Group();
         $group->Code = $code;

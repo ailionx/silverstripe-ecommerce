@@ -43,6 +43,10 @@ class TOSECategory extends DataObject {
         return 'Root';
     }   
     
+    /**
+     * Function is to check if the category have products or descendant categories, if empty, return true
+     * @return boolean
+     */
     public function categoryEmpty() {
         $productNum = $this->getAllProducts()->count();
         $subCateNum = $this->getDescendantCategories()->count();
@@ -281,6 +285,9 @@ class TOSECategory extends DataObject {
 
     }
     
+    /**
+     * After write, if parent ID changed, we need to update all the chain information of descendant categories
+     */
     protected function onAfterWrite() {
         parent::onAfterWrite();
         
@@ -297,11 +304,5 @@ class TOSECategory extends DataObject {
             $this->write();
         }
     }
-
-    protected function onBeforeDelete() {
-        parent::onBeforeDelete();
-        self::update_category_chain($this->ID, $this->ParentID);
-    }
-
     
 }

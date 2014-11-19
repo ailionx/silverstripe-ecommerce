@@ -18,6 +18,11 @@ class TOSEBillingAddress extends TOSEAddress {
     
     private static $has_many = array();
     
+    /**
+     * OVERRIDE
+     * @param type $data
+     * @return \TOSEBillingAddress
+     */
     public static function save($data) {
         $billingAddress = new TOSEBillingAddress();
         $billingAddress->update($data);

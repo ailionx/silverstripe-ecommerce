@@ -28,6 +28,11 @@ class TOSEMember extends DataExtension {
     
     const PermissionCode = "SITETREE_VIEW_ALL";
 
+    /**
+     * Function is to save data into database
+     * @param type $data
+     * @return \Member
+     */
     public static function save($data) {
         
         $member = new Member();
@@ -48,11 +53,18 @@ class TOSEMember extends DataExtension {
         return $member->inGroup($customerGroup);
     }
     
+    /**
+     * Function is to logout
+     */
     public static function logout() {
         $member = Member::currentUser();
         $member->logOut();
     }
     
+    /**
+     * function is to get config that purchasing need login
+     * @return type
+     */
     public static function need_login() {
         $options = array(
             self::NeedLoginYes,
@@ -69,13 +81,20 @@ class TOSEMember extends DataExtension {
         die("needLogin is not defined correctly, it only can be".self::NeedLoginYes.", ".self::NeedLoginNo." or ".self::NeedLoginBoth."please check config file");
     }
     
+    /**
+     * Function is to get config of customer group code
+     * @return type
+     */
     public static function get_customer_group_code() {
         $code = Config::inst()->get('Member', 'customerGroup');
         $lcCode = strtolower($code);
         return strtolower($lcCode);
     }
     
-    
+    /**
+     * Function is to check if the user has permission to purchase
+     * @return boolean
+     */
     public static function check_purchase_permission() {
         if((self::need_login()===self::NeedLoginYes) && !self::is_customer_login()) {
             return FALSE;

@@ -19,6 +19,11 @@ class TOSEProductPage_Controller extends TOSEPage_Controller {
     
     private static $allowed_actions = array();
     
+    /**
+     * Function is to filter url data and direct to given product page
+     * @param SS_HTTPRequest $request
+     * @return type
+     */
     public function index(SS_HTTPRequest $request) {
         $id = $request->param("ID");
         if(!$id || !is_numeric($id) || !($product = DataObject::get_by_id("TOSEProduct", $id)) || $product->isEnabled()==FALSE){

@@ -24,6 +24,10 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
      */
     const SessionRegisterInfo = 'TOSERegisterInfo';
 
+    /**
+     * User register form
+     * @return \Form
+     */
     public function registerForm() {
         $fields = new FieldList();
         $userInfo = new CompositeField();
@@ -75,14 +79,24 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
         return $form;
     }
 
-            
+    
+    /**
+     * Function is to check if mail name already exist in database
+     * @param type $email
+     * @return type
+     */
     public function checkMailExist($email){
         $sqlField = Convert::raw2sql($email);
         $existMemberInfo = DataObject::get_one('Member',"Email = '$sqlField'");
         return $result = $existMemberInfo ? TRUE : FALSE;
     }
     
-    
+    /**
+     * Function is to handle register task
+     * @param array $data
+     * @param type $form
+     * @return type
+     */
     public function doRegister($data, $form) {
         
         Session::set(self::SessionRegisterInfo, $data);

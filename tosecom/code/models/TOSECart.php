@@ -176,6 +176,11 @@ class TOSECart extends DataObject {
         return $item;
     }
     
+    /**
+     * Function is to assign certain quantity to certain cart item
+     * @param type $specID
+     * @param type $quantity
+     */
     public function itemAssignQuantity($specID, $quantity) {
         $item = $this->getCartItems()->find('SpecID', $specID);
         $item->Quantity = $quantity;

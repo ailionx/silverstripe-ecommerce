@@ -117,6 +117,11 @@ class TOSEPrice extends DataObject {
         }
     }           
     
+    /**
+     * Function is get currency symbol for given currency name
+     * @param type $currencyName
+     * @return type
+     */
     public static function get_currency_symbol($currencyName) {
         $currencies = self::get_all_currencies();
         return $currencies[$currencyName];
@@ -131,6 +136,10 @@ class TOSEPrice extends DataObject {
         return self::get_currency_symbol($Name);
     }
     
+    /**
+     * OVERRIDE
+     * @return type
+     */
     public function getCMSFields() {
         $fields = parent::getCMSFields();
         $fields->replaceField('Currency', new ReadonlyField('Currency', 'Currency'));
