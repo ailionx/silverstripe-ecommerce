@@ -275,7 +275,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
             'Amount' => $this->getTotalPrice()->Price,
             'Currency' => $this->getTotalPrice()->Currency,
             'Status' => TOSEOrder::PENDING,
-            'Reference' => null
+            'Reference' => TOSEOrder::create_reference()
         );
         
 	// Process the payment 
@@ -334,9 +334,9 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      * Function is to save the order
      * @return type
      */
-    public function saveOrder() {
+    public function saveOrder($reference) {
         $orderInfo = unserialize(Session::get(self::SessionOrderInfo));
-        $orderData['Reference'] = TOSEOrder::create_reference();
+        $orderData['Reference'] = $reference;
         $orderData['NeedInvoice'] = array_key_exists('NeedInvoice', $orderInfo);
         $orderData['Status'] = TOSEOrder::PENDING;
         $orderData['ShippingFee'] = $this->getShippingPrice()->Price;
@@ -382,11 +382,11 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         if($payment && $payment->Status === Payment::SUCCESS){
 
             //To call save order function to create order
-
-            $order = $this->saveOrder();
+            $reference = $payment->Reference;
+            $this->saveOrder($reference);
             $data['IsSuccess'] = TRUE;
             $data['Status'] = Payment::SUCCESS;
-            $data['Reference'] = $order->Reference;
+            $data['Reference'] = $reference;
         
             //Clear cart and order information
             
