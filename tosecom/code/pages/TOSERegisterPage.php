@@ -117,7 +117,7 @@ class TOSERegisterPage_Controller extends TOSEPage_Controller {
         }
         
         $member = TOSEMember::save($data);
-        $groupCode = Config::inst()->get('Member', 'customerGroup');
+        $groupCode = TOSEMember::get_customer_group_code();
 
         $data['MemberID'] = $member->ID;
         $address = TOSEMemberAddress::save($data);

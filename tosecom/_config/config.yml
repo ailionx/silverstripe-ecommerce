@@ -1,10 +1,12 @@
 Member:
-#needLogin options: "Yes"/"No"/"Both"
+    #needLogin options: "Yes"/"No"/"Both"
     needLogin: 'Both'
+    #if need login, only members from this group can purchase. Registered user will be added in to this group
     customerGroup: 'customer'
     extensions:
         - TOSEMember
-
+        
+#Following are for page title and page url segment 
 TOSERegisterPage:
     pageTitle: 'Register'
     pageURLSegment: 'register'
@@ -36,10 +38,13 @@ TOSECartPage:
 TOSECheckoutPage:
     pageTitle: 'Checkout'
     pageURLSegment: 'checkout'
+
         
 TOSEPrice:
-    primaryCurrency: 'NZD'
+    #System will use this currency to do payment
+    primaryCurrency: 'NZD'    
     primaryCurrencySymbol: '$'
+    #multiCurrency is only for show price, payment will still use primary currency
     multiCurrency: 'FALSE'
     optionalCurrencies:
         GBP: '£'
@@ -52,6 +57,7 @@ TOSECategory:
         - TOSECategoryTreeHierarchy
 
 TOSEProduct:
+    #Control if the system has inventory feature
     hasInventory: 'Yes'
 
 TOSEProductAdmin:
