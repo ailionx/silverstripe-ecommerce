@@ -6,8 +6,8 @@ PaymentProcessor:
   supported_methods:
     dev:
         - 'PaymentExpressPxPay'
-        - 'PayPalExpress'
-        - 'Cheque'
+#        - 'PayPalExpress'
+#        - 'Cheque'
     live:
         - 'PayPalExpress'
     

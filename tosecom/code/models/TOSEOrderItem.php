@@ -39,8 +39,9 @@ class TOSEOrderItem extends DataObject {
         
         // update inventory after transaction
         if(TOSEProduct::has_inventory()) {
-            $spec->Inventory = $spec->Inventory - $orderItem->Quantity;
             $spec = $orderItem->Spec();
+            $spec->Inventory = $spec->Inventory - $orderItem->Quantity;
+            
             $spec->write();
         }
         

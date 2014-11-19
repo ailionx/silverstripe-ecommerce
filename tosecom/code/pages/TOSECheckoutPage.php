@@ -101,19 +101,17 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
         $fields->push(new LiteralField('CommentsTitle', '<h3>Message</h3>'));
         $fields->push($commentField);
         
-        $methods = Config::inst()->get('PaymentProcessor', 'supported_methods');
-        if($this->multiPaymentMethod()) {
-            $envMethods = array();
-            foreach ($methods[SS_ENVIRONMENT_TYPE] as $method) {
-                $envMethods[$method] = $method;
-            }
-            $paymentField = new DropdownField('PaymentMethod', 'Payment Method', $envMethods);
-        } else {
-            $envMethods = $methods[SS_ENVIRONMENT_TYPE][0];
-            $paymentField = new HiddenField('PaymentMethod', 'Payment Method', $envMethods);
-        }
-        $fields->push($paymentField);
+        $methods = $this->getPaymentMethods();
         
+        if($this->multiPaymentMethod()) {
+            $paymentField = new DropdownField('PaymentMethod', 'Payment Method', $methods);
+        } else {
+            $method = $methods[0];
+            $paymentField = new HiddenField('PaymentMethod', 'Payment Method', $method);
+        }
+        
+        $fields->push($paymentField);
+
         $actions = new FieldList(
                 new FormAction('doNext', 'Next')
                 );
@@ -133,8 +131,9 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
             );
         
         $form = new Form($this, 'orderForm', $fields, $actions, $required);
-        
+
         if($data = unserialize(Session::get(self::SessionOrderInfo))) {
+            $data = array_filter($data);
             $form->loadDataFrom($data);
         } elseif (TOSEMember::is_customer_login()) {
             $memberAddress = TOSEAddress::getCurrentMemberAddress();
@@ -166,7 +165,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
             );
             $form->loadDataFrom($loadData);
         }
-        
+
         return $form;
     }
     
@@ -176,6 +175,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      * @return type
      */
     public function doNext($data) {
+
         $sessionData = serialize($data);
         Session::set(self::SessionOrderInfo, $sessionData);
 
@@ -192,6 +192,7 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
             return $this->redirect($this->Link()."cartEmpty");
         }
         $data = unserialize(Session::get(self::SessionOrderInfo));
+
         $data['NeedInvoice'] = key_exists('NeedInvoice', $data) ? TRUE : FALSE;
 
         return $this->customise($data)->renderWith(array('TOSECheckoutPage_confirm', 'Page'));
@@ -202,16 +203,30 @@ class TOSECheckoutPage_Controller extends TOSEPage_Controller {
      * @return boolean
      */
     public function multiPaymentMethod() {
-        $methods = Config::inst()->get('PaymentProcessor', 'supported_methods');
-        $envMethods = $methods[SS_ENVIRONMENT_TYPE];
-        if(count($envMethods)>1) {
-            return TRUE;
-        }
         
-        return FALSE;
+        $methods = $this->getPaymentMethods();
+        
+        return count($methods)>1 ? TRUE : FALSE;
     }
 
+    /**
+     * Function is to get payment environment
+     * @return type
+     */
+    public function getPaymentEnv() {
+        return $paymentEnv = Config::inst()->get('PaymentGateway', 'environment');
+    }
     
+    
+    public function getPaymentMethods() {
+        $methods = Config::inst()->get('PaymentProcessor', 'supported_methods');
+        $paymentEnv = $this->getPaymentEnv();
+        
+        $envMethods = $methods[$paymentEnv];
+        
+        return $envMethods;
+    }
+
     /**
      * Function is to get the shipping fee
      * @return int
