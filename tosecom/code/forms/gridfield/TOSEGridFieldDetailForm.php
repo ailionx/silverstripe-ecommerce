@@ -20,7 +20,11 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 		'view',
 		'ItemEditForm'
 	);
-                
+        
+        /**
+         * Override
+         * @return \Form
+         */
         public function ItemEditForm() {
 
 		$list = $this->gridField->getList();
@@ -61,20 +65,28 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 					->addExtraClass('ss-ui-action-destructive action-delete mod-category-none mod-category-elements'));
 
                                 if(!$this->record->categoryEmpty()) {
-                                    
+                                    /**
+                                     * if category not empty, hide real delete button
+                                     */
                                     $actions->dataFieldByName('action_doDelete')
                                             ->addExtraClass('tose_hide');
-                                    
+                                    /**
+                                     * Fake delete button, actual to open mod-category-pop elements
+                                     */
                                     $actions->push(new LiteralField(
                                                 'DeleteModCategory',
                                                 '<button class="mod-category-delete mod-category-origin mod-category-elements">Delete</button>'
                                             ));
-                                    
+                                    /**
+                                     * Mod Category action
+                                     */
                                     $actions->push(FormAction::create('doModCategory', _t('TOSE_Admin.Gridfield.GridFieldDetailForm.ModCategory', 'Confirm'))
                                         ->setUseButtonTag(true)
 					->addExtraClass('ss-ui-action-constructive mod-category-confirm mod-category-pop mod-category-elements')
                                         ->setAttribute('data-icon', 'accept')); 
-                                    
+                                    /**
+                                     * Cancel mod-category-pop
+                                     */
                                     $actions->push(new LiteralField(
                                             'CancelModCategory',
                                             '<button class="mod-category-cancel mod-category-pop mod-category-elements">Cancel</button>'
@@ -182,41 +194,12 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 	}
         
         
-        public function doDelete($data, $form) {
-		$title = $this->record->Title;
-		try {
-			if (!$this->record->canDelete()) {
-				throw new ValidationException(
-					_t('GridFieldDetailForm.DeletePermissionsFailure',"No delete permissions"),0);
-			}
-
-//			$this->record->delete();
-		} catch(ValidationException $e) {
-			$form->sessionMessage($e->getResult()->message(), 'bad');
-			return $this->getToplevelController()->redirectBack();
-		}
-
-		$message = sprintf(
-			_t('GridFieldDetailForm.Deleted', 'Deleted %s %s'),
-			$this->record->i18n_singular_name(),
-			htmlspecialchars($title, ENT_QUOTES)
-		);
-		
-		$toplevelController = $this->getToplevelController();
-		if($toplevelController && $toplevelController instanceof LeftAndMain) {
-			$backForm = $toplevelController->getEditForm();
-			$backForm->sessionMessage($message, 'good');
-		} else {
-			$form->sessionMessage($message, 'good');
-		}
-
-		//when an item is deleted, redirect to the parent controller
-		$controller = $this->getToplevelController();
-		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
-
-		return $controller->redirect($this->getBacklink(), 302); //redirect back to admin section
-	}
-        
+        /**
+         * Modify category action
+         * @param type $data
+         * @param type $form
+         * @return type
+         */
         public function doModCategory($data, $form) {
 
             $descendantCategories = $this->record->getDescendantCategories();
@@ -225,14 +208,10 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
             if($data['modOptions'] == '0') {
                 
                 foreach ($descendantCategories as $category) {
-                    $category->ParentID = 0;
-                    $category->write();
-//                    $category->delete();
+                    $category->delete();
                 }
                 foreach ($allProducts as $product) {
-                    $product->CategoryID = 0;
-                    $product->write();
-//                    $product->delete();
+                    $product->delete();
                 }
                 
             } elseif (($data['modOptions'] == '1') && $data['moveSub']) {

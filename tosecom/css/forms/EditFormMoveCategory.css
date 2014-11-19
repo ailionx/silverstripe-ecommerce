@@ -2,20 +2,37 @@
     position: fixed;
     top: 0px;
     right: 0px;
-    bottom: 52px;
+    bottom: 53px;
     left: 160px;
     background-color: #ECEFF1;
     z-index: 100;
     padding: 50px;
     margin: 0 auto 0 auto;
-    border: 1px solid #B3B3B3;
     display: none;
+
 }
 
 .mod-category-fields #moveSub{
     display: none;
 }
 
+.mod-category-fields h3{
+    border: 1px solid #B3B3B3;
+    text-align: justify;
+    padding: 20px;
+    margin-bottom: 50px;
+    color: red;
+    width: 654px;
+    
+}
+
+.mod-category-fields #Form_ItemEditForm_modOptions_chzn {
+    max-width: 512px;
+}
+
+.mod-category-fields #TreeDropdownField_Form_ItemEditForm_moveSub {
+    width: 512px;
+}
 
 .Actions .tose_hide, .Actions .mod-category-pop{
     display: none;
