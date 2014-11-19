@@ -225,7 +225,7 @@ class TOSECategory extends DataObject {
                     '<h3>Attention: This Category still has products or sub-categories. Before delete it, please remove them or move them under another category first</h3>'
                 );
             $modCategoryFields->push($modCategoryHeader);
-            $modCategoryFields->addExtraClass('mod-category-fields');
+            $modCategoryFields->addExtraClass('mod-category-fields mod-category-pop mod-category-elements');
             $removeField = new DropdownField('modOptions', 'Choose what you want?', array(
                     'Remove products and sub-categories belong to this category',
                     'Move products and sub-categories to another category'

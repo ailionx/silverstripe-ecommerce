@@ -12,28 +12,11 @@
     display: none;
 }
 
-/*.mod-category-fields h3{
-    position: absolute;
-    width: 60%;
-    margin: 70px auto 0px auto;
-}
-
-.mod-category-fields #modOptions{
-    position: absolute;
-    width: 80%;
-    margin: 180px auto 0px auto;
-}
-
-.mod-category-fields #moveSub{
-    position: absolute;
-    width: 80%;
-    margin: 230px auto 0px auto;
-}*/
-
 .mod-category-fields #moveSub{
     display: none;
 }
 
-.cms-edit-form .Actions .mod-category-confirm, .cms-edit-form .Actions .mod-category-cancel{
+
+.Actions .tose_hide, .Actions .mod-category-pop{
     display: none;
 }

@@ -48,7 +48,7 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 			if($canEdit) {
 				$actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
 					->setUseButtonTag(true)
-					->addExtraClass('ss-ui-action-constructive')
+					->addExtraClass('ss-ui-action-constructive mod-category-none mod-category-origin mod-category-elements')
 					->setAttribute('data-icon', 'accept'));
 			}
                         
@@ -56,36 +56,31 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
 
                         
 			if($canDelete) {
-//                                    $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
-//					->setUseButtonTag(true)
-//					->addExtraClass('ss-ui-action-destructive action-delete'));
-                                
-                                if(!$this->record->categoryEmpty()) {
-                                    
                                     $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
 					->setUseButtonTag(true)
-					->addExtraClass('ss-ui-action-destructive action-delete-mod'));
+					->addExtraClass('ss-ui-action-destructive action-delete mod-category-none mod-category-elements'));
+
+                                if(!$this->record->categoryEmpty()) {
+                                    
+                                    $actions->dataFieldByName('action_doDelete')
+                                            ->addExtraClass('tose_hide');
+                                    
+                                    $actions->push(new LiteralField(
+                                                'DeleteModCategory',
+                                                '<button class="mod-category-delete mod-category-origin mod-category-elements">Delete</button>'
+                                            ));
                                     
                                     $actions->push(FormAction::create('doModCategory', _t('TOSE_Admin.Gridfield.GridFieldDetailForm.ModCategory', 'Confirm'))
                                         ->setUseButtonTag(true)
-					->addExtraClass('ss-ui-action-constructive mod-category-confirm')
+					->addExtraClass('ss-ui-action-constructive mod-category-confirm mod-category-pop mod-category-elements')
                                         ->setAttribute('data-icon', 'accept')); 
                                     
                                     $actions->push(new LiteralField(
                                             'CancelModCategory',
-                                            '<button class="ss-ui-button ss-ui-action-destructive ui-corner-all mod-category-cancel">Cancel</button>'
+                                            '<button class="mod-category-cancel mod-category-pop mod-category-elements">Cancel</button>'
                                         ));
                                     
-                                } else {
-                                    $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
-					->setUseButtonTag(true)
-					->addExtraClass('ss-ui-action-destructive action-delete'));
-                                }
-                                
-                                $actions->push(new LiteralField(
-                                            'testAction',
-                                            '<button class="ss-ui-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ss-ui-action-destructive action-test">Test</button>'
-                                        ));
+                                } 
 			}                        
 
 
