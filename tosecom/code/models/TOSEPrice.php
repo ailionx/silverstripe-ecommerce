@@ -143,6 +143,7 @@ class TOSEPrice extends DataObject {
     public function getCMSFields() {
         $fields = parent::getCMSFields();
         $fields->replaceField('Currency', new ReadonlyField('Currency', 'Currency'));
+        $fields->dataFieldByName('Price')->setTitle('Price ($)');
         $fields->removeByName('SpecID');
         
         return $fields;

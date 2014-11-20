@@ -1,0 +1,12 @@
+en:
+    TOSE_Admin:
+        Message:
+            IS_ROOT_CATEGORY: Root Category
+            NEW_CATEGORY_SUB_CATEGORY: You can create sub-category after creating new CATEGORY
+            NEW_CATEGORY_PRODUCT: You can add product after creating new CATEGORY
+            NEW_PRODUCT_SPEC: You can add specifications after creating new PRODUCT
+            NEW_PRODUCT_IMAGE: You can add images after creating new PRODUCT
+        Gridfield:
+            GridFieldDetailForm:
+                MODCATEGORY: Confirm
+                    

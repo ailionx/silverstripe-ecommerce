@@ -80,7 +80,7 @@ class TOSECategoryGridFieldDetailForm_ItemRequest extends GridFieldDetailForm_It
                                     /**
                                      * Mod Category action
                                      */
-                                    $actions->push(FormAction::create('doModCategory', _t('TOSE_Admin.Gridfield.GridFieldDetailForm.ModCategory', 'Confirm'))
+                                    $actions->push(FormAction::create('doModCategory', _t('TOSE_Admin.Gridfield.GridFieldDetailForm.MODCATEGORY', 'Confirm'))
                                         ->setUseButtonTag(true)
 					->addExtraClass('ss-ui-action-constructive mod-category-confirm mod-category-pop mod-category-elements')
                                         ->setAttribute('data-icon', 'accept')); 

@@ -44,6 +44,14 @@ class TOSECategory extends DataObject {
     }   
     
     /**
+     * OVERRIDE
+     * @return string
+     */
+    public function singular_name() {
+        return "Category";
+    }
+    
+    /**
      * Function is to check if the category have products or descendant categories, if empty, return true
      * @return boolean
      */
@@ -252,6 +260,23 @@ class TOSECategory extends DataObject {
             $gridFieldConfig->getComponentByType('GridFieldAddNewButton')->setButtonName('Add New Product');
             $gridField = new GridField("Products", "Products", $this->Products(), $gridFieldConfig);
             $fields->addFieldToTab('Root.Main', $gridField);  
+        } else {
+            
+            $fields->addFieldToTab(
+                    "Root.Main", 
+                    new LiteralField(
+                            "NewProductPriceMsg", 
+                            "<div class='message warning'>" . _t("TOSE_Admin.Message.NEW_CATEGORY_SUB_CATEGORY") . "</div>"
+                    )
+            );
+            
+            $fields->addFieldToTab(
+                    "Root.Main", 
+                    new LiteralField(
+                            "NewProductImageMsg", 
+                            "<div class='message warning'>" . _t("TOSE_Admin.Message.NEW_CATEGORY_PRODUCT") . "</div>"
+                    )
+            );
         }
 
          

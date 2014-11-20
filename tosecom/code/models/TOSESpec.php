@@ -43,10 +43,11 @@ class TOSESpec extends DataObject {
         if(!TOSEProduct::has_inventory()){
             $fields->removeByName('Inventory');
         }
+        $fields->dataFieldByName('ExtraInfo')->setTitle('Extra Info (optional)');
         $weightField = $fields->dataFieldByName('Weight');
 //        var_dump($weightField); die();
         $weightField->setTitle('Weight (Unit: kg.)');
-        
+        $fields->dataFieldByName('ExtraInfo')->setTitle('Extra Info (Optional)');
         if ($this->ID) {
             $gridFieldConfig = GridFieldConfig_RelationEditor::create();
             $gridFieldConfig
@@ -63,7 +64,7 @@ class TOSESpec extends DataObject {
                     "Root.Main", 
                     new LiteralField(
                             "NewProductPriceMsg", 
-                            "<div class='message warning'>" . _t("TOSE_ADMIN.MESSAGE.NEW_PRODUCT_PRICE") . "</div>"
+                            "<div class='message warning'>" . _t("TOSE_Admin.Message.NEW_PRODUCT_PRICE") . "</div>"
                     )
             );
         }

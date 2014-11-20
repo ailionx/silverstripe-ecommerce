@@ -49,6 +49,14 @@ class TOSEProduct extends DataObject {
     }
 
     /**
+     * OVERRIDE
+     * @return string
+     */
+    public function singular_name() {
+        return "Product";
+    }
+    
+    /**
      * Function is to get the default spec of product
      * @return type
      */
@@ -153,6 +161,9 @@ class TOSEProduct extends DataObject {
         $fields->removeByName(array('Specs', 'Images', 'Enabled'));
         $enabledField = new CheckboxField('Enabled', 'Enabled this product?', TRUE);
         $fields->addFieldToTab('Root.Main', $enabledField);
+        $fields->dataFieldByName('Description')->setTitle('Description (Optional)');
+        $fields->dataFieldByName('NewFromDate')->setTitle('New From Date (Optional)');
+        $fields->dataFieldByName('NewToDate')->setTitle('New To Date (Optional)');
 //        $newFromField = $fields->dataFieldByName('NewFromDate');
 //        $newToField = $fields->dataFieldByName('NewToDate');
 //        $newFromField->setConfig('showcalendar', true);
@@ -182,7 +193,7 @@ class TOSEProduct extends DataObject {
                     "Root.Main", 
                     new LiteralField(
                             "NewProductPriceMsg", 
-                            "<div class='message warning'>" . _t("TOSE_ADMIN.MESSAGE.NEW_PRODUCT_PRICE") . "</div>"
+                            "<div class='message warning'>" . _t("TOSE_Admin.Message.NEW_PRODUCT_SPEC") . "</div>"
                     )
             );
             
@@ -190,7 +201,7 @@ class TOSEProduct extends DataObject {
                     "Root.Main", 
                     new LiteralField(
                             "NewProductImageMsg", 
-                            "<div class='message warning'>" . _t("TOSE_ADMIN.MESSAGE.NEW_PRODUCT_IMAGE") . "</div>"
+                            "<div class='message warning'>" . _t("TOSE_Admin.Message.NEW_PRODUCT_IMAGE") . "</div>"
                     )
             );
         }
