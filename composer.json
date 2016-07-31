@@ -1,0 +1,11 @@
+{
+	"name": "silverstripe/tosecom",
+	"type": "silverstripe-module",
+	"description": "SilverStripe e-commerce module",
+	"require": {
+		"silverstripe/framework": "3.*",
+        "frankmullenger/payment-paymentexpress": "^1.0",
+        "silverstripe/payment": "1.0.x-dev"
+	}
+}
+
